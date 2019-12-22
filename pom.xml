@@ -9,4 +9,8 @@
 	<name>UnderBudget</name>
 	<description>Personal finance management</description>
 
+	<modules>
+		<module>backend</module>
+	</modules>
+
 </project>
