@@ -9,6 +9,20 @@
 	<name>UnderBudget</name>
 	<description>Personal finance management</description>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<configuration>
+					<!-- Disable running in the root dir so the VS Code Kotlin language
+						server can get the backend sub-module's dependency list. -->
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 	<modules>
 		<module>backend</module>
 	</modules>
