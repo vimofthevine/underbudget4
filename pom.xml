@@ -4,10 +4,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.vimofthevine</groupId>
 	<artifactId>underbudget-root</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>${revision}</version>
 	<packaging>pom</packaging>
 	<name>UnderBudget</name>
 	<description>Personal finance management</description>
+
+	<properties>
+		<revision>4.0.0-SNAPSHOT</revision>
+	</properties>
 
 	<build>
 		<plugins>
@@ -17,6 +21,14 @@
 				<configuration>
 					<!-- Disable running in the root dir so the VS Code Kotlin language
 						server can get the backend sub-module's dependency list. -->
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.8.2</version>
+				<configuration>
 					<skip>true</skip>
 				</configuration>
 			</plugin>
