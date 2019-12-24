@@ -10,13 +10,29 @@
 
 	<properties>
 		<revision>4.0.0-SNAPSHOT</revision>
-    <skip.npm.install>false</skip.npm.install>
-    <skip.npm.build>false</skip.npm.build>
-    <skip.npm.test>false</skip.npm.test>
-	</properties>
+    <skip.npm>false</skip.npm>
+    <skip.npm.install>${skip.npm}</skip.npm.install>
+    <skip.npm.build>${skip.npm}</skip.npm.build>
+    <skip.npm.test>${skip.npm}</skip.npm.test> </properties>
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>3.1.0</version>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>${project.basedir}/build</directory>
+            </fileset>
+            <fileset>
+              <directory>${project.basedir}/coverage</directory>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
@@ -70,6 +86,26 @@
                 <CI>true</CI>
               </environmentVariables>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <descriptors>
+            <descriptor>dist.xml</descriptor>
+          </descriptors>
+        </configuration>
+        <executions>
+          <execution>
+            <id>assemble-dist</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
