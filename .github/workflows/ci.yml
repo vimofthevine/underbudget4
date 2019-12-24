@@ -22,6 +22,10 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+    - name: Set up Node 13.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: '13.x'
     - name: Build with Maven
       run: mvn -B verify --file pom.xml
     - name: Upload backend coverage
