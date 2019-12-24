@@ -10,6 +10,70 @@
 
 	<properties>
 		<revision>4.0.0-SNAPSHOT</revision>
+    <skip.npm.install>false</skip.npm.install>
+    <skip.npm.build>false</skip.npm.build>
+    <skip.npm.test>false</skip.npm.test>
 	</properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <executions>
+          <execution>
+            <id>exec-npm-install</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <skip>${skip.npm.install}</skip>
+              <executable>npm</executable>
+              <arguments>
+                <argument>ci</argument>
+              </arguments>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>exec-npm-run-build</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <skip>${skip.npm.build}</skip>
+              <executable>npm</executable>
+              <arguments>
+                <argument>run</argument>
+                <argument>build</argument>
+              </arguments>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>exec-npm-run-test</id>
+            <phase>test</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <skip>${skip.npm.test}</skip>
+              <executable>npm</executable>
+              <arguments>
+                <argument>run</argument>
+                <argument>test:coverage</argument>
+              </arguments>
+              <environmentVariables>
+                <CI>true</CI>
+              </environmentVariables>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
