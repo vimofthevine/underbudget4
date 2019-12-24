@@ -37,6 +37,7 @@
 
 	<modules>
 		<module>backend</module>
+		<module>webapp</module>
 	</modules>
 
 </project>

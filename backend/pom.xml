@@ -12,7 +12,6 @@
 	<artifactId>underbudget</artifactId>
 	<version>${revision}</version>
 	<name>UnderBudget Backend Application</name>
-	<description>Personal finance management</description>
 
 	<properties>
 		<revision>4.0.0-SNAPSHOT</revision>
