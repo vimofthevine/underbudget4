@@ -13,7 +13,9 @@
     <skip.npm>false</skip.npm>
     <skip.npm.install>${skip.npm}</skip.npm.install>
     <skip.npm.build>${skip.npm}</skip.npm.build>
-    <skip.npm.test>${skip.npm}</skip.npm.test> </properties>
+    <skip.npm.test>${skip.npm}</skip.npm.test>
+    <skip.npm.lint>${skip.npm}</skip.npm.lint>
+  </properties>
 
   <build>
     <plugins>
@@ -85,6 +87,22 @@
               <environmentVariables>
                 <CI>true</CI>
               </environmentVariables>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>exec-npm-run-lint</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <skip>${skip.npm.lint}</skip>
+              <executable>npm</executable>
+              <arguments>
+                <argument>run</argument>
+                <argument>lint</argument>
+              </arguments>
             </configuration>
           </execution>
         </executions>
