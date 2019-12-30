@@ -24,7 +24,7 @@ jobs:
       id: extract_version
       uses: frabert/replace-string-action@v1.1
       with:
-        pattern: 'v(.*)'
+        pattern: 'refs/tags/v(.*)'
         string: ${{ github.ref }}
         replace-with: '$1'
     - name: Build and deploy with Maven
