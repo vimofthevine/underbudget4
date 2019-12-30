@@ -22,6 +22,10 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+    - name: Set up Node 13.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: '13.x'
     - name: Build with Maven
       run: mvn -B verify --file pom.xml
     - name: Upload backend coverage
@@ -30,4 +34,11 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
         file: ./backend/target/site/jacoco/jacoco.xml
         flags: backend
+        fail_ci_if_error: true
+    - name: Upload webapp coverage
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ./webapp/coverage/clover.xml
+        flags: webapp
         fail_ci_if_error: true

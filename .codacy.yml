@@ -1,3 +1,5 @@
 ---
 exclude_paths:
   - '.mvn/**'
+  - 'webapp/src/serviceWorker.js'
+  - 'webapp/src/setupTests.js'
