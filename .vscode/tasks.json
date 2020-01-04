@@ -4,28 +4,49 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "verify",
+      "label": "verify backend",
       "type": "shell",
       "command": "mvn -B verify",
-      "group": "build"
+      "group": "build",
+      "options": {
+        "cwd": "${workspaceRoot}/backend"
+      }
     },
     {
-      "label": "package",
+      "label": "package backend",
       "type": "shell",
       "command": "mvn -B package",
-      "group": "build"
+      "group": "build",
+      "options": {
+        "cwd": "${workspaceRoot}/backend"
+      }
     },
     {
-      "label": "test",
+      "label": "test backend",
       "type": "shell",
       "command": "mvn -B test",
-      "group": "test"
+      "group": "test",
+      "options": {
+        "cwd": "${workspaceRoot}/backend"
+      }
     },
     {
-      "label": "run",
+      "label": "integ test backend",
+      "type": "shell",
+      "command": "mvn -B -Ddockerfile.skip=true integration-test",
+      "group": "test",
+      "options": {
+        "cwd": "${workspaceRoot}/backend"
+      }
+    },
+    {
+      "label": "run backend",
       "type": "shell",
       "command": "mvn -B spring-boot:run",
-      "group": "test"
+      "group": "test",
+      "options": {
+        "cwd": "${workspaceRoot}/backend"
+      }
     }
   ]
 }

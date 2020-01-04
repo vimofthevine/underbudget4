@@ -9,22 +9,23 @@ import java.util.UUID
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.http.HttpStatus
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.server.ResponseStatusException
 
-@SpringBootTest
+@ExtendWith(MockitoExtension::class)
 class UserServiceTest {
-  @MockBean
+  @Mock
   lateinit var encoder: PasswordEncoder
 
-  @MockBean
+  @Mock
   lateinit var repo: UserRepository
 
-  @Autowired
+  @InjectMocks
   lateinit var service: UserService
 
   val user = User(id = UUID.fromString("aaaabbbb-aaaa-bbbb-cccc-aaaabbbbcccc"), name = "dbuser",
@@ -63,6 +64,7 @@ class UserServiceTest {
   fun registerShouldThrowWhenSaveError() {
     whenever(repo.findByName("dupuser")).thenReturn(null)
     whenever(repo.findByEmail("user@test.com")).thenReturn(null)
+    whenever(encoder.encode("mypassword")).thenReturn("hashed")
     whenever(repo.save(any<User>())).thenThrow(RuntimeException())
     try {
       service.registerUser(UserRegistrationRequest(
