@@ -1,2 +1,6 @@
+app.jwt.secret: IOUBcepBESQqQ_rPFK84rQqMmLQhtggR9dENmn761o7iys8kYXQZa_FC-CsC2h-LMGUThkuC6rXdJRBZgsXVFg0
+logging.level.org.hibernate:
+  SQL: DEBUG
+  type.descriptor.sql.BasicBinder: TRACE
 spring.datasource.url: jdbc:h2:mem:testdb
 spring.jpa.hibernate.ddl-auto: create-drop

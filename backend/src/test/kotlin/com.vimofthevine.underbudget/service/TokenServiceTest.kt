@@ -2,10 +2,9 @@ package com.vimofthevine.underbudget.service
 
 import com.nhaarman.mockitokotlin2.*
 import com.vimofthevine.underbudget.dto.LoginRequest
-import com.vimofthevine.underbudget.model.User
 import com.vimofthevine.underbudget.repository.TokenRepository
-import com.vimofthevine.underbudget.repository.UserRepository
 import com.vimofthevine.underbudget.security.JwtTokenProvider
+import com.vimofthevine.underbudget.security.UserPrincipal
 
 import java.util.UUID
 
@@ -33,9 +32,6 @@ class TokenServiceTest {
   @Mock
   lateinit var tokenRepo: TokenRepository
 
-  @Mock
-  lateinit var userRepo: UserRepository
-
   @InjectMocks
   lateinit var service: TokenService
 
@@ -49,9 +45,8 @@ class TokenServiceTest {
   }
 
   @Test
-  fun `authentication attempt should throw when user ID lookup fails`() {
+  fun `authentication attempt should throw when user principal is invalid`() {
     whenever(authManager.authenticate(any())).thenReturn(UsernamePasswordAuthenticationToken("testuser", null))
-    whenever(userRepo.findByName("testuser")).thenReturn(null)
     try {
       service.authenticate(LoginRequest(name = "testuser", password = "testpass"))
       fail<Unit>("Should have thrown exception")
@@ -63,13 +58,8 @@ class TokenServiceTest {
   @Test
   fun `authentication attempt should create JWT token`() {
     val userId = UUID.fromString("aaaabbbb-aaaa-bbbb-cccc-aaaabbbbcccc")
-    whenever(authManager.authenticate(any())).thenReturn(UsernamePasswordAuthenticationToken("testuser", null))
-    whenever(userRepo.findByName("testuser")).thenReturn(User(
-      id = userId,
-      name = "testuser",
-      email = "user@test.com",
-      hashedPassword = "hash"
-    ))
+    whenever(authManager.authenticate(any())).thenReturn(UsernamePasswordAuthenticationToken(
+      UserPrincipal(userId, "testuser", ""), null))
     whenever(tokenProvider.generateToken(userId)).thenReturn("jwtToken")
     val response = service.authenticate(LoginRequest(name = "testuser", password = "testpass"))
     assertEquals("jwtToken", response.token)

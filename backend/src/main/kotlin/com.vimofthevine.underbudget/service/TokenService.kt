@@ -6,6 +6,7 @@ import com.vimofthevine.underbudget.model.Token
 import com.vimofthevine.underbudget.repository.TokenRepository
 import com.vimofthevine.underbudget.repository.UserRepository
 import com.vimofthevine.underbudget.security.JwtTokenProvider
+import com.vimofthevine.underbudget.security.UserPrincipal
 
 import org.slf4j.LoggerFactory
 
@@ -20,8 +21,7 @@ import org.springframework.web.server.ResponseStatusException
 class TokenService(
   private val authManager: AuthenticationManager,
   private val tokenProvider: JwtTokenProvider,
-  private val tokens: TokenRepository,
-  private val users: UserRepository
+  private val tokens: TokenRepository
 ) {
   private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -29,11 +29,10 @@ class TokenService(
     try {
       val auth = authManager.authenticate(
         UsernamePasswordAuthenticationToken(req.name, req.password))
-
-      val userId = users.findByName(req.name)?.id
-      if (userId != null) {
-        SecurityContextHolder.getContext().setAuthentication(auth)
-        return TokenResponse(token = tokenProvider.generateToken(userId))
+      SecurityContextHolder.getContext().setAuthentication(auth)
+      val principal = auth.principal
+      if (principal is UserPrincipal) {
+        return TokenResponse(token = tokenProvider.generateToken(principal.id))
       } else {
         throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User not found")
       }
