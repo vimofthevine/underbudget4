@@ -17,7 +17,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 class WebSecurityConfig(
-  private val authFilter: JwtAuthenticationFilter,
   private val entryPoint: JwtAuthEntryPoint,
   private val tokenProvider: JwtTokenProvider,
   private val userDetailsService: JwtUserDetailsService
@@ -47,7 +46,8 @@ class WebSecurityConfig(
         .antMatchers(HttpMethod.POST, "/api/users").permitAll()
         .anyRequest().authenticated()
 
-    http.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter::class.java)
+    http.addFilterBefore(JwtAuthenticationFilter(tokenProvider, userDetailsService),
+      UsernamePasswordAuthenticationFilter::class.java)
   }
 
   @Bean
