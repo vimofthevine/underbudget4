@@ -60,5 +60,86 @@
 			")",
 			""
 		]
+	},
+	"Controller boilerplate": {
+		"scope": "kotlin",
+		"prefix": "controller",
+		"body": [
+			"package com.vimofthevine.underbudget.controller",
+			"",
+			"import com.vimofthevine.underbudget.dto.*",
+			"import com.vimofthevine.underbudget.service.*",
+			"",
+			"import javax.validation.Valid",
+			"",
+			"import org.springframework.http.HttpStatus",
+			"import org.springframework.web.bind.annotation.*",
+			"",
+			"@RestController",
+			"@RequestMapping(\"/api/$1\")",
+			"class $2Controller(",
+			"  $0",
+			") {",
+			"}",
+			""
+		]
+	},
+	"Mockito-based unit test boilerplate": {
+		"scope": "kotlin",
+		"prefix": "mockitotest",
+		"body": [
+			"package com.vimofthevine.underbudget.$1",
+			"",
+			"import com.nhaarman.mockitokotlin2.*",
+			"import com.vimofthevine.underbudget.$1.*",
+			"",
+			"import org.junit.jupiter.api.Assertions.*",
+			"import org.junit.jupiter.api.Test",
+			"import org.junit.jupiter.api.extension.ExtendWith",
+			"import org.mockito.InjectMocks",
+			"import org.mockito.Mock",
+			"import org.mockito.junit.jupiter.MockitoExtension",
+			"",
+			"@ExtendWith(MockitoExtension::class)",
+			"class $2Test {",
+			"  $0",
+			"}"
+		]
+	},
+	"Controller unit test boilerplate": {
+		"scope": "kotlin",
+		"prefix": "controllertest",
+		"body": [
+			"package com.vimofthevine.underbudget.controller",
+			"",
+			"import com.fasterxml.jackson.databind.ObjectMapper",
+			"import com.nhaarman.mockitokotlin2.*",
+			"import com.vimofthevine.underbudget.service.$1Service",
+			"",
+			"import java.util.UUID",
+			"",
+			"import org.hamcrest.Matchers.*",
+			"import org.junit.jupiter.api.Assertions.*",
+			"import org.junit.jupiter.api.Test",
+			"import org.springframework.http.HttpStatus",
+			"import org.springframework.beans.factory.annotation.Autowired",
+			"import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest",
+			"import org.springframework.boot.test.mock.mockito.MockBean",
+			"import org.springframework.http.MediaType",
+			"import org.springframework.test.web.servlet.MockMvc",
+			"import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*",
+			"import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*",
+			"import org.springframework.test.web.servlet.setup.MockMvcBuilders.*",
+			"import org.springframework.web.server.ResponseStatusException",
+			"",
+			"@WebMvcTest($1Controller::class)",
+			"class $1ControllerTest : AbstractControllerTest() {",
+			"  @MockBean",
+			"  lateinit var service: $1Service",
+			"",
+			"  @Autowired",
+			"  lateinit var mvc: MockMvc",
+			"}"
+		]
 	}
 }

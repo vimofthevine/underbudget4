@@ -43,7 +43,7 @@ class WebSecurityConfig(
           "/**/*.css",
           "/**/*.js"
         ).permitAll()
-        .antMatchers(HttpMethod.POST, "/api/users").permitAll()
+        .antMatchers(HttpMethod.POST, "/api/tokens", "/api/users").permitAll()
         .anyRequest().authenticated()
 
     http.addFilterBefore(JwtAuthenticationFilter(tokenProvider, userDetailsService),
@@ -52,4 +52,7 @@ class WebSecurityConfig(
 
   @Bean
   fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
+
+  @Bean
+  override fun authenticationManager() = super.authenticationManager()
 }

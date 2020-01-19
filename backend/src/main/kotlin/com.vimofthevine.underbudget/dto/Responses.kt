@@ -5,3 +5,5 @@ import java.util.UUID
 data class ErrorResponse(val message: String, val details: List<String>? = null)
 
 data class UserIdResponse(val userId: UUID)
+
+data class TokenResponse(val token: String)
