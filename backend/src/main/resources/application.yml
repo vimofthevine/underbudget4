@@ -1,0 +1,11 @@
+app:
+  jwt:
+    secret: changeme
+    # One week
+    expirationMillis: 604800000
+server.port: 9090
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+  jpa.database-platform: org.hibernate.dialect.H2Dialect
+  jpa.hibernate.ddl-auto: update
