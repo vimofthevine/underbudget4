@@ -1,5 +1,7 @@
 package com.vimofthevine.underbudget.model
 
+import com.vimofthevine.underbudget.dto.UserProfileResponse
+
 import java.util.Date
 import java.util.UUID
 
@@ -30,4 +32,12 @@ data class User(
   @Column(name = "last_updated")
   @Temporal(TemporalType.DATE)
   val lastUpdated: Date = Date()
-)
+) {
+  fun toUserProfile() = UserProfileResponse(
+    id = id,
+    name = name,
+    email = email,
+    created = created,
+    lastUpdated = lastUpdated
+  )
+}

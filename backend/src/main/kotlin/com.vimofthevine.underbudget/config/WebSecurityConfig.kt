@@ -17,7 +17,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 class WebSecurityConfig(
-  private val entryPoint: JwtAuthEntryPoint,
   private val tokenProvider: JwtTokenProvider,
   private val userDetailsService: JwtUserDetailsService
 ) : WebSecurityConfigurerAdapter() {
@@ -28,7 +27,7 @@ class WebSecurityConfig(
   override fun configure(http: HttpSecurity) {
     http.csrf().disable()
       .exceptionHandling()
-        .authenticationEntryPoint(entryPoint)
+        .authenticationEntryPoint(JwtAuthEntryPoint())
         .and()
       .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()

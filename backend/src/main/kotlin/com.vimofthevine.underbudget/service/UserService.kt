@@ -5,8 +5,9 @@ import com.vimofthevine.underbudget.dto.UserRegistrationRequest
 import com.vimofthevine.underbudget.model.User
 import com.vimofthevine.underbudget.repository.UserRepository
 
-import org.slf4j.LoggerFactory
+import java.util.UUID
 
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -19,6 +20,10 @@ class UserService(
 ) {
   private val logger = LoggerFactory.getLogger(javaClass)
 
+  fun getUserProfile(id: UUID) =
+    users.findById(id).orElse(null)?.let({ it.toUserProfile() })
+    ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
+  
   fun registerUser(req: UserRegistrationRequest): UserIdResponse {
     if (users.findByName(req.name) != null) {
       throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Username is already in use")

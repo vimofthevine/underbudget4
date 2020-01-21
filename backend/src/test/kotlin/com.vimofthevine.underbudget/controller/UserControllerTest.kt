@@ -3,9 +3,12 @@ package com.vimofthevine.underbudget.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.*
 import com.vimofthevine.underbudget.dto.UserIdResponse
+import com.vimofthevine.underbudget.dto.UserProfileResponse
 import com.vimofthevine.underbudget.dto.UserRegistrationRequest
+import com.vimofthevine.underbudget.security.UserPrincipal
 import com.vimofthevine.underbudget.service.UserService
 
+import java.util.Date
 import java.util.UUID
 
 import org.hamcrest.Matchers.*
@@ -16,10 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
-import org.springframework.test.web.servlet.setup.MockMvcBuilders.*
 import org.springframework.web.server.ResponseStatusException
 
 @WebMvcTest(UserController::class)
@@ -135,5 +138,33 @@ class UserControllerTest : AbstractControllerTest() {
       ))))
       .andExpect(status().isCreated)
       .andExpect(jsonPath("$.userId", equalTo("aaaabbbb-aaaa-bbbb-cccc-aaaabbbbcccc")))
+  }
+
+  @Test
+  fun `get current user should reject when unauthenticated`() {
+    mvc.perform(get("/api/users/me")).andExpect(status().isUnauthorized)
+  }
+
+  @Test
+  fun `get current user should return user profile`() {
+    whenever(users.getUserProfile(UUID.fromString("aaaabbbb-aaaa-bbbb-cccc-aaaabbbbcccc")))
+      .thenReturn(UserProfileResponse(
+        id = UUID.fromString("aaaabbbb-aaaa-bbbb-cccc-aaaabbbbcccc"),
+        name = "myusername",
+        email = "my@email.com",
+        created = Date(120, 0, 21),
+        lastUpdated = Date(120, 0, 22)
+      ))
+    mvc.perform(get("/api/users/me").with(user(UserPrincipal(
+      id = UUID.fromString("aaaabbbb-aaaa-bbbb-cccc-aaaabbbbcccc"),
+      name = "theusername",
+      hashedPassword = "hashed-password"
+    ))))
+      .andExpect(status().isOk)
+      .andExpect(jsonPath("$.id", equalTo("aaaabbbb-aaaa-bbbb-cccc-aaaabbbbcccc")))
+      .andExpect(jsonPath("$.name", equalTo("myusername")))
+      .andExpect(jsonPath("$.email", equalTo("my@email.com")))
+      // .andExpect(jsonPath("$.created", contains("2020-01-21")))
+      // .andExpect(jsonPath("$.lastUpdated", contains("2020-01-22")))
   }
 }

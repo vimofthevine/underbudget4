@@ -60,7 +60,7 @@ class TokenControllerTest : AbstractControllerTest() {
         "name" to "testuser",
         "password" to "testpass"
       ))))
-    verify(jwtAuthEntryPoint).commence(any(), any(), any())
+      .andExpect(status().isUnauthorized)
   }
 
   @Test

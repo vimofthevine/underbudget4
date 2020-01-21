@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse
 
 import java.io.IOException
 
-@Component
 class JwtAuthEntryPoint : AuthenticationEntryPoint {
   private val logger = LoggerFactory.getLogger(javaClass)
 

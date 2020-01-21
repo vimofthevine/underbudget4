@@ -5,6 +5,8 @@ import com.vimofthevine.underbudget.dto.UserRegistrationRequest
 import com.vimofthevine.underbudget.model.User
 import com.vimofthevine.underbudget.repository.UserRepository
 
+import java.util.Date
+import java.util.Optional
 import java.util.UUID
 
 import org.junit.jupiter.api.Assertions.*
@@ -29,7 +31,30 @@ class UserServiceTest {
   lateinit var service: UserService
 
   val user = User(id = UUID.fromString("aaaabbbb-aaaa-bbbb-cccc-aaaabbbbcccc"), name = "dbuser",
-    email = "user@db.com", hashedPassword = "pword")
+    email = "user@db.com", hashedPassword = "pword",
+    created = Date(2020, 1, 15), lastUpdated = Date(2020, 1, 16))
+
+  @Test
+  fun `get profile should throw when user not found`() {
+    whenever(repo.findById(UUID.fromString("aabbaabb-aabb-aabb-aabb-aabbaabbaabb")))
+      .thenReturn(Optional.empty())
+    try {
+      service.getUserProfile(UUID.fromString("aabbaabb-aabb-aabb-aabb-aabbaabbaabb"))
+    } catch (e: ResponseStatusException) {
+      assertEquals(HttpStatus.NOT_FOUND, e.status)
+    }
+  }
+
+  fun `get profile should return user profile`() {
+    whenever(repo.findById(UUID.fromString("aaaabbbb-aaaa-bbbb-cccc-aaaabbbbcccc")))
+      .thenReturn(Optional.of(user))
+    val profile = service.getUserProfile(UUID.fromString("aaaabbbb-aaaa-bbbb-cccc-aaaabbbbcccc"))
+    assertEquals(UUID.fromString("aaaabbbb-aaaa-bbbb-cccc-aaaabbbbcccc"), profile.id)
+    assertEquals("dbuser", profile.name)
+    assertEquals("user@db.com", profile.email)
+    assertEquals(Date(2020, 1, 15), profile.created)
+    assertEquals(Date(2020, 1, 16), profile.lastUpdated)
+  }
 
   @Test
   fun registerShouldThrowWhenDuplicateName() {
