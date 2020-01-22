@@ -3,7 +3,7 @@ package com.vimofthevine.underbudget.repository
 import com.vimofthevine.underbudget.model.Token
 import com.vimofthevine.underbudget.model.User
 
-import java.util.Date
+import java.time.Instant
 import java.util.UUID
 
 import org.junit.jupiter.api.Assertions.*
@@ -31,7 +31,7 @@ class TokenRepositoryTest {
     val id = tokens.save(Token(
       user = user,
       jwtId = "abcd1234",
-      issued = Date(),
+      issued = Instant.now(),
       subject = "test"
     )).id
     val token = tokens.findByJwtId("abcd1234")
@@ -50,7 +50,7 @@ class TokenRepositoryTest {
     tokens.save(Token(
       user = user,
       jwtId = "abcd1234",
-      issued = Date(),
+      issued = Instant.now(),
       subject = "test"
     ))
     val found = tokens.findByUserId(UUID.fromString("aaaabbbb-aaaa-bbbb-cccc-aaaabbbbcccc"))
@@ -63,7 +63,7 @@ class TokenRepositoryTest {
     val id = tokens.save(Token(
       user = user,
       jwtId = "abcd1234",
-      issued = Date(),
+      issued = Instant.now(),
       subject = "test"
     )).id
     val found = tokens.findByUserId(user.id)
@@ -78,13 +78,13 @@ class TokenRepositoryTest {
     tokens.save(Token(
       user = user,
       jwtId = "abcd1234",
-      issued = Date(),
+      issued = Instant.now(),
       subject = "test"
     ))
     tokens.save(Token(
       user = user,
       jwtId = "dcba4321",
-      issued = Date(),
+      issued = Instant.now(),
       subject = "test"
     ))
     val found = tokens.findByUserId(user.id)
@@ -100,10 +100,11 @@ class TokenRepositoryTest {
     val id = tokens.save(Token(
       user = user,
       jwtId = "abcd1234",
-      issued = Date(),
+      issued = Instant.now(),
       subject = "test"
     )).id
+    assertTrue(tokens.existsById(id))
     tokens.deleteByJwtId("abcd1234")
-    assertFalse(tokens.findById(id).isPresent)
+    assertFalse(tokens.existsById(id))
   }
 }

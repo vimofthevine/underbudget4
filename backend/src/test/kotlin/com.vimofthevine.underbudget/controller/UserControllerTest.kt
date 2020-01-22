@@ -8,7 +8,7 @@ import com.vimofthevine.underbudget.dto.UserRegistrationRequest
 import com.vimofthevine.underbudget.security.UserPrincipal
 import com.vimofthevine.underbudget.service.UserService
 
-import java.util.Date
+import java.time.Instant
 import java.util.UUID
 
 import org.hamcrest.Matchers.*
@@ -152,8 +152,8 @@ class UserControllerTest : AbstractControllerTest() {
         id = UUID.fromString("aaaabbbb-aaaa-bbbb-cccc-aaaabbbbcccc"),
         name = "myusername",
         email = "my@email.com",
-        created = Date(120, 0, 21),
-        lastUpdated = Date(120, 0, 22)
+        created = Instant.parse("2020-01-21T00:00:00.00Z"),
+        lastUpdated = Instant.parse("2020-01-22T00:00:00.00Z")
       ))
     mvc.perform(get("/api/users/me").with(user(UserPrincipal(
       id = UUID.fromString("aaaabbbb-aaaa-bbbb-cccc-aaaabbbbcccc"),
@@ -164,7 +164,7 @@ class UserControllerTest : AbstractControllerTest() {
       .andExpect(jsonPath("$.id", equalTo("aaaabbbb-aaaa-bbbb-cccc-aaaabbbbcccc")))
       .andExpect(jsonPath("$.name", equalTo("myusername")))
       .andExpect(jsonPath("$.email", equalTo("my@email.com")))
-      // .andExpect(jsonPath("$.created", contains("2020-01-21")))
-      // .andExpect(jsonPath("$.lastUpdated", contains("2020-01-22")))
+      .andExpect(jsonPath("$.created", containsString("2020-01-21")))
+      .andExpect(jsonPath("$.lastUpdated", containsString("2020-01-22")))
   }
 }

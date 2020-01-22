@@ -1,6 +1,6 @@
 package com.vimofthevine.underbudget.model
 
-import java.util.Date
+import java.time.Instant
 import java.util.UUID
 
 import javax.persistence.*
@@ -19,8 +19,8 @@ data class Token(
   @Column(name = "jwt_id", length = 256, unique = true)
   val jwtId: String,
 
-  @Temporal(TemporalType.DATE)
-  val issued: Date,
+  @Column
+  val issued: Instant,
 
   @Column(length = 512)
   val subject: String

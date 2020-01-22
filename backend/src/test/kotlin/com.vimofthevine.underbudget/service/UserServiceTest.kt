@@ -5,7 +5,7 @@ import com.vimofthevine.underbudget.dto.UserRegistrationRequest
 import com.vimofthevine.underbudget.model.User
 import com.vimofthevine.underbudget.repository.UserRepository
 
-import java.util.Date
+import java.time.Instant
 import java.util.Optional
 import java.util.UUID
 
@@ -32,7 +32,8 @@ class UserServiceTest {
 
   val user = User(id = UUID.fromString("aaaabbbb-aaaa-bbbb-cccc-aaaabbbbcccc"), name = "dbuser",
     email = "user@db.com", hashedPassword = "pword",
-    created = Date(2020, 1, 15), lastUpdated = Date(2020, 1, 16))
+    created = Instant.parse("2020-01-15T00:00:00.00Z"),
+    lastUpdated = Instant.parse("2020-01-16T00:00:00.00Z"))
 
   @Test
   fun `get profile should throw when user not found`() {
@@ -52,8 +53,8 @@ class UserServiceTest {
     assertEquals(UUID.fromString("aaaabbbb-aaaa-bbbb-cccc-aaaabbbbcccc"), profile.id)
     assertEquals("dbuser", profile.name)
     assertEquals("user@db.com", profile.email)
-    assertEquals(Date(2020, 1, 15), profile.created)
-    assertEquals(Date(2020, 1, 16), profile.lastUpdated)
+    assertEquals(Instant.parse("2020-01-15T00:00:00.00Z"), profile.created)
+    assertEquals(Instant.parse("2020-01-16T00:00:00.00Z"), profile.lastUpdated)
   }
 
   @Test

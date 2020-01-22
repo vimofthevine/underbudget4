@@ -2,7 +2,7 @@ package com.vimofthevine.underbudget.model
 
 import com.vimofthevine.underbudget.dto.UserProfileResponse
 
-import java.util.Date
+import java.time.Instant
 import java.util.UUID
 
 import javax.persistence.*
@@ -26,12 +26,11 @@ data class User(
   @Column
   val verified: Boolean = false,
 
-  @Temporal(TemporalType.DATE)
-  val created: Date = Date(),
+  @Column
+  val created: Instant = Instant.now(),
 
   @Column(name = "last_updated")
-  @Temporal(TemporalType.DATE)
-  val lastUpdated: Date = Date()
+  val lastUpdated: Instant = Instant.now()
 ) {
   fun toUserProfile() = UserProfileResponse(
     id = id,
