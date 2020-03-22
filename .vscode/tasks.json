@@ -45,7 +45,10 @@
       "command": "mvn -B spring-boot:run",
       "group": "test",
       "options": {
-        "cwd": "${workspaceRoot}/backend"
+        "cwd": "${workspaceRoot}/backend",
+        "env": {
+          "APP_USER_PASSWORD": "$2y$10$ADZd4zNxzYiqZ6MYE5xAweVZOgOxVdQMcqvNTFh2a4U9I0Gpbs0QC"
+        }
       }
     }
   ]
