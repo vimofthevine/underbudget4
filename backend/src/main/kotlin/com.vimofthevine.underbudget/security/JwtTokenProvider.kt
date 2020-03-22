@@ -34,7 +34,7 @@ class JwtTokenProvider(
 
   fun parseToken(token: String): Jws<Claims>? {
     try {
-      return Jwts.parser().setSigningKey(key).parseClaimsJws(token)
+      return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token)
     } catch (exc: Exception) {
       logger.error("Invalid token: {}", exc.message)
       return null
