@@ -47,6 +47,7 @@
       "options": {
         "cwd": "${workspaceRoot}/backend",
         "env": {
+          "APP_JWT_SECRET": "gp6gMRA3tEJx+ehFA29OLIm3KXLGIzH4AxyZGI1WMbcU4evJMH0tTVa2m3YTzzdsWPnXZrnTQ69IinLSN4i7DA==",
           "APP_USER_PASSWORD": "$2y$10$ADZd4zNxzYiqZ6MYE5xAweVZOgOxVdQMcqvNTFh2a4U9I0Gpbs0QC"
         }
       }

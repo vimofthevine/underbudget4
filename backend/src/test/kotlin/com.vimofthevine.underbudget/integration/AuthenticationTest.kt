@@ -17,7 +17,7 @@ class AuthenticationTest : AbstractIntegrationTest() {
         "source" to "authtest"
       ))
     } When {
-      post("/api/tokens")
+      post("/api/authenticate")
     } Then {
       statusCode(400)
     }
@@ -29,7 +29,7 @@ class AuthenticationTest : AbstractIntegrationTest() {
         "source" to "authtest"
       ))
     } When {
-      post("/api/tokens")
+      post("/api/authenticate")
     } Then {
       statusCode(400)
     }
@@ -41,7 +41,7 @@ class AuthenticationTest : AbstractIntegrationTest() {
         "src" to "authtest"
       ))
     } When {
-      post("/api/tokens")
+      post("/api/authenticate")
     } Then {
       statusCode(400)
     }
@@ -53,7 +53,7 @@ class AuthenticationTest : AbstractIntegrationTest() {
         "source" to ""
       ))
     } When {
-      post("/api/tokens")
+      post("/api/authenticate")
     } Then {
       statusCode(400)
     }
@@ -65,7 +65,7 @@ class AuthenticationTest : AbstractIntegrationTest() {
         "source" to "authtest"
       ))
     } When {
-      post("/api/tokens")
+      post("/api/authenticate")
     } Then {
       statusCode(401)
     }
@@ -77,7 +77,7 @@ class AuthenticationTest : AbstractIntegrationTest() {
         "source" to "authtest"
       ))
     } When {
-      post("/api/tokens")
+      post("/api/authenticate")
     } Then {
       statusCode(201)
     }

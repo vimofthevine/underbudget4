@@ -40,7 +40,7 @@ abstract class AbstractIntegrationTest {
           "source" to "integrationtest"
         ))
       } When {
-        post("/api/tokens")
+        post("/api/authenticate")
       } Then {
         statusCode(201)
       } Extract {

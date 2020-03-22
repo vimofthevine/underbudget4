@@ -49,7 +49,9 @@ class WebSecurityConfig(
           "/**/*.css",
           "/**/*.js"
         ).permitAll()
-        .antMatchers(HttpMethod.POST, "/api/tokens").permitAll()
+        .antMatchers("/**/*swagger*/**", "/**/*springfox*/**", "/v2/api-docs").permitAll()
+        .antMatchers(HttpMethod.POST, "/api/authenticate").permitAll()
+        .antMatchers(HttpMethod.GET, "/api", "/api/profile", "/api/profile/**").permitAll()
         .anyRequest().authenticated()
 
     http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)

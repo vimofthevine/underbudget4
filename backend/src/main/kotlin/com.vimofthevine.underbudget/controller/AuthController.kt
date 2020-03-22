@@ -9,11 +9,10 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/tokens")
-class TokenController(
+class AuthController(
   private val tokens: TokenService
 ) {
-  @PostMapping()
+  @PostMapping("/api/authenticate")
   @ResponseStatus(HttpStatus.CREATED)
   fun login(@Valid @RequestBody req: CreateTokenRequest) = tokens.authenticate(req)
 }

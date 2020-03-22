@@ -22,8 +22,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.springframework.test.web.servlet.setup.MockMvcBuilders.*
 import org.springframework.web.server.ResponseStatusException
 
-@WebMvcTest(TokenController::class)
-class TokenControllerTest: AbstractControllerTest() {
+@WebMvcTest(AuthController::class)
+class AuthControllerTest: AbstractControllerTest() {
   @MockBean
   lateinit var tokens: TokenService
 
@@ -32,7 +32,7 @@ class TokenControllerTest: AbstractControllerTest() {
 
   @Test
   fun `create token should reject when missing password`() {
-    mvc.perform(post("/api/tokens").contentType(MediaType.APPLICATION_JSON)
+    mvc.perform(post("/api/authenticate").contentType(MediaType.APPLICATION_JSON)
       .content(objectMapper.writeValueAsString(mapOf(
         "passcode" to "testpass",
         "source" to "requestsrc"
@@ -40,7 +40,7 @@ class TokenControllerTest: AbstractControllerTest() {
       .andExpect(status().isBadRequest)
       .andExpect(jsonPath("$.message", equalTo("Validation Failed")))
 
-    mvc.perform(post("/api/tokens").contentType(MediaType.APPLICATION_JSON)
+    mvc.perform(post("/api/authenticate").contentType(MediaType.APPLICATION_JSON)
       .content(objectMapper.writeValueAsString(mapOf(
         "password" to "",
         "source" to "requestsrc"
@@ -51,7 +51,7 @@ class TokenControllerTest: AbstractControllerTest() {
 
   @Test
   fun `create token should reject when missing source`() {
-    mvc.perform(post("/api/tokens").contentType(MediaType.APPLICATION_JSON)
+    mvc.perform(post("/api/authenticate").contentType(MediaType.APPLICATION_JSON)
       .content(objectMapper.writeValueAsString(mapOf(
         "password" to "testpass",
         "src" to "requestsrc"
@@ -59,7 +59,7 @@ class TokenControllerTest: AbstractControllerTest() {
       .andExpect(status().isBadRequest)
       .andExpect(jsonPath("$.message", equalTo("Validation Failed")))
 
-    mvc.perform(post("/api/tokens").contentType(MediaType.APPLICATION_JSON)
+    mvc.perform(post("/api/authenticate").contentType(MediaType.APPLICATION_JSON)
       .content(objectMapper.writeValueAsString(mapOf(
         "password" to "testpass",
         "source" to ""
@@ -71,7 +71,7 @@ class TokenControllerTest: AbstractControllerTest() {
   @Test
   fun `create token should reject when bad credentials`() {
     whenever(tokens.authenticate(any())).thenThrow(BadCredentialsException("Bad Creds"))
-    mvc.perform(post("/api/tokens").contentType(MediaType.APPLICATION_JSON)
+    mvc.perform(post("/api/authenticate").contentType(MediaType.APPLICATION_JSON)
       .content(objectMapper.writeValueAsString(mapOf(
         "password" to "testpass",
         "source" to "requestsrc"
@@ -82,7 +82,7 @@ class TokenControllerTest: AbstractControllerTest() {
   @Test
   fun `login should succeed with valid credentials`() {
     whenever(tokens.authenticate(any())).thenReturn(TokenResponse(token = "jwtToken"))
-    mvc.perform(post("/api/tokens").contentType(MediaType.APPLICATION_JSON)
+    mvc.perform(post("/api/authenticate").contentType(MediaType.APPLICATION_JSON)
       .content(objectMapper.writeValueAsString(mapOf(
         "password" to "testpass",
         "source" to "requestsrc"
