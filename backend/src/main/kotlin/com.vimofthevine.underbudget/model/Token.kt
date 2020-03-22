@@ -12,16 +12,12 @@ data class Token(
   @GeneratedValue
   val id: UUID = UUID.randomUUID(),
 
-  @ManyToOne
-  @JoinColumn(name = "user_id")
-  val user: User,
-
-  @Column(name = "jwt_id", length = 256, unique = true)
+  @Column(name = "jwt_id", unique = true)
   val jwtId: String,
 
   @Column
   val issued: Instant,
 
-  @Column(length = 512)
-  val subject: String
+  @Column
+  val source: String
 )

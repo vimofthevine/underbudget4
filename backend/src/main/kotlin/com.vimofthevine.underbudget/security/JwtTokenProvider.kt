@@ -24,29 +24,24 @@ class JwtTokenProvider(
 
   private val key = SecretKeySpec(secret.toByteArray(), SignatureAlgorithm.HS512.jcaName)
 
-  fun generateToken(userId: UUID) = Jwts.builder()
-    .setSubject(userId.toString())
+  fun generateToken(username: String) = Jwts.builder()
+    .setSubject(username)
     .setId(UUID.randomUUID().toString())
     .setIssuedAt(Date())
     .setExpiration(Date(Date().time + expirationMillis))
     .signWith(key, SignatureAlgorithm.HS512)
     .compact()
 
-  fun getUserIdFromToken(token: String) = UUID.fromString(
-    Jwts.parser()
-      .setSigningKey(key)
-      .parseClaimsJws(token)
-      .getBody()
-      .getSubject()
-  )
-
-  fun validateToken(token: String): Boolean {
+  fun parseToken(token: String): Jws<Claims>? {
     try {
-      Jwts.parser().setSigningKey(key).parseClaimsJws(token)
-      return true
+      return Jwts.parser().setSigningKey(key).parseClaimsJws(token)
     } catch (exc: Exception) {
-      logger.error("Invalid token: ${exc.message}")
-      return false
+      logger.error("Invalid token: {}", exc.message)
+      return null
     }
   }
+
+  fun getJwtId(jws: Jws<Claims>) = jws.getBody().getId()
+
+  fun getSubject(jws: Jws<Claims>) = jws.getBody().getSubject()
 }

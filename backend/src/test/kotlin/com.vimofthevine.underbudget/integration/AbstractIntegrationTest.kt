@@ -2,8 +2,11 @@ package com.vimofthevine.underbudget.integration
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import com.vimofthevine.underbudget.dto.UserIdResponse
-import com.vimofthevine.underbudget.dto.UserRegistrationRequest
+
+import io.restassured.RestAssured
+import io.restassured.RestAssured.*
+import io.restassured.builder.RequestSpecBuilder
+import io.restassured.module.kotlin.extensions.*
 
 import java.util.UUID
 
@@ -19,29 +22,29 @@ import org.springframework.test.context.ActiveProfiles
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 abstract class AbstractIntegrationTest {
-  val testUserName: String = "testuser"
-  val testUserPassword: String = "testpassword"
-  var testUserId: UUID = UUID.randomUUID()
-
-  val objectMapper = ObjectMapper().registerModule(KotlinModule())
+  var jwt: String = ""
 
   @LocalServerPort
   var localServerPort: Int = 0
 
-  @Autowired
-  lateinit var restTemplate: TestRestTemplate
-
-  fun url(endpoint: String) = "http://localhost:$localServerPort$endpoint"
-
   @BeforeEach
-  fun registerTestUser() {
-    println("KJT creating user")
-    val response = restTemplate.postForEntity(url("/api/users"),
-      UserRegistrationRequest(name = testUserName,
-        password = testUserPassword, email = "user@test.com"),
-      String::class.java)
-    if (HttpStatus.CREATED == response.statusCode) {
-      testUserId = objectMapper.readValue(response.body, UserIdResponse::class.java).userId
-    }
+  fun setup() {
+    RestAssured.port = localServerPort
+    RestAssured.requestSpecification =
+      RequestSpecBuilder().setContentType("application/json").build()
+
+    jwt = 
+      Given {
+        body(mapOf(
+          "password" to "testpassword",
+          "source" to "integrationtest"
+        ))
+      } When {
+        post("/api/tokens")
+      } Then {
+        statusCode(201)
+      } Extract {
+        path("token")
+      }
   }
 }

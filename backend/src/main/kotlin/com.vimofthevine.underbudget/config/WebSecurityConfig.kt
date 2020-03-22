@@ -2,6 +2,7 @@ package com.vimofthevine.underbudget.config
 
 import com.vimofthevine.underbudget.security.*
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -17,11 +18,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 class WebSecurityConfig(
-  private val tokenProvider: JwtTokenProvider,
-  private val userDetailsService: JwtUserDetailsService
+  private val jwtFilter: JwtAuthenticationFilter,
+
+  @Value("\${app.user.password}")
+  private val password: String
 ) : WebSecurityConfigurerAdapter() {
+
   override fun configure(builder: AuthenticationManagerBuilder) {
-    builder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder())
+    builder.inMemoryAuthentication()
+      .withUser("user").password(password).roles("USER")
+      .and()
+      .passwordEncoder(passwordEncoder())
   }
 
   override fun configure(http: HttpSecurity) {
@@ -42,11 +49,10 @@ class WebSecurityConfig(
           "/**/*.css",
           "/**/*.js"
         ).permitAll()
-        .antMatchers(HttpMethod.POST, "/api/tokens", "/api/users").permitAll()
+        .antMatchers(HttpMethod.POST, "/api/tokens").permitAll()
         .anyRequest().authenticated()
 
-    http.addFilterBefore(JwtAuthenticationFilter(tokenProvider, userDetailsService),
-      UsernamePasswordAuthenticationFilter::class.java)
+    http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
   }
 
   @Bean

@@ -1,12 +1,12 @@
 package com.vimofthevine.underbudget.service
 
-import com.vimofthevine.underbudget.dto.LoginRequest
+import com.vimofthevine.underbudget.dto.CreateTokenRequest
 import com.vimofthevine.underbudget.dto.TokenResponse
 import com.vimofthevine.underbudget.model.Token
 import com.vimofthevine.underbudget.repository.TokenRepository
-import com.vimofthevine.underbudget.repository.UserRepository
 import com.vimofthevine.underbudget.security.JwtTokenProvider
-import com.vimofthevine.underbudget.security.UserPrincipal
+
+import java.time.Instant
 
 import org.slf4j.LoggerFactory
 
@@ -21,21 +21,24 @@ import org.springframework.web.server.ResponseStatusException
 class TokenService(
   private val authManager: AuthenticationManager,
   private val tokenProvider: JwtTokenProvider,
-  private val tokens: TokenRepository
+  private val tokenRepo: TokenRepository
 ) {
   private val logger = LoggerFactory.getLogger(javaClass)
 
-  fun authenticate(req: LoginRequest): TokenResponse {
+  fun authenticate(req: CreateTokenRequest): TokenResponse {
     try {
       val auth = authManager.authenticate(
-        UsernamePasswordAuthenticationToken(req.name, req.password))
+        UsernamePasswordAuthenticationToken("user", req.password))
       SecurityContextHolder.getContext().setAuthentication(auth)
-      val principal = auth.principal
-      if (principal is UserPrincipal) {
-        return TokenResponse(token = tokenProvider.generateToken(principal.id))
-      } else {
-        throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User not found")
-      }
+      val token = tokenProvider.generateToken("user")
+      tokenProvider.parseToken(token)?.let({
+        tokenRepo.save(Token(
+          jwtId = tokenProvider.getJwtId(it),
+          issued = Instant.now(),
+          source = req.source
+        ))
+      })
+      return TokenResponse(token)
     } catch (exc: Exception) {
       logger.info("Failed auth attempt: ${exc.message}")
       throw exc

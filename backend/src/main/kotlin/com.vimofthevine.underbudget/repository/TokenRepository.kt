@@ -7,7 +7,7 @@ import java.util.UUID
 import org.springframework.data.repository.CrudRepository
 
 interface TokenRepository : CrudRepository<Token, UUID> {
-  fun findByJwtId(jwtId: String): Token?
-  fun findByUserId(userId: UUID): List<Token>
   fun deleteByJwtId(jwtId: String)
+  fun existsByJwtId(jwtId: String): Boolean
+  fun findByJwtId(jwtId: String): Token?
 }

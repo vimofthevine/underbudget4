@@ -1,10 +1,12 @@
 package com.vimofthevine.underbudget.service
 
 import com.nhaarman.mockitokotlin2.*
-import com.vimofthevine.underbudget.dto.LoginRequest
+import com.vimofthevine.underbudget.dto.CreateTokenRequest
+import com.vimofthevine.underbudget.model.Token
 import com.vimofthevine.underbudget.repository.TokenRepository
 import com.vimofthevine.underbudget.security.JwtTokenProvider
-import com.vimofthevine.underbudget.security.UserPrincipal
+
+import io.jsonwebtoken.*
 
 import java.util.UUID
 
@@ -35,33 +37,34 @@ class TokenServiceTest {
   @InjectMocks
   lateinit var service: TokenService
 
+  @Mock
+  lateinit var jws: Jws<Claims>
+
   @Test
   fun `authentication attempt should throw when failed credentials provided`() {
     whenever(authManager.authenticate(any())).thenThrow(BadCredentialsException("bad creds"))
-    try {
-      service.authenticate(LoginRequest(name = "testuser", password = "testpass"))
-      fail<Unit>("Should have thrown exception")
-    } catch (e: AuthenticationException) {}
-  }
-
-  @Test
-  fun `authentication attempt should throw when user principal is invalid`() {
-    whenever(authManager.authenticate(any())).thenReturn(UsernamePasswordAuthenticationToken("testuser", null))
-    try {
-      service.authenticate(LoginRequest(name = "testuser", password = "testpass"))
-      fail<Unit>("Should have thrown exception")
-    } catch (e: ResponseStatusException) {
-      assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, e.status)
+    assertThrows(AuthenticationException::class.java) {
+      service.authenticate(CreateTokenRequest(password = "testpass", source = "test"))
     }
   }
 
   @Test
-  fun `authentication attempt should create JWT token`() {
-    val userId = UUID.fromString("aaaabbbb-aaaa-bbbb-cccc-aaaabbbbcccc")
-    whenever(authManager.authenticate(any())).thenReturn(UsernamePasswordAuthenticationToken(
-      UserPrincipal(userId, "testuser", ""), null))
-    whenever(tokenProvider.generateToken(userId)).thenReturn("jwtToken")
-    val response = service.authenticate(LoginRequest(name = "testuser", password = "testpass"))
+  fun `authentication attempt should create JWT token when successful`() {
+    whenever(authManager.authenticate(any())).thenReturn(
+      UsernamePasswordAuthenticationToken(null, null))
+    whenever(tokenProvider.generateToken("user")).thenReturn("jwtToken")
+    val response = service.authenticate(CreateTokenRequest(password = "testpass", source = "test"))
     assertEquals("jwtToken", response.token)
+  }
+
+  @Test
+  fun `authentication attempt should save JWT token to repo when successful`() {
+    whenever(authManager.authenticate(any())).thenReturn(
+      UsernamePasswordAuthenticationToken(null, null))
+    whenever(tokenProvider.generateToken("user")).thenReturn("jwtToken")
+    whenever(tokenProvider.parseToken("jwtToken")).thenReturn(jws)
+    whenever(tokenProvider.getJwtId(jws)).thenReturn("jwtId")
+    service.authenticate(CreateTokenRequest(password = "testpass", source = "test"))
+    verify(tokenRepo).save(any<Token>())
   }
 }

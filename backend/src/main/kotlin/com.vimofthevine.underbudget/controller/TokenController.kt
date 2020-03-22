@@ -14,5 +14,6 @@ class TokenController(
   private val tokens: TokenService
 ) {
   @PostMapping()
-  fun login(@Valid @RequestBody req: LoginRequest) = tokens.authenticate(req)
+  @ResponseStatus(HttpStatus.CREATED)
+  fun login(@Valid @RequestBody req: CreateTokenRequest) = tokens.authenticate(req)
 }

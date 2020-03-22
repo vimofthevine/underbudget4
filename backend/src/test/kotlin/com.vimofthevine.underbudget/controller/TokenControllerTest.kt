@@ -1,8 +1,8 @@
 package com.vimofthevine.underbudget.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.*
 import com.vimofthevine.underbudget.dto.TokenResponse
+import com.vimofthevine.underbudget.security.JwtAuthenticationFilter
 import com.vimofthevine.underbudget.service.TokenService
 
 import java.util.UUID
@@ -23,55 +23,71 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders.*
 import org.springframework.web.server.ResponseStatusException
 
 @WebMvcTest(TokenController::class)
-class TokenControllerTest : AbstractControllerTest() {
+class TokenControllerTest: AbstractControllerTest() {
   @MockBean
-  lateinit var service: TokenService
+  lateinit var tokens: TokenService
 
   @Autowired
   lateinit var mvc: MockMvc
 
   @Test
-  fun `login should reject when missing name`() {
+  fun `create token should reject when missing password`() {
     mvc.perform(post("/api/tokens").contentType(MediaType.APPLICATION_JSON)
-      .content(ObjectMapper().writeValueAsString(mapOf(
-        "username" to "testuser",
-        "password" to "testpass"
+      .content(objectMapper.writeValueAsString(mapOf(
+        "passcode" to "testpass",
+        "source" to "requestsrc"
+      ))))
+      .andExpect(status().isBadRequest)
+      .andExpect(jsonPath("$.message", equalTo("Validation Failed")))
+
+    mvc.perform(post("/api/tokens").contentType(MediaType.APPLICATION_JSON)
+      .content(objectMapper.writeValueAsString(mapOf(
+        "password" to "",
+        "source" to "requestsrc"
       ))))
       .andExpect(status().isBadRequest)
       .andExpect(jsonPath("$.message", equalTo("Validation Failed")))
   }
 
   @Test
-  fun `login should reject when missing password`() {
+  fun `create token should reject when missing source`() {
     mvc.perform(post("/api/tokens").contentType(MediaType.APPLICATION_JSON)
-      .content(ObjectMapper().writeValueAsString(mapOf(
-        "name" to "testuser",
-        "passcode" to "testpass"
+      .content(objectMapper.writeValueAsString(mapOf(
+        "password" to "testpass",
+        "src" to "requestsrc"
+      ))))
+      .andExpect(status().isBadRequest)
+      .andExpect(jsonPath("$.message", equalTo("Validation Failed")))
+
+    mvc.perform(post("/api/tokens").contentType(MediaType.APPLICATION_JSON)
+      .content(objectMapper.writeValueAsString(mapOf(
+        "password" to "testpass",
+        "source" to ""
       ))))
       .andExpect(status().isBadRequest)
       .andExpect(jsonPath("$.message", equalTo("Validation Failed")))
   }
 
   @Test
-  fun `login should reject when bad credentials`() {
-    whenever(service.authenticate(any())).thenThrow(BadCredentialsException("Bad Creds"))
+  fun `create token should reject when bad credentials`() {
+    whenever(tokens.authenticate(any())).thenThrow(BadCredentialsException("Bad Creds"))
     mvc.perform(post("/api/tokens").contentType(MediaType.APPLICATION_JSON)
-      .content(ObjectMapper().writeValueAsString(mapOf(
-        "name" to "testuser",
-        "password" to "testpass"
+      .content(objectMapper.writeValueAsString(mapOf(
+        "password" to "testpass",
+        "source" to "requestsrc"
       ))))
       .andExpect(status().isUnauthorized)
   }
 
   @Test
   fun `login should succeed with valid credentials`() {
-    whenever(service.authenticate(any())).thenReturn(TokenResponse(token = "jwtToken"))
+    whenever(tokens.authenticate(any())).thenReturn(TokenResponse(token = "jwtToken"))
     mvc.perform(post("/api/tokens").contentType(MediaType.APPLICATION_JSON)
-      .content(ObjectMapper().writeValueAsString(mapOf(
-        "name" to "testuser",
-        "password" to "testpass"
+      .content(objectMapper.writeValueAsString(mapOf(
+        "password" to "testpass",
+        "source" to "requestsrc"
       ))))
-      .andExpect(status().isOk)
+      .andExpect(status().isCreated)
       .andExpect(jsonPath("$.token", equalTo("jwtToken")))
   }
 }

@@ -1,30 +1,40 @@
 package com.vimofthevine.underbudget.security
 
+import com.vimofthevine.underbudget.repository.TokenRepository
+
+import io.jsonwebtoken.*
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
+import org.springframework.stereotype.Component
 import org.springframework.util.StringUtils
 import org.springframework.web.filter.OncePerRequestFilter
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+@Component
 class JwtAuthenticationFilter(
-  private val tokens: JwtTokenProvider,
-  private val users: JwtUserDetailsService
+  private val tokenRepo: TokenRepository,
+  private val tokenUtil: JwtTokenProvider
 ) : OncePerRequestFilter() {
+
   override fun doFilterInternal(request: HttpServletRequest,
       response: HttpServletResponse, chain: FilterChain) {
     try {
       getTokenFromRequest(request)?.let({
-        if (StringUtils.hasText(it) and tokens.validateToken(it)) {
-          val id = tokens.getUserIdFromToken(it)
-          val user = users.loadUserById(id)
-          val auth = UsernamePasswordAuthenticationToken(user, null, user.authorities)
-          auth.setDetails(WebAuthenticationDetailsSource().buildDetails(request))
-
-          SecurityContextHolder.getContext().setAuthentication(auth)
+        if (StringUtils.hasText(it)) {
+          tokenUtil.parseToken(it)?.let({
+            if (tokenRepo.existsByJwtId(tokenUtil.getJwtId(it))) {
+              val auth = UsernamePasswordAuthenticationToken(
+                tokenUtil.getSubject(it), null, listOf<GrantedAuthority>())
+              auth.setDetails(WebAuthenticationDetailsSource().buildDetails(request))
+              SecurityContextHolder.getContext().setAuthentication(auth)
+            }
+          })
         }
       })
     } catch (exc: Exception) {
