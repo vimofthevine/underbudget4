@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus
 
 class AuthenticationTest : AbstractIntegrationTest() {
   @Test
-  fun `should create access token`() {
+  fun `creating authentication token`() {
     // Missing password
     Given {
       body(mapOf(
@@ -80,6 +80,31 @@ class AuthenticationTest : AbstractIntegrationTest() {
       post("/api/authenticate")
     } Then {
       statusCode(201)
+    }
+  }
+
+  @Test
+  fun `managing authentication tokens`() {
+    When {
+      get("/api/tokens")
+    } Then {
+      statusCode(401)
+    }
+
+    Given {
+      header("Authorization", "Bearer notatoken")
+    } When {
+      get("/api/tokens")
+    } Then {
+      statusCode(401)
+    }
+
+    Given {
+      header("Authorization", "Bearer ${jwt}")
+    } When {
+      get("/api/tokens")
+    } Then {
+      statusCode(200)
     }
   }
 }
