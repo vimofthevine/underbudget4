@@ -6,8 +6,6 @@ import com.vimofthevine.underbudget.model.Token
 import com.vimofthevine.underbudget.repository.TokenRepository
 import com.vimofthevine.underbudget.security.JwtTokenProvider
 
-import java.time.Instant
-
 import org.slf4j.LoggerFactory
 
 import org.springframework.http.HttpStatus
@@ -30,15 +28,12 @@ class TokenService(
       val auth = authManager.authenticate(
         UsernamePasswordAuthenticationToken("user", req.password))
       SecurityContextHolder.getContext().setAuthentication(auth)
-      val token = tokenProvider.generateToken("user")
-      tokenProvider.parseToken(token)?.let({
-        tokenRepo.save(Token(
-          jwtId = tokenProvider.getJwtId(it),
-          issued = Instant.now(),
-          source = req.source
-        ))
-      })
-      return TokenResponse(token)
+
+      val jwtId = tokenRepo.save(Token(
+        source = req.source
+      )).jwtId
+
+      return TokenResponse(tokenProvider.generateToken(jwtId, "user"))
     } catch (exc: Exception) {
       logger.info("Failed auth attempt: ${exc.message}")
       throw exc

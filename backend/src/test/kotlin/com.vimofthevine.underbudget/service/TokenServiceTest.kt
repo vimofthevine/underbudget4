@@ -37,9 +37,6 @@ class TokenServiceTest {
   @InjectMocks
   lateinit var service: TokenService
 
-  @Mock
-  lateinit var jws: Jws<Claims>
-
   @Test
   fun `authentication attempt should throw when failed credentials provided`() {
     whenever(authManager.authenticate(any())).thenThrow(BadCredentialsException("bad creds"))
@@ -50,21 +47,12 @@ class TokenServiceTest {
 
   @Test
   fun `authentication attempt should create JWT token when successful`() {
+    val jwtId = UUID.fromString("12341234-1234-1234-1234-123412341234")
     whenever(authManager.authenticate(any())).thenReturn(
       UsernamePasswordAuthenticationToken(null, null))
-    whenever(tokenProvider.generateToken("user")).thenReturn("jwtToken")
+    whenever(tokenRepo.save(any<Token>())).thenReturn(Token(jwtId = jwtId, source = "unittest"))
+    whenever(tokenProvider.generateToken(jwtId, "user")).thenReturn("jwtToken")
     val response = service.authenticate(CreateTokenRequest(password = "testpass", source = "test"))
     assertEquals("jwtToken", response.token)
-  }
-
-  @Test
-  fun `authentication attempt should save JWT token to repo when successful`() {
-    whenever(authManager.authenticate(any())).thenReturn(
-      UsernamePasswordAuthenticationToken(null, null))
-    whenever(tokenProvider.generateToken("user")).thenReturn("jwtToken")
-    whenever(tokenProvider.parseToken("jwtToken")).thenReturn(jws)
-    whenever(tokenProvider.getJwtId(jws)).thenReturn("jwtId")
-    service.authenticate(CreateTokenRequest(password = "testpass", source = "test"))
-    verify(tokenRepo).save(any<Token>())
   }
 }

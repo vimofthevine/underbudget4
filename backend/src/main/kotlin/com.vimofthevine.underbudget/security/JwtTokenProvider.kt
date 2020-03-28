@@ -24,9 +24,9 @@ class JwtTokenProvider(
 
   private val key = SecretKeySpec(secret.toByteArray(), SignatureAlgorithm.HS512.jcaName)
 
-  fun generateToken(username: String) = Jwts.builder()
+  fun generateToken(jwtId: UUID, username: String) = Jwts.builder()
     .setSubject(username)
-    .setId(UUID.randomUUID().toString())
+    .setId(jwtId.toString())
     .setIssuedAt(Date())
     .setExpiration(Date(Date().time + expirationMillis))
     .signWith(key, SignatureAlgorithm.HS512)

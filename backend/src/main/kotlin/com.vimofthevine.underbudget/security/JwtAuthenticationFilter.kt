@@ -4,6 +4,8 @@ import com.vimofthevine.underbudget.repository.TokenRepository
 
 import io.jsonwebtoken.*
 
+import java.util.UUID
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
@@ -28,7 +30,7 @@ class JwtAuthenticationFilter(
       getTokenFromRequest(request)?.let({
         if (StringUtils.hasText(it)) {
           tokenUtil.parseToken(it)?.let({
-            if (tokenRepo.existsByJwtId(tokenUtil.getJwtId(it))) {
+            if (tokenRepo.existsById(UUID.fromString(tokenUtil.getJwtId(it)))) {
               val auth = UsernamePasswordAuthenticationToken(
                 tokenUtil.getSubject(it), null, listOf<GrantedAuthority>())
               auth.setDetails(WebAuthenticationDetailsSource().buildDetails(request))

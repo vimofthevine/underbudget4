@@ -6,18 +6,15 @@ import java.util.UUID
 import javax.persistence.*
 
 @Entity
-@Table(name = "user")
+@Table(name = "token")
 data class Token(
   @Id
-  @GeneratedValue
-  val id: UUID = UUID.randomUUID(),
+  @Column(name = "jwt_id")
+  val jwtId: UUID = UUID.randomUUID(),
 
-  @Column(name = "jwt_id", unique = true)
-  val jwtId: String,
+  @Column(nullable = false)
+  val issued: Instant = Instant.now(),
 
-  @Column
-  val issued: Instant,
-
-  @Column
+  @Column(nullable = false)
   val source: String
 )
