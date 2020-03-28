@@ -9,6 +9,7 @@ import java.util.UUID
 
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,6 +24,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders.*
 import org.springframework.web.server.ResponseStatusException
 
 @WebMvcTest(AuthController::class)
+@Disabled
 class AuthControllerTest: AbstractControllerTest() {
   @MockBean
   lateinit var tokens: TokenService
