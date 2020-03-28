@@ -28,16 +28,14 @@ class JwtAuthenticationFilter(
       response: HttpServletResponse, chain: FilterChain) {
     try {
       getTokenFromRequest(request)?.let({
-        if (StringUtils.hasText(it)) {
-          tokenUtil.parseToken(it)?.let({
-            if (tokenRepo.existsById(UUID.fromString(tokenUtil.getJwtId(it)))) {
-              val auth = UsernamePasswordAuthenticationToken(
-                tokenUtil.getSubject(it), null, listOf<GrantedAuthority>())
-              auth.setDetails(WebAuthenticationDetailsSource().buildDetails(request))
-              SecurityContextHolder.getContext().setAuthentication(auth)
-            }
-          })
-        }
+        tokenUtil.parseToken(it)?.let({
+          if (tokenRepo.existsById(UUID.fromString(tokenUtil.getJwtId(it)))) {
+            val auth = UsernamePasswordAuthenticationToken(
+              tokenUtil.getSubject(it), null, listOf<GrantedAuthority>())
+            auth.setDetails(WebAuthenticationDetailsSource().buildDetails(request))
+            SecurityContextHolder.getContext().setAuthentication(auth)
+          }
+        })
       })
     } catch (exc: Exception) {
       logger.error("Could not set user authentication context", exc)
