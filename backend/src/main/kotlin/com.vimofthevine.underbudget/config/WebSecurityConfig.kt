@@ -47,14 +47,12 @@ class WebSecurityConfig(
           "/**/*.jpg",
           "/**/*.html",
           "/**/*.css",
-          "/**/*.js"
-        ).permitAll()
-        .antMatchers(
+          "/**/*.js",
           "/**/*swagger*/**",
           "/**/*springfox*/**",
-          "/v2/api-docs"
+          "/v2/api-docs",
+          "/api/authenticate"
         ).permitAll()
-        .antMatchers(HttpMethod.POST, "/api/authenticate").permitAll()
         .antMatchers(HttpMethod.GET, "/api", "/api/profile", "/api/profile/**").permitAll()
         .anyRequest().authenticated()
 
