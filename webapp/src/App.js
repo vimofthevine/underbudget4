@@ -1,16 +1,27 @@
-import './App.css';
+import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import React from 'react';
-import logo from './logo.svg';
+import green from '@material-ui/core/colors/green';
+import indigo from '@material-ui/core/colors/indigo';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: green[100],
+    },
+    secondary: {
+      main: indigo[100],
+    },
+  },
+});
 
 function App() {
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
           <p>
             Edit <code>src/App.js</code> and save to reload.
           </p>
@@ -24,7 +35,7 @@ function App() {
           </a>
         </header>
       </div>
-    </>
+    </ThemeProvider>
   );
 }
 

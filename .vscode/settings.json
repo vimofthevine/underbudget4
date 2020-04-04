@@ -1,3 +1,4 @@
 {
+  "eslint.workingDirectories": ["./webapp"],
   "kotlin.compiler.jvm.target": "1.8"
 }
