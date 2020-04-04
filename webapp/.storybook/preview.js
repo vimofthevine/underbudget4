@@ -3,6 +3,8 @@ import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import React from 'react';
 import { addDecorator } from '@storybook/react';
+import green from '@material-ui/core/colors/green';
+import indigo from '@material-ui/core/colors/indigo';
 
 const theme = createMuiTheme({
   palette: {
