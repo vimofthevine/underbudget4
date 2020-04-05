@@ -1,9 +1,8 @@
-import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-
-import CssBaseline from '@material-ui/core/CssBaseline';
-import React from 'react';
 import green from '@material-ui/core/colors/green';
 import indigo from '@material-ui/core/colors/indigo';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import React from 'react';
 
 const theme = createMuiTheme({
   palette: {
@@ -20,16 +19,16 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <div className="App">
-        <header className="App-header">
+      <div className='App'>
+        <header className='App-header'>
           <p>
             Edit <code>src/App.js</code> and save to reload.
           </p>
           <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
+            className='App-link'
+            href='https://reactjs.org'
+            target='_blank'
+            rel='noopener noreferrer'
           >
             Learn React
           </a>
