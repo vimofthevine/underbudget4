@@ -2,20 +2,28 @@ import green from '@material-ui/core/colors/green';
 import indigo from '@material-ui/core/colors/indigo';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import React from 'react';
-
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: green[100],
-    },
-    secondary: {
-      main: indigo[100],
-    },
-  },
-});
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import React, { useMemo } from 'react';
 
 function App() {
+  const darkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
+  const theme = useMemo(
+    () =>
+      createMuiTheme({
+        palette: {
+          primary: {
+            main: green[100],
+          },
+          secondary: {
+            main: indigo[100],
+          },
+          type: darkMode ? 'dark' : 'light',
+        },
+      }),
+    [darkMode],
+  );
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
