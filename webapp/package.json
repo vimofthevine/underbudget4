@@ -64,7 +64,8 @@
       "src/**/*.js",
       "!src/**/*.stories.js",
       "!src/index.js",
-      "!src/serviceWorker.js"
+      "!src/serviceWorker.js",
+      "!src/tests/**"
     ]
   }
 }
