@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import authenticate from '../../../../api/auth/authenticate';
 import setApiToken from '../../../../utils/setApiToken';
@@ -9,7 +9,7 @@ export function useLogin() {
   const [errorMessage, setErrorMessage] = useState(null);
   const dismissError = useCallback(() => setErrorMessage(null), []);
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const { from } = location.state || { from: { pathname: '/' } };
 
@@ -22,7 +22,7 @@ export function useLogin() {
         .then((res) => {
           setApiToken(res.data.token);
           setErrorMessage(null);
-          history.replace(from);
+          navigate(from, { replace: true });
         })
         .catch(() => {
           setErrorMessage('Login failed');
