@@ -17,7 +17,7 @@
   },
   "rules": {
     "import/no-extraneous-dependencies": ["error", {
-      "devDependencies": ["**/*.stories.js", "**/*.test.js"]
+      "devDependencies": ["**/*.stories.js", "**/*.test.js", "**/setupTests.js", "**/tests/**"]
     }],
     "jsx-a11y/href-no-hash": ["off"],
     "react/jsx-filename-extension": ["warn", { "extensions": [".js", ".jsx"] }],

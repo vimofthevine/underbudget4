@@ -10,7 +10,7 @@ const schema = yup.object().shape({
   password: yup.string().required('Required'),
 });
 
-const LoginForm = ({ onLogin }) => (
+const LoginForm = ({ className, onLogin }) => (
   <Formik
     initialValues={{ password: '' }}
     onSubmit={onLogin}
@@ -18,7 +18,7 @@ const LoginForm = ({ onLogin }) => (
     validationSchema={schema}
   >
     {({ isSubmitting, isValid }) => (
-      <Form>
+      <Form className={className}>
         <Field
           autoComplete='current-password'
           component={TextField}
@@ -35,7 +35,12 @@ const LoginForm = ({ onLogin }) => (
 );
 
 LoginForm.propTypes = {
+  className: PropTypes.string,
   onLogin: PropTypes.func.isRequired,
+};
+
+LoginForm.defaultProps = {
+  className: null,
 };
 
 export default LoginForm;

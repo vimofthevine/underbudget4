@@ -12,7 +12,7 @@ const SubmitButton = ({ text, ...props }) => {
     <Button
       color='primary'
       fullWidth
-      style={{ marginTop: theme.spacing(3) }}
+      style={{ margin: theme.spacing(3, 0, 2) }}
       type='submit'
       variant='contained'
       {...props}
