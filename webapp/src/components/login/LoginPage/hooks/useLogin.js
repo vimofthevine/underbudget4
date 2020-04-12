@@ -28,7 +28,7 @@ export function useLogin() {
           setErrorMessage('Login failed');
         });
     },
-    [from],
+    [from, navigate],
   );
 
   return {
