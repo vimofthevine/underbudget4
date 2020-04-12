@@ -35,5 +35,13 @@
         "ignoreRegExpLiterals": true
       }
     ]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["**/*.stories.js"],
+      "rules": {
+        "react/jsx-props-no-spreading": "off"
+      }
+    }
+  ]
 }
