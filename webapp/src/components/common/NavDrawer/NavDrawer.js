@@ -10,6 +10,7 @@ import NavMenu from '../NavMenu';
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
+  appBarSpacer: theme.mixins.toolbar,
   drawerPaper: {
     position: 'relative',
     transition: theme.transitions.create('width', {
@@ -44,6 +45,7 @@ const NavDrawer = ({ onClose, open }) => {
       open={open}
       variant={mobile ? 'temporary' : 'permanent'}
     >
+      <div className={classes.appBarSpacer} />
       <NavMenu showAccountMenu={mobile} />
     </Drawer>
   );
