@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
   drawerPaper: {
     position: 'relative',
     transition: theme.transitions.create('width', {
-      during: theme.transitions.duration.enteringScreen,
+      duration: theme.transitions.duration.enteringScreen,
       easing: theme.transitions.easing.sharp,
     }),
     whiteSpace: 'nowrap',
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   drawerPaperClosed: {
     overflowX: 'hidden',
     transition: theme.transitions.create('width', {
-      during: theme.transitions.duration.leavingScreen,
+      duration: theme.transitions.duration.leavingScreen,
       easing: theme.transitions.easing.sharp,
     }),
     width: 0,
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 const NavDrawer = ({ onClose, open }) => {
   const classes = useStyles();
   const theme = useTheme();
-  const mobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const mobile = useMediaQuery(theme.breakpoints.down('xs'));
 
   return (
     <Drawer
