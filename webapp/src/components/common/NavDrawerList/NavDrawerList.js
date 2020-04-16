@@ -15,9 +15,9 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import * as routes from '../../../utils/routes';
-import AccountMenu from '../AccountMenu';
+import AccountDrawerList from '../AccountDrawerList';
 
-const NavMenu = ({ showAccountMenu }) => {
+const NavDrawerList = ({ showAccountItems }) => {
   const navigate = useNavigate();
   return (
     <>
@@ -75,22 +75,22 @@ const NavMenu = ({ showAccountMenu }) => {
           <ListItemText primary='Reports' />
         </ListItem>
       </List>
-      {showAccountMenu && (
+      {showAccountItems && (
         <>
           <Divider />
-          <AccountMenu />
+          <AccountDrawerList />
         </>
       )}
     </>
   );
 };
 
-NavMenu.propTypes = {
-  showAccountMenu: PropTypes.bool,
+NavDrawerList.propTypes = {
+  showAccountItems: PropTypes.bool,
 };
 
-NavMenu.defaultProps = {
-  showAccountMenu: false,
+NavDrawerList.defaultProps = {
+  showAccountItems: false,
 };
 
-export default NavMenu;
+export default NavDrawerList;

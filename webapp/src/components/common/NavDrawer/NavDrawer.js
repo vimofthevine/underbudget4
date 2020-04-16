@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import NavMenu from '../NavMenu';
+import NavDrawerList from '../NavDrawerList';
 
 const drawerWidth = 240;
 
@@ -46,7 +46,7 @@ const NavDrawer = ({ onClose, open }) => {
       variant={mobile ? 'temporary' : 'permanent'}
     >
       <div className={classes.appBarSpacer} />
-      <NavMenu showAccountMenu={mobile} />
+      <NavDrawerList showAccountItems={mobile} />
     </Drawer>
   );
 };

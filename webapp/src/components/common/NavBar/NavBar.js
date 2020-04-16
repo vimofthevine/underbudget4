@@ -50,7 +50,12 @@ const NavBar = ({ onToggleDrawer, title }) => {
           {title}
         </Typography>
 
-        <IconButton className={classes.accountButton} color='inherit' edge='end'>
+        <IconButton
+          aria-label='open user menu'
+          className={classes.accountButton}
+          color='inherit'
+          edge='end'
+        >
           <AccountCircleIcon />
         </IconButton>
       </Toolbar>
