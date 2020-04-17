@@ -54,7 +54,7 @@ describe('AppPage', () => {
     it('when desktop', () => {
       window.matchMedia = createMediaQuery('800px');
 
-      const { container, getByLabelText, getByText, queryByText } = render(
+      const { container, getByLabelText, getByText } = render(
         <AppPage>
           <div />
         </AppPage>,
