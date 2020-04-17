@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
+import AccountMenu from '../AccountMenu';
 import NavBar from '../NavBar';
 import NavDrawer from '../NavDrawer';
 
@@ -21,16 +22,24 @@ const useStyles = makeStyles((theme) => ({
 
 const AppPage = ({ children, title }) => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-
   const handleToggleDrawer = () => setDrawerOpen((old) => !old);
   const handleCloseDrawer = () => setDrawerOpen(false);
+
+  const [accountMenuAnchor, setAccountMenuAnchor] = useState(null);
+  const handleOpenAccountMenu = (event) => setAccountMenuAnchor(event.currentTarget);
+  const handleCloseAccountMenu = () => setAccountMenuAnchor(null);
 
   const classes = useStyles();
 
   return (
     <div style={{ display: 'flex' }}>
-      <NavBar onToggleDrawer={handleToggleDrawer} title={title} />
+      <NavBar
+        onOpenAccountMenu={handleOpenAccountMenu}
+        onToggleDrawer={handleToggleDrawer}
+        title={title}
+      />
       <NavDrawer onClose={handleCloseDrawer} open={isDrawerOpen} />
+      <AccountMenu anchor={accountMenuAnchor} onClose={handleCloseAccountMenu} />
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container className={classes.container} maxWidth='lg'>

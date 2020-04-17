@@ -43,24 +43,18 @@ describe('AppPage', () => {
       );
 
       expect(queryByText('Dashboard')).toBeNull();
-      expect(queryByText('Access Tokens')).toBeNull();
-      expect(queryByText('Logout')).toBeNull();
 
       fireEvent.click(getByLabelText('open drawer'));
       await waitFor(() => expect(getByText('Dashboard')).toBeInTheDocument());
-      expect(queryByText('Access Tokens')).toBeInTheDocument();
-      expect(queryByText('Logout')).toBeInTheDocument();
 
       fireEvent.click(getByLabelText('open drawer'));
       await waitForElementToBeRemoved(() => queryByText('Dashboard'));
-      expect(queryByText('Access Tokens')).toBeNull();
-      expect(queryByText('Logout')).toBeNull();
     });
 
     it('when desktop', () => {
       window.matchMedia = createMediaQuery('800px');
 
-      const { container, getByLabelText, getByText } = render(
+      const { container, getByLabelText, getByText, queryByText } = render(
         <AppPage>
           <div />
         </AppPage>,
@@ -78,6 +72,8 @@ describe('AppPage', () => {
   });
 
   it('should navigate to pages from drawer links', () => {
+    window.matchMedia = createMediaQuery('800px');
+
     const { getByText, history } = render(
       <AppPage>
         <div />
@@ -104,5 +100,55 @@ describe('AppPage', () => {
 
     fireEvent.click(getByText('Reports'));
     expect(history.location.pathname).toBe('/reports');
+  });
+
+  it('should navigate to pages from account drawer links on mobile', async () => {
+    window.matchMedia = createMediaQuery('400px');
+
+    const { getByLabelText, getByText, history, queryByText } = render(
+      <AppPage>
+        <div />
+      </AppPage>,
+    );
+
+    expect(queryByText('Access Tokens')).toBeNull();
+    expect(queryByText('Logout')).toBeNull();
+
+    fireEvent.click(getByLabelText('open drawer'));
+    await waitFor(() => expect(getByText('Access Tokens')).toBeInTheDocument());
+    await waitFor(() => expect(getByText('Logout')).toBeInTheDocument());
+
+    fireEvent.click(getByText('Access Tokens'));
+    expect(history.location.pathname).toBe('/tokens');
+
+    fireEvent.click(getByText('Logout'));
+    expect(history.location.pathname).toBe('/logout');
+  });
+
+  it('should navigate to pages from account menu links', async () => {
+    window.matchMedia = createMediaQuery('800px');
+
+    const { getByLabelText, getByText, history, queryByText } = render(
+      <AppPage>
+        <div />
+      </AppPage>,
+    );
+
+    expect(queryByText('Access Tokens')).toBeNull();
+    expect(queryByText('Logout')).toBeNull();
+
+    fireEvent.click(getByLabelText('open account menu'));
+    await waitFor(() => expect(getByText('Access Tokens')).toBeInTheDocument());
+    await waitFor(() => expect(getByText('Logout')).toBeInTheDocument());
+
+    fireEvent.click(getByText('Access Tokens'));
+    expect(history.location.pathname).toBe('/tokens');
+
+    fireEvent.click(getByText('Logout'));
+    expect(history.location.pathname).toBe('/logout');
+
+    fireEvent.keyDown(getByText('Logout'), { key: 'Tab', code: 'Tab' });
+    await waitForElementToBeRemoved(() => queryByText('Access Tokens'));
+    expect(queryByText('Logout')).toBeNull();
   });
 });

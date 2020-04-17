@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NavBar = ({ onToggleDrawer, title }) => {
+const NavBar = ({ onOpenAccountMenu, onToggleDrawer, title }) => {
   const classes = useStyles();
   return (
     <AppBar className={classes.appBar} position='absolute'>
@@ -51,10 +51,11 @@ const NavBar = ({ onToggleDrawer, title }) => {
         </Typography>
 
         <IconButton
-          aria-label='open user menu'
+          aria-label='open account menu'
           className={classes.accountButton}
           color='inherit'
           edge='end'
+          onClick={onOpenAccountMenu}
         >
           <AccountCircleIcon />
         </IconButton>
@@ -64,6 +65,7 @@ const NavBar = ({ onToggleDrawer, title }) => {
 };
 
 NavBar.propTypes = {
+  onOpenAccountMenu: PropTypes.func.isRequired,
   onToggleDrawer: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
 };
