@@ -7,6 +7,7 @@ import React, { useMemo } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import LoginPage from './components/login/LoginPage';
+import * as routes from './utils/routes';
 
 function App() {
   const darkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -32,7 +33,7 @@ function App() {
       <CssBaseline />
       <BrowserRouter>
         <Routes>
-          <Route path='/login' element={<LoginPage />} />
+          <Route path={routes.LOGIN} element={<LoginPage />} />
           <Route path='*' element={<div>hi</div>} />
         </Routes>
       </BrowserRouter>
