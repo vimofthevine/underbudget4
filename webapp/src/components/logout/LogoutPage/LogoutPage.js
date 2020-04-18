@@ -1,34 +1,34 @@
 import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
-import Snackbar from '@material-ui/core/Snackbar';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import React from 'react';
 
-import LoginForm from '../LoginForm';
-import { useLogin } from './useLogin';
+import { useLogout } from './useLogout';
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
     backgroundColor: theme.palette.secondary.main,
     margin: theme.spacing(2, 1, 1),
   },
-  form: {
-    marginTop: theme.spacing(1),
+  loginButton: {
+    margin: theme.spacing(3, 0, 2),
   },
   paper: {
     alignItems: 'center',
     display: 'flex',
     flexDirection: 'column',
+    padding: theme.spacing(0, 5),
     marginTop: theme.spacing(8),
   },
 }));
 
-const LoginPage = () => {
+const LogoutPage = () => {
   const classes = useStyles();
-  const { dismissError, errorMessage, handleLogin } = useLogin();
+  const { handleLogin } = useLogout();
 
   return (
     <Container component='main' maxWidth='xs'>
@@ -38,20 +38,21 @@ const LoginPage = () => {
         </Avatar>
 
         <Typography component='h1' variant='h5'>
-          Sign in
+          You&apos;ve been logged out!
         </Typography>
 
-        <LoginForm className={classes.form} onLogin={handleLogin} />
+        <Button
+          className={classes.loginButton}
+          color='primary'
+          fullWidth
+          onClick={handleLogin}
+          variant='contained'
+        >
+          Log in again
+        </Button>
       </Paper>
-
-      <Snackbar
-        autoHideDuration={3000}
-        message={errorMessage}
-        onClose={dismissError}
-        open={Boolean(errorMessage)}
-      />
     </Container>
   );
 };
 
-export default LoginPage;
+export default LogoutPage;

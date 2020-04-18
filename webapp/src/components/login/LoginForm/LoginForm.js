@@ -28,7 +28,7 @@ const LoginForm = ({ className, onLogin }) => (
           name='password'
           type='password'
         />
-        <SubmitButton disabled={isSubmitting || !isValid} text='Login' />
+        <SubmitButton disabled={isSubmitting || !isValid} text='Log in' />
       </Form>
     )}
   </Formik>

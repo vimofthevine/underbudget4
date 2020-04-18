@@ -10,10 +10,10 @@ describe('LoginPage', () => {
   it('should prevent submission when no password entered', async () => {
     const { getByText } = render(<LoginPage />);
 
-    fireEvent.click(getByText('Login'));
+    fireEvent.click(getByText(/log in/i));
 
     await waitFor(() => getByText('Required'));
-    expect(getByText('Login').closest('button')).toBeDisabled();
+    expect(getByText(/log in/i).closest('button')).toBeDisabled();
   });
 
   it('should display error message when authentication error', async () => {
@@ -27,11 +27,11 @@ describe('LoginPage', () => {
     fireEvent.change(getByLabelText('Password'), {
       target: { value: 'loginpassword' },
     });
-    fireEvent.click(getByText('Login'));
+    fireEvent.click(getByText(/log in/i));
 
-    await waitFor(() => expect(getByText('Login')).toBeDisabled());
+    await waitFor(() => expect(getByText(/log in/i)).toBeDisabled());
     await waitFor(() => expect(getByText('Login failed')).toBeInTheDocument());
-    await waitFor(() => expect(getByText('Login')).toBeEnabled());
+    await waitFor(() => expect(getByText(/log in/i)).toBeEnabled());
 
     expect(history.location.pathname).toBe('/login');
   });
@@ -47,10 +47,10 @@ describe('LoginPage', () => {
     fireEvent.change(getByLabelText('Password'), {
       target: { value: 'loginpassword' },
     });
-    fireEvent.click(getByText('Login'));
+    fireEvent.click(getByText(/log in/i));
 
-    await waitFor(() => expect(getByText('Login')).toBeDisabled());
-    await waitFor(() => expect(getByText('Login')).toBeEnabled());
+    await waitFor(() => expect(getByText(/log in/i)).toBeDisabled());
+    await waitFor(() => expect(getByText(/log in/i)).toBeEnabled());
     expect(queryByText('Login failed')).not.toBeInTheDocument();
 
     expect(localStorage.setItem).toHaveBeenLastCalledWith(
@@ -72,10 +72,10 @@ describe('LoginPage', () => {
     fireEvent.change(getByLabelText('Password'), {
       target: { value: 'loginpassword' },
     });
-    fireEvent.click(getByText('Login'));
+    fireEvent.click(getByText(/log in/i));
 
-    await waitFor(() => expect(getByText('Login')).toBeDisabled());
-    await waitFor(() => expect(getByText('Login')).toBeEnabled());
+    await waitFor(() => expect(getByText(/log in/i)).toBeDisabled());
+    await waitFor(() => expect(getByText(/log in/i)).toBeEnabled());
     expect(queryByText('Login failed')).not.toBeInTheDocument();
 
     expect(history.location.pathname).toBe('/');
@@ -97,10 +97,10 @@ describe('LoginPage', () => {
     fireEvent.change(getByLabelText('Password'), {
       target: { value: 'loginpassword' },
     });
-    fireEvent.click(getByText('Login'));
+    fireEvent.click(getByText(/log in/i));
 
-    await waitFor(() => expect(getByText('Login')).toBeDisabled());
-    await waitFor(() => expect(getByText('Login')).toBeEnabled());
+    await waitFor(() => expect(getByText(/log in/i)).toBeDisabled());
+    await waitFor(() => expect(getByText(/log in/i)).toBeEnabled());
     expect(queryByText('Login failed')).not.toBeInTheDocument();
 
     expect(history.location.pathname).toBe('/last-page');

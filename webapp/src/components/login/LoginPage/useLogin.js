@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import authenticate from '../../../../api/auth/authenticate';
-import setApiToken from '../../../../utils/setApiToken';
+import authenticate from '../../../api/auth/authenticate';
+import setApiToken from '../../../utils/setApiToken';
 
 // eslint-disable-next-line import/prefer-default-export
 export function useLogin() {
