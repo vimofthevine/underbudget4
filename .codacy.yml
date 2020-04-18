@@ -4,4 +4,4 @@ exclude_paths:
   - 'backend/src/test/**'
   - 'webapp/src/serviceWorker.js'
   - 'webapp/src/setupTests.js'
-  - 'webapp/src/**/test.js'
+  - 'webapp/src/**/*.test.js'
