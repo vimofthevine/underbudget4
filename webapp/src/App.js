@@ -6,7 +6,9 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import React, { useMemo } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
+import ProtectedRoute from './components/common/ProtectedRoute';
 import LoginPage from './components/login/LoginPage';
+import LogoutPage from './components/logout/LogoutPage';
 import * as routes from './utils/routes';
 
 function App() {
@@ -34,7 +36,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path={routes.LOGIN} element={<LoginPage />} />
-          <Route path='*' element={<div>hi</div>} />
+          <Route path={routes.LOGOUT} element={<LogoutPage />} />
+          <ProtectedRoute path='*' element={<div>hi</div>} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
