@@ -16,6 +16,9 @@
     "node": true
   },
   "rules": {
+    "import/no-extraneous-dependencies": ["error", {
+      "devDependencies": ["**/*.stories.js", "**/*.test.js", "**/setupTests.js", "**/tests/**"]
+    }],
     "jsx-a11y/href-no-hash": ["off"],
     "react/jsx-filename-extension": ["warn", { "extensions": [".js", ".jsx"] }],
     "max-len": [
@@ -32,5 +35,13 @@
         "ignoreRegExpLiterals": true
       }
     ]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["**/*.stories.js"],
+      "rules": {
+        "react/jsx-props-no-spreading": "off"
+      }
+    }
+  ]
 }
