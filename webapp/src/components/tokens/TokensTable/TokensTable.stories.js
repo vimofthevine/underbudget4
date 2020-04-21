@@ -15,8 +15,8 @@ export const OneToken = () => (
     tokens={[
       {
         issued: moment().subtract(1, 'day').toISOString(),
-        jwtId: 'testJwtId',
         source: 'device #1',
+        _links: { self: { href: '/api/tokens/testJwtId1' } },
       },
     ]}
   />
@@ -27,18 +27,18 @@ export const SeveralTokens = () => (
     tokens={[
       {
         issued: moment().subtract(1, 'day').toISOString(),
-        jwtId: 'testJwtId1',
         source: 'device #1',
+        _links: { self: { href: '/api/tokens/testJwtId1' } },
       },
       {
         issued: moment().subtract(9, 'day').toISOString(),
-        jwtId: 'testJwtId2',
         source: 'device #2',
+        _links: { self: { href: '/api/tokens/testJwtId2' } },
       },
       {
         issued: moment().subtract(25, 'minute').toISOString(),
-        jwtId: 'testJwtId3',
         source: 'device #3',
+        _links: { self: { href: '/api/tokens/testJwtId3' } },
       },
     ]}
   />

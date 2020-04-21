@@ -10,13 +10,15 @@ import React from 'react';
 const TokensTable = ({ mobile, tokens }) => (
   <Table size={mobile ? 'small' : 'medium'}>
     <TableHead>
-      <TableCell>Issued</TableCell>
-      <TableCell>Source</TableCell>
-      <TableCell>Actions</TableCell>
+      <TableRow>
+        <TableCell>Issued</TableCell>
+        <TableCell>Device</TableCell>
+        <TableCell>Actions</TableCell>
+      </TableRow>
     </TableHead>
     <TableBody>
       {tokens.map((token) => (
-        <TableRow key={token.jwtId}>
+        <TableRow key={token._links.self.href}>
           <TableCell component='th' scope='row'>
             {moment(token.issued).fromNow()}
           </TableCell>
@@ -33,8 +35,12 @@ TokensTable.propTypes = {
   tokens: PropTypes.arrayOf(
     PropTypes.shape({
       issued: PropTypes.string.isRequired,
-      jwtId: PropTypes.string.isRrequired,
       source: PropTypes.string.isRequired,
+      _links: PropTypes.shape({
+        self: PropTypes.shape({
+          href: PropTypes.string.isRequired,
+        }).isRequired,
+      }).isRequired,
     }),
   ).isRequired,
 };

@@ -9,6 +9,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import LoginPage from './components/login/LoginPage';
 import LogoutPage from './components/logout/LogoutPage';
+import TokensPage from './components/tokens/TokensPage';
 import * as routes from './utils/routes';
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
         <Routes>
           <Route path={routes.LOGIN} element={<LoginPage />} />
           <Route path={routes.LOGOUT} element={<LogoutPage />} />
+          <ProtectedRoute path={`${routes.TOKENS}/*`} element={<TokensPage />} />
           <ProtectedRoute path='*' element={<div>hi</div>} />
         </Routes>
       </BrowserRouter>
