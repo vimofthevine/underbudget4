@@ -10,7 +10,9 @@ export default {
   component: ConfirmationDialog,
 };
 
-export const DefaultProperties = () => <ConfirmationDialog open />;
+export const ConfirmVariant = () => <ConfirmationDialog open />;
+
+export const InfoVariant = () => <ConfirmationDialog open variant='info' />;
 
 export const Customized = () => (
   <ConfirmationDialog

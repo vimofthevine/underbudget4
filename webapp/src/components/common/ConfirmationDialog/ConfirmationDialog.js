@@ -2,6 +2,7 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -14,6 +15,7 @@ const ConfirmationDialog = ({
   open,
   rejectText,
   title,
+  variant,
 }) => (
   <Dialog
     aria-labelledby='confirmation-dialog'
@@ -23,11 +25,15 @@ const ConfirmationDialog = ({
     open={open}
   >
     <DialogTitle id='confirmation-dialog-title'>{title}</DialogTitle>
-    <DialogContent>{message}</DialogContent>
+    <DialogContent>
+      <DialogContentText>{message}</DialogContentText>
+    </DialogContent>
     <DialogActions>
-      <Button autoFocus color='primary' onClick={onReject}>
-        {rejectText}
-      </Button>
+      {variant !== 'info' && (
+        <Button autoFocus color='primary' onClick={onReject}>
+          {rejectText}
+        </Button>
+      )}
       <Button color='primary' onClick={onConfirm}>
         {confirmText}
       </Button>
@@ -43,6 +49,7 @@ ConfirmationDialog.propTypes = {
   open: PropTypes.bool,
   rejectText: PropTypes.string,
   title: PropTypes.string,
+  variant: PropTypes.oneOf(['confirm', 'info']),
 };
 
 ConfirmationDialog.defaultProps = {
@@ -53,6 +60,7 @@ ConfirmationDialog.defaultProps = {
   open: false,
   rejectText: 'Cancel',
   title: 'Confirm',
+  variant: 'confirm',
 };
 
 export default ConfirmationDialog;
