@@ -8,12 +8,12 @@ import TokensTable from '../TokensTable';
 import { useTokens } from './useTokens';
 
 const TokensPage = () => {
-  const { error, mobile, status, tokens } = useTokens();
+  const { error, handleDelete, mobile, status, tokens } = useTokens();
 
   return (
     <AppPage title='Access Tokens'>
       <Paper>
-        <TokensTable mobile={mobile} tokens={tokens} />
+        <TokensTable mobile={mobile} onDelete={handleDelete} tokens={tokens} />
         {status === 'loading' && <LinearProgress />}
         {status === 'error' && <Alert severity='error'>{error.message}</Alert>}
       </Paper>

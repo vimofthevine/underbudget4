@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
 import AccountMenu from '../AccountMenu';
-import { ConfirmationServiceProvider } from '../ConfirmationService';
 import NavBar from '../NavBar';
 import NavDrawer from '../NavDrawer';
 
@@ -41,14 +40,12 @@ const AppPage = ({ children, title }) => {
       />
       <NavDrawer onClose={handleCloseDrawer} open={isDrawerOpen} />
       <AccountMenu anchor={accountMenuAnchor} onClose={handleCloseAccountMenu} />
-      <ConfirmationServiceProvider>
-        <main className={classes.content}>
-          <div className={classes.appBarSpacer} />
-          <Container className={classes.container} maxWidth='lg'>
-            {children}
-          </Container>
-        </main>
-      </ConfirmationServiceProvider>
+      <main className={classes.content}>
+        <div className={classes.appBarSpacer} />
+        <Container className={classes.container} maxWidth='lg'>
+          {children}
+        </Container>
+      </main>
     </div>
   );
 };

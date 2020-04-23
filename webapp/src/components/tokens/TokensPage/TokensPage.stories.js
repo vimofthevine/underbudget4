@@ -3,10 +3,13 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import moment from 'moment';
 import React from 'react';
-import { queryCache } from 'react-query';
+import { ReactQueryConfigProvider, queryCache } from 'react-query';
 import { MemoryRouter } from 'react-router-dom';
 
+import { ConfirmationServiceProvider } from '../../common/ConfirmationService';
 import TokensPage from './TokensPage';
+
+const queryConfig = { retryDelay: 200 };
 
 export default {
   title: 'tokens/TokensPage',
@@ -18,6 +21,8 @@ export default {
     },
     (story) => story({ mock: new MockAdapter(axios, { delayResponse: 1000 }) }),
     (story) => <MemoryRouter>{story()}</MemoryRouter>,
+    (story) => <ConfirmationServiceProvider>{story()}</ConfirmationServiceProvider>,
+    (story) => <ReactQueryConfigProvider config={queryConfig}>{story()}</ReactQueryConfigProvider>,
   ],
 };
 
@@ -26,6 +31,7 @@ const createTokens = (start, stop) => {
   let i = start;
   while (i <= stop) {
     tokens.push({
+      id: `token-id-${i}`,
       issued: moment()
         .subtract(i * 2, 'hour')
         .toISOString(),
@@ -48,6 +54,23 @@ export const ManyTokens = ({ mock }) => {
   mock.onGet('/api/tokens').reply(200, {
     _embedded: { tokens: createTokens(1, 42) },
   });
+  return <TokensPage />;
+};
+
+export const DeleteTokenSuccess = ({ mock }) => {
+  mock
+    .onGet('/api/tokens')
+    .reply(200, {
+      _embedded: { tokens: createTokens(1, 5) },
+    })
+    .onDelete('/api/tokens/token-id-5')
+    .reply(() => {
+      mock.reset();
+      mock.onGet('/api/tokens').reply(200, {
+        _embedded: { tokens: createTokens(1, 4) },
+      });
+      return [200];
+    });
   return <TokensPage />;
 };
 

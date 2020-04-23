@@ -2,7 +2,7 @@ import Button from '@material-ui/core/Button';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
-import { useConfirmation } from '../ConfirmationService';
+import { ConfirmationServiceProvider, useConfirmation } from '../ConfirmationService';
 import AppPage from './AppPage';
 
 export default {
@@ -37,7 +37,9 @@ const ConfirmButton = () => {
 };
 
 export const ConfirmationDialog = () => (
-  <AppPage>
-    <ConfirmButton />
-  </AppPage>
+  <ConfirmationServiceProvider>
+    <AppPage>
+      <ConfirmButton />
+    </AppPage>
+  </ConfirmationServiceProvider>
 );

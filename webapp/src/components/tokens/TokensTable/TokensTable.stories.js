@@ -1,3 +1,4 @@
+import { action } from '@storybook/addon-actions';
 import moment from 'moment';
 import React from 'react';
 
@@ -12,6 +13,7 @@ export const NoTokens = () => <TokensTable tokens={[]} />;
 
 export const OneToken = () => (
   <TokensTable
+    onDelete={action('delete')}
     tokens={[
       {
         issued: moment().subtract(1, 'day').toISOString(),
@@ -24,6 +26,7 @@ export const OneToken = () => (
 
 export const SeveralTokens = () => (
   <TokensTable
+    onDelete={action('delete')}
     tokens={[
       {
         issued: moment().subtract(1, 'day').toISOString(),

@@ -1,13 +1,15 @@
+import IconButton from '@material-ui/core/IconButton';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import DeleteIcon from '@material-ui/icons/Delete';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-const TokensTable = ({ mobile, tokens }) => (
+const TokensTable = ({ mobile, onDelete, tokens }) => (
   <Table size={mobile ? 'small' : 'medium'}>
     <TableHead>
       <TableRow>
@@ -23,7 +25,11 @@ const TokensTable = ({ mobile, tokens }) => (
             {moment(token.issued).fromNow()}
           </TableCell>
           <TableCell>{token.source}</TableCell>
-          <TableCell>Delete</TableCell>
+          <TableCell>
+            <IconButton onClick={() => onDelete(token)}>
+              <DeleteIcon />
+            </IconButton>
+          </TableCell>
         </TableRow>
       ))}
     </TableBody>
@@ -32,6 +38,7 @@ const TokensTable = ({ mobile, tokens }) => (
 
 TokensTable.propTypes = {
   mobile: PropTypes.bool,
+  onDelete: PropTypes.func,
   tokens: PropTypes.arrayOf(
     PropTypes.shape({
       issued: PropTypes.string.isRequired,
@@ -47,6 +54,7 @@ TokensTable.propTypes = {
 
 TokensTable.defaultProps = {
   mobile: false,
+  onDelete: () => 0,
 };
 
 export default TokensTable;

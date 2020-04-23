@@ -6,6 +6,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import React, { useMemo } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
+import { ConfirmationServiceProvider } from './components/common/ConfirmationService';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import LoginPage from './components/login/LoginPage';
 import LogoutPage from './components/logout/LogoutPage';
@@ -34,14 +35,16 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <BrowserRouter>
-        <Routes>
-          <Route path={routes.LOGIN} element={<LoginPage />} />
-          <Route path={routes.LOGOUT} element={<LogoutPage />} />
-          <ProtectedRoute path={`${routes.TOKENS}/*`} element={<TokensPage />} />
-          <ProtectedRoute path='*' element={<div>hi</div>} />
-        </Routes>
-      </BrowserRouter>
+      <ConfirmationServiceProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path={routes.LOGIN} element={<LoginPage />} />
+            <Route path={routes.LOGOUT} element={<LogoutPage />} />
+            <ProtectedRoute path={`${routes.TOKENS}/*`} element={<TokensPage />} />
+            <ProtectedRoute path='*' element={<div>hi</div>} />
+          </Routes>
+        </BrowserRouter>
+      </ConfirmationServiceProvider>
     </ThemeProvider>
   );
 }
