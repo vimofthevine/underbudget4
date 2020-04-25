@@ -4,6 +4,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import React, { useMemo } from 'react';
+import { ReactQueryConfigProvider } from 'react-query';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { ConfirmationServiceProvider } from './components/common/ConfirmationService';
@@ -12,6 +13,7 @@ import { SnackbarServiceProvider } from './components/common/SnackbarService';
 import LoginPage from './components/login/LoginPage';
 import LogoutPage from './components/logout/LogoutPage';
 import TokensPage from './components/tokens/TokensPage';
+import queryConfig from './utils/queryConfig';
 import * as routes from './utils/routes';
 
 function App() {
@@ -36,18 +38,20 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <ConfirmationServiceProvider>
-        <SnackbarServiceProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path={routes.LOGIN} element={<LoginPage />} />
-              <Route path={routes.LOGOUT} element={<LogoutPage />} />
-              <ProtectedRoute path={`${routes.TOKENS}/*`} element={<TokensPage />} />
-              <ProtectedRoute path='*' element={<div>hi</div>} />
-            </Routes>
-          </BrowserRouter>
-        </SnackbarServiceProvider>
-      </ConfirmationServiceProvider>
+      <ReactQueryConfigProvider config={queryConfig}>
+        <ConfirmationServiceProvider>
+          <SnackbarServiceProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path={routes.LOGIN} element={<LoginPage />} />
+                <Route path={routes.LOGOUT} element={<LogoutPage />} />
+                <ProtectedRoute path={`${routes.TOKENS}/*`} element={<TokensPage />} />
+                <ProtectedRoute path='*' element={<div>hi</div>} />
+              </Routes>
+            </BrowserRouter>
+          </SnackbarServiceProvider>
+        </ConfirmationServiceProvider>
+      </ReactQueryConfigProvider>
     </ThemeProvider>
   );
 }
