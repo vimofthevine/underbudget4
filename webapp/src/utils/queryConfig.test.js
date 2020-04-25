@@ -25,9 +25,9 @@ describe('query configuration', () => {
     });
   });
 
-  it('should not retry when 401 error', async () => {
+  it('should not retry on error', async () => {
     const mockAxios = new MockAdapter(axios);
-    mockAxios.onGet('/').reply(401);
+    mockAxios.onGet('/').reply(503);
 
     const { getByText } = render(
       <ReactQueryConfigProvider config={queryConfig}>
@@ -37,33 +37,5 @@ describe('query configuration', () => {
 
     await waitFor(() => expect(getByText('error')).toBeInTheDocument());
     expect(mockAxios.history.get).toHaveLength(1);
-  });
-
-  it('should not retry when 403 error', async () => {
-    const mockAxios = new MockAdapter(axios);
-    mockAxios.onGet('/').reply(403);
-
-    const { getByText } = render(
-      <ReactQueryConfigProvider config={queryConfig}>
-        <Fetch />
-      </ReactQueryConfigProvider>,
-    );
-
-    await waitFor(() => expect(getByText('error')).toBeInTheDocument());
-    expect(mockAxios.history.get).toHaveLength(1);
-  });
-
-  it('should retry when other error', async () => {
-    const mockAxios = new MockAdapter(axios);
-    mockAxios.onGet('/').reply(404);
-
-    const { getByText } = render(
-      <ReactQueryConfigProvider config={queryConfig}>
-        <Fetch />
-      </ReactQueryConfigProvider>,
-    );
-
-    await waitFor(() => expect(getByText('error')).toBeInTheDocument());
-    expect(mockAxios.history.get).toHaveLength(4);
   });
 });
