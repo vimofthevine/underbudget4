@@ -19,13 +19,13 @@ const queryConfig = {
 };
 
 const token1 = {
-  id: 'testTokenId0',
+  jwtId: 'testTokenId0',
   issued: moment().subtract(1, 'hour'),
   source: 'Mobile Device',
   _links: { self: { href: 'http://localhost:9090/api/tokens/testTokenId1' } },
 };
 const token2 = {
-  id: 'testTokenId2',
+  jwtId: 'testTokenId2',
   issued: moment().subtract(1, 'day'),
   source: 'Desktop Device',
   _links: { self: { href: 'http://localhost:9090/api/tokens/testTokenId2' } },

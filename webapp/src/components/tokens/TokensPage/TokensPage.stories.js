@@ -33,12 +33,11 @@ const createTokens = (start, stop) => {
   let i = start;
   while (i <= stop) {
     tokens.push({
-      id: `token-id-${i}`,
       issued: moment()
         .subtract(i * 2, 'hour')
         .toISOString(),
+      jwtId: `token-id-${i}`,
       source: `Device #${i}`,
-      _links: { self: { href: `/api/tokens/token-id-${i}` } },
     });
     i += 1;
   }

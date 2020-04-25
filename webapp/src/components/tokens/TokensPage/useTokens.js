@@ -24,7 +24,7 @@ export function useTokens() {
 
   const handleDelete = (token) =>
     confirm({ message: 'Delete access token?' }).then(() => {
-      mutate(token.id);
+      mutate(token.jwtId);
     });
 
   return {

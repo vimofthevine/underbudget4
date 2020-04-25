@@ -20,7 +20,7 @@ const TokensTable = ({ mobile, onDelete, tokens }) => (
     </TableHead>
     <TableBody>
       {tokens.map((token) => (
-        <TableRow key={token._links.self.href}>
+        <TableRow key={token.jwtId}>
           <TableCell component='th' scope='row'>
             {moment(token.issued).fromNow()}
           </TableCell>
@@ -42,12 +42,8 @@ TokensTable.propTypes = {
   tokens: PropTypes.arrayOf(
     PropTypes.shape({
       issued: PropTypes.string.isRequired,
+      jwtId: PropTypes.string.isRequired,
       source: PropTypes.string.isRequired,
-      _links: PropTypes.shape({
-        self: PropTypes.shape({
-          href: PropTypes.string.isRequired,
-        }).isRequired,
-      }).isRequired,
     }),
   ).isRequired,
 };
