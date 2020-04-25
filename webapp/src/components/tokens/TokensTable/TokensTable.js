@@ -26,7 +26,7 @@ const TokensTable = ({ mobile, onDelete, tokens }) => (
           </TableCell>
           <TableCell>{token.source}</TableCell>
           <TableCell>
-            <IconButton onClick={() => onDelete(token)}>
+            <IconButton aria-label='Delete access token' onClick={() => onDelete(token)}>
               <DeleteIcon />
             </IconButton>
           </TableCell>
@@ -38,7 +38,7 @@ const TokensTable = ({ mobile, onDelete, tokens }) => (
 
 TokensTable.propTypes = {
   mobile: PropTypes.bool,
-  onDelete: PropTypes.func,
+  onDelete: PropTypes.func.isRequired,
   tokens: PropTypes.arrayOf(
     PropTypes.shape({
       issued: PropTypes.string.isRequired,
@@ -54,7 +54,6 @@ TokensTable.propTypes = {
 
 TokensTable.defaultProps = {
   mobile: false,
-  onDelete: () => 0,
 };
 
 export default TokensTable;

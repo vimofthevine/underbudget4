@@ -9,7 +9,7 @@ export default {
   component: TokensTable,
 };
 
-export const NoTokens = () => <TokensTable tokens={[]} />;
+export const NoTokens = () => <TokensTable onDelete={action('delete')} tokens={[]} />;
 
 export const OneToken = () => (
   <TokensTable

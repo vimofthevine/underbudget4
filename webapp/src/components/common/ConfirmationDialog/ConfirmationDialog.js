@@ -18,7 +18,7 @@ const ConfirmationDialog = ({
   variant,
 }) => (
   <Dialog
-    aria-labelledby='confirmation-dialog'
+    aria-labelledby='confirmation-dialog-title'
     disableBackdropClick
     disableEscapeKeyDown
     maxWidth='xs'
