@@ -6,18 +6,17 @@ const authErrors = [401, 403];
 const noByStatus = {};
 
 // eslint-disable-next-line react/prop-types
-const defaultAuthMessage = ({ location }) => (
+const defaultAuthMessage = (error, location) => (
   <span>
     {'You are no longer logged in, please '}
-    <Link to={{ pathname: '/login', state: { from: location } }}>log in</Link>
+    <Link to='/login' state={{ from: location }}>
+      log in
+    </Link>
     {' again'}
   </span>
 );
 
 const getMessage = (error, location, message) => {
-  if (React.isValidElement(message)) {
-    return React.createElement(message, { error, location });
-  }
   if (typeof message === 'function') {
     return message(error, location);
   }
