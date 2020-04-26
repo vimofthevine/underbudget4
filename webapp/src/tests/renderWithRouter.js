@@ -12,11 +12,11 @@ export default (
 ) => {
   // eslint-disable-next-line react/prop-types
   const Wrapper = ({ children }) => (
-    <ConfirmationServiceProvider>
-      <SnackbarServiceProvider>
-        <Router history={history}>{children}</Router>
-      </SnackbarServiceProvider>
-    </ConfirmationServiceProvider>
+    <Router history={history}>
+      <ConfirmationServiceProvider>
+        <SnackbarServiceProvider>{children}</SnackbarServiceProvider>
+      </ConfirmationServiceProvider>
+    </Router>
   );
 
   return {

@@ -53,7 +53,7 @@ describe('TokensPage', () => {
     await waitFor(() => expect(queryByRole('progressbar')).toBeInTheDocument());
   });
 
-  it('should show error message when failed to fetch', async () => {
+  it('should show error message when not logged in', async () => {
     const mockAxios = new MockAdapter(axios);
     mockAxios.onGet('/api/tokens').reply(401);
 
@@ -64,7 +64,35 @@ describe('TokensPage', () => {
     );
 
     await waitFor(() => expect(queryByRole('alert')).toBeInTheDocument());
-    expect(queryByText(/.*401.*/)).toBeInTheDocument();
+    expect(queryByText(/you are no longer logged in/i)).toBeInTheDocument();
+  });
+
+  it('should show error message when network error', async () => {
+    const mockAxios = new MockAdapter(axios);
+    mockAxios.onGet('/api/tokens').timeout();
+
+    const { queryByRole, queryByText } = render(
+      <ReactQueryConfigProvider config={queryConfig}>
+        <TokensPage />
+      </ReactQueryConfigProvider>,
+    );
+
+    await waitFor(() => expect(queryByRole('alert')).toBeInTheDocument());
+    expect(queryByText(/unable to retrieve access tokens/i)).toBeInTheDocument();
+  });
+
+  it('should show error message when server error', async () => {
+    const mockAxios = new MockAdapter(axios);
+    mockAxios.onGet('/api/tokens').reply(500);
+
+    const { queryByRole, queryByText } = render(
+      <ReactQueryConfigProvider config={queryConfig}>
+        <TokensPage />
+      </ReactQueryConfigProvider>,
+    );
+
+    await waitFor(() => expect(queryByRole('alert')).toBeInTheDocument());
+    expect(queryByText(/an error occurred on the server/i)).toBeInTheDocument();
   });
 
   it('should show tokens from successful fetch', async () => {
@@ -113,7 +141,7 @@ describe('TokensPage', () => {
   it('should show error message when failed to delete', async () => {
     const mockAxios = new MockAdapter(axios);
     mockAxios.onGet('/api/tokens').reply(200, { _embedded: { tokens: [token1, token2] } });
-    mockAxios.onDelete('/api/tokens/testTokenId2').reply(403);
+    mockAxios.onDelete('/api/tokens/testTokenId2').reply(400);
 
     render(
       <ReactQueryConfigProvider config={queryConfig}>

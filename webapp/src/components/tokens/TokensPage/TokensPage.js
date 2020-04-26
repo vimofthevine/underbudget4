@@ -15,7 +15,7 @@ const TokensPage = () => {
       <Paper>
         <TokensTable mobile={mobile} onDelete={handleDelete} tokens={tokens} />
         {status === 'loading' && <LinearProgress />}
-        {status === 'error' && <Alert severity='error'>{error.message}</Alert>}
+        {status === 'error' && <Alert severity='error'>{error}</Alert>}
       </Paper>
     </AppPage>
   );

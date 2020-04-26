@@ -10,7 +10,7 @@ import { ConfirmationServiceProvider } from '../../common/ConfirmationService';
 import { SnackbarServiceProvider } from '../../common/SnackbarService';
 import TokensPage from './TokensPage';
 
-const queryConfig = { retryDelay: 200 };
+const queryConfig = { retry: false };
 
 export default {
   title: 'tokens/TokensPage',
@@ -82,5 +82,10 @@ export const NetworkError = ({ mock }) => {
 
 export const Unauthorized = ({ mock }) => {
   mock.onGet('/api/tokens').reply(401);
+  return <TokensPage />;
+};
+
+export const ServerError = ({ mock }) => {
+  mock.onGet('/api/tokens').reply(500);
   return <TokensPage />;
 };

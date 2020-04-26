@@ -39,18 +39,18 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <ReactQueryConfigProvider config={queryConfig}>
-        <ConfirmationServiceProvider>
-          <SnackbarServiceProvider>
-            <BrowserRouter>
+        <BrowserRouter>
+          <ConfirmationServiceProvider>
+            <SnackbarServiceProvider>
               <Routes>
                 <Route path={routes.LOGIN} element={<LoginPage />} />
                 <Route path={routes.LOGOUT} element={<LogoutPage />} />
                 <ProtectedRoute path={`${routes.TOKENS}/*`} element={<TokensPage />} />
                 <ProtectedRoute path='*' element={<div>hi</div>} />
               </Routes>
-            </BrowserRouter>
-          </SnackbarServiceProvider>
-        </ConfirmationServiceProvider>
+            </SnackbarServiceProvider>
+          </ConfirmationServiceProvider>
+        </BrowserRouter>
       </ReactQueryConfigProvider>
     </ThemeProvider>
   );
