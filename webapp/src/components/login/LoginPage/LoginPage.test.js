@@ -36,6 +36,31 @@ describe('LoginPage', () => {
     expect(history.location.pathname).toBe('/login');
   });
 
+  it('should submit token with user agent', async () => {
+    Object.defineProperty(window.navigator, 'userAgent', {
+      value: 'user-agent-value',
+      writable: true,
+    });
+
+    const mockAxios = new MockAdapter(axios);
+    mockAxios.onPost('/api/authenticate').reply(201, {
+      token: 'generated-auth-token',
+    });
+
+    const { getByText, getByLabelText } = render(<LoginPage />);
+
+    fireEvent.change(getByLabelText('Password'), {
+      target: { value: 'loginpassword' },
+    });
+    fireEvent.click(getByText(/log in/i));
+
+    await waitFor(() => expect(mockAxios.history.post.length).toBe(1));
+    expect(JSON.parse(mockAxios.history.post[0].data)).toEqual({
+      password: 'loginpassword',
+      source: 'user-agent-value',
+    });
+  });
+
   it('should save token in localstorage when authentication successful', async () => {
     const mockAxios = new MockAdapter(axios);
     mockAxios.onPost('/api/authenticate').reply(201, {

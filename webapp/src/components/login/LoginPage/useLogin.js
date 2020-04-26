@@ -17,7 +17,7 @@ export function useLogin() {
     async (values) => {
       return authenticate({
         password: values.password,
-        source: 'me',
+        source: navigator.userAgent,
       })
         .then((res) => {
           setApiToken(res.data.token);

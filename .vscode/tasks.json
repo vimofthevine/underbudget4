@@ -13,6 +13,15 @@
       }
     },
     {
+      "label": "compile backend",
+      "type": "shell",
+      "command": "mvn -B compile",
+      "group": "build",
+      "options": {
+        "cwd": "${workspaceRoot}/backend"
+      }
+    },
+    {
       "label": "package backend",
       "type": "shell",
       "command": "mvn -B package",

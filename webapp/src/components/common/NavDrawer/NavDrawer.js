@@ -1,10 +1,10 @@
 import Drawer from '@material-ui/core/Drawer';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import useMobile from '../../../hooks/useMobile';
 import NavDrawerList from '../NavDrawerList';
 
 const drawerWidth = 240;
@@ -35,8 +35,7 @@ const useStyles = makeStyles((theme) => ({
 
 const NavDrawer = ({ onClose, open }) => {
   const classes = useStyles();
-  const theme = useTheme();
-  const mobile = useMediaQuery(theme.breakpoints.down('xs'));
+  const mobile = useMobile();
 
   return (
     <Drawer
