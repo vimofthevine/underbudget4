@@ -1,7 +1,5 @@
-import green from '@material-ui/core/colors/green';
-import indigo from '@material-ui/core/colors/indigo';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import React, { useMemo } from 'react';
 import { ReactQueryConfigProvider } from 'react-query';
@@ -13,27 +11,14 @@ import { SnackbarServiceProvider } from './components/common/SnackbarService';
 import LoginPage from './components/login/LoginPage';
 import LogoutPage from './components/logout/LogoutPage';
 import TokensPage from './components/tokens/TokensPage';
+import createTheme from './utils/createTheme';
 import queryConfig from './utils/queryConfig';
 import * as routes from './utils/routes';
 
 function App() {
   const darkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
-  const theme = useMemo(
-    () =>
-      createMuiTheme({
-        palette: {
-          primary: {
-            main: green[100],
-          },
-          secondary: {
-            main: indigo[100],
-          },
-          type: darkMode ? 'dark' : 'light',
-        },
-      }),
-    [darkMode],
-  );
+  const theme = useMemo(() => createTheme(darkMode), [darkMode]);
 
   return (
     <ThemeProvider theme={theme}>

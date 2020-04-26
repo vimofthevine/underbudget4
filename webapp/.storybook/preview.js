@@ -1,25 +1,17 @@
-import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-
 import CssBaseline from '@material-ui/core/CssBaseline';
-import React from 'react';
+import { ThemeProvider } from '@material-ui/core/styles';
+import { withA11y } from '@storybook/addon-a11y';
 import { addDecorator } from '@storybook/react';
-import green from '@material-ui/core/colors/green';
-import indigo from '@material-ui/core/colors/indigo';
+import React from 'react';
+import { useDarkMode } from 'storybook-dark-mode';
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: green[100],
-    },
-    secondary: {
-      main: indigo[100],
-    },
-  },
-});
+import createTheme from '../src/utils/createTheme';
 
 addDecorator(story => (
-  <ThemeProvider theme={theme}>
+  <ThemeProvider theme={createTheme(useDarkMode())}>
     <CssBaseline />
     {story()}
   </ThemeProvider>
 ));
+
+addDecorator(withA11y);

@@ -1,5 +1,6 @@
+import MuiLink from '@material-ui/core/Link';
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 
 const authErrors = [401, 403];
 
@@ -9,9 +10,9 @@ const noByStatus = {};
 const defaultAuthMessage = (error, location) => (
   <span>
     {'You are no longer logged in, please '}
-    <Link to='/login' state={{ from: location }}>
+    <MuiLink color='secondary' component={RouterLink} state={{ from: location }} to='/login'>
       log in
-    </Link>
+    </MuiLink>
     {' again'}
   </span>
 );
