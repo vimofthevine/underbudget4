@@ -241,7 +241,7 @@ class LedgerTest : AbstractIntegrationTest() {
         "currency" to 978
       ))
     } When {
-      patch("/api/ledgers/$id")
+      put("/api/ledgers/$id")
     } Then {
       statusCode(200)
       body("name", equalTo("Audited Ledger"))
@@ -258,11 +258,28 @@ class LedgerTest : AbstractIntegrationTest() {
         "lastUpdated" to Instant.ofEpochSecond(2000)
       ))
     } When {
-      patch("/api/ledgers/$id")
+      put("/api/ledgers/$id")
     } Then {
       statusCode(200)
       body("name", equalTo("Bypass Auditing Ledger"))
       body("currency", equalTo(123))
+      body("created", equalTo(created.toString()))
+      body("lastUpdated", not(equalTo(Instant.ofEpochSecond(2000).toString())))
+    }
+
+    Given {
+      body(mapOf(
+        "name" to "Patched Ledger",
+        "currency" to 456,
+        "created" to Instant.ofEpochSecond(1000),
+        "lastUpdated" to Instant.ofEpochSecond(2000)
+      ))
+    } When {
+      patch("/api/ledgers/$id")
+    } Then {
+      statusCode(200)
+      body("name", equalTo("Patched Ledger"))
+      body("currency", equalTo(456))
       body("created", equalTo(created.toString()))
       body("lastUpdated", not(equalTo(Instant.ofEpochSecond(2000).toString())))
     }

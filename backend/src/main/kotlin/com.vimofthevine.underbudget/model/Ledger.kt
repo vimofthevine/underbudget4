@@ -18,10 +18,10 @@ data class Ledger(
   val id: UUID = UUID.randomUUID(),
 
   @get:NotEmpty(message = "Name is required")
-  val name: String = "",
+  var name: String = "",
 
   @get:Min(value = 1, message = "Currency code must be a positive number")
-  val currency: Int = 0,
+  var currency: Int = 0,
 
   @Column(updatable = false)
   @CreatedDate
