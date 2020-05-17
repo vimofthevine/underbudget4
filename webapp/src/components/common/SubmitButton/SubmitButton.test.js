@@ -48,4 +48,20 @@ describe('SubmitButton', () => {
       expect(screen.getByRole('button', { name: /click me/i })).not.toBeDisabled(),
     );
   });
+
+  it('should show progress indicator when form is submitting', async () => {
+    const submit = jest.fn(() => new Promise((res) => setTimeout(res, 50)));
+    render(
+      <Formik initialValues={{}} onSubmit={submit}>
+        <Form>
+          <SubmitButton text='Click Me' />
+        </Form>
+      </Formik>,
+    );
+
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /click me/i }));
+    await waitFor(() => expect(screen.getByRole('progressbar')).toBeInTheDocument());
+    await waitFor(() => expect(screen.queryByRole('progressbar')).not.toBeInTheDocument());
+  });
 });

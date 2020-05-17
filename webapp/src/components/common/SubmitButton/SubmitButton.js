@@ -2,6 +2,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { useTheme } from '@material-ui/core/styles';
 import { useFormikContext } from 'formik';
 import PropTypes from 'prop-types';
@@ -12,6 +13,7 @@ const SubmitButton = ({ text, ...props }) => {
   const { isSubmitting, isValid } = useFormikContext();
   return (
     <Button
+      aria-label={text}
       color='primary'
       disabled={isSubmitting || !isValid}
       fullWidth
@@ -20,7 +22,7 @@ const SubmitButton = ({ text, ...props }) => {
       variant='contained'
       {...props}
     >
-      {text}
+      {isSubmitting ? <CircularProgress color='secondary' /> : text}
     </Button>
   );
 };

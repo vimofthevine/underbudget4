@@ -1,4 +1,4 @@
-import { fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
@@ -8,30 +8,30 @@ import LoginPage from './LoginPage';
 
 describe('LoginPage', () => {
   it('should prevent submission when no password entered', async () => {
-    const { getByText } = render(<LoginPage />);
+    render(<LoginPage />);
 
-    fireEvent.click(getByText(/log in/i));
+    fireEvent.click(screen.getByRole('button', { name: /log in/i }));
 
-    await waitFor(() => getByText('Required'));
-    expect(getByText(/log in/i).closest('button')).toBeDisabled();
+    await waitFor(() => expect(screen.getByText(/required/i)).toBeInTheDocument());
+    expect(screen.getByRole('button', { name: /log in/i })).toBeDisabled();
   });
 
   it('should display error message when authentication error', async () => {
     const mockAxios = new MockAdapter(axios);
     mockAxios.onPost('/api/authenticate').reply(401);
 
-    const { getByText, getByLabelText, history } = render(<LoginPage />, {
+    const { history } = render(<LoginPage />, {
       route: '/login',
     });
 
-    fireEvent.change(getByLabelText('Password'), {
+    fireEvent.change(screen.getByLabelText(/password/i), {
       target: { value: 'loginpassword' },
     });
-    fireEvent.click(getByText(/log in/i));
+    fireEvent.click(screen.getByRole('button', { name: /log in/i }));
 
-    await waitFor(() => expect(getByText(/log in/i)).toBeDisabled());
-    await waitFor(() => expect(getByText('Login failed')).toBeInTheDocument());
-    await waitFor(() => expect(getByText(/log in/i)).toBeEnabled());
+    await waitFor(() => expect(screen.getByRole('button', { name: /log in/i })).toBeDisabled());
+    await waitFor(() => expect(screen.getByText('Login failed')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('button', { name: /log in/i })).toBeEnabled());
 
     expect(history.location.pathname).toBe('/login');
   });
@@ -47,12 +47,12 @@ describe('LoginPage', () => {
       token: 'generated-auth-token',
     });
 
-    const { getByText, getByLabelText } = render(<LoginPage />);
+    render(<LoginPage />);
 
-    fireEvent.change(getByLabelText('Password'), {
+    fireEvent.change(screen.getByLabelText(/password/i), {
       target: { value: 'loginpassword' },
     });
-    fireEvent.click(getByText(/log in/i));
+    fireEvent.click(screen.getByRole('button', { name: /log in/i }));
 
     await waitFor(() => expect(mockAxios.history.post.length).toBe(1));
     expect(JSON.parse(mockAxios.history.post[0].data)).toEqual({
@@ -67,16 +67,16 @@ describe('LoginPage', () => {
       token: 'generated-auth-token',
     });
 
-    const { getByText, getByLabelText, queryByText } = render(<LoginPage />);
+    render(<LoginPage />);
 
-    fireEvent.change(getByLabelText('Password'), {
+    fireEvent.change(screen.getByLabelText(/password/i), {
       target: { value: 'loginpassword' },
     });
-    fireEvent.click(getByText(/log in/i));
+    fireEvent.click(screen.getByRole('button', { name: /log in/i }));
 
-    await waitFor(() => expect(getByText(/log in/i)).toBeDisabled());
-    await waitFor(() => expect(getByText(/log in/i)).toBeEnabled());
-    expect(queryByText('Login failed')).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.getByRole('button', { name: /log in/i })).toBeDisabled());
+    await waitFor(() => expect(screen.getByRole('button', { name: /log in/i })).toBeEnabled());
+    expect(screen.queryByText('Login failed')).not.toBeInTheDocument();
 
     expect(localStorage.setItem).toHaveBeenLastCalledWith(
       'underbudget.api.token',
@@ -90,18 +90,18 @@ describe('LoginPage', () => {
       token: 'generated-auth-token',
     });
 
-    const { getByText, getByLabelText, history, queryByText } = render(<LoginPage />, {
+    const { history } = render(<LoginPage />, {
       route: '/login',
     });
 
-    fireEvent.change(getByLabelText('Password'), {
+    fireEvent.change(screen.getByLabelText(/password/i), {
       target: { value: 'loginpassword' },
     });
-    fireEvent.click(getByText(/log in/i));
+    fireEvent.click(screen.getByRole('button', { name: /log in/i }));
 
-    await waitFor(() => expect(getByText(/log in/i)).toBeDisabled());
-    await waitFor(() => expect(getByText(/log in/i)).toBeEnabled());
-    expect(queryByText('Login failed')).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.getByRole('button', { name: /log in/i })).toBeDisabled());
+    await waitFor(() => expect(screen.getByRole('button', { name: /log in/i })).toBeEnabled());
+    expect(screen.queryByText('Login failed')).not.toBeInTheDocument();
 
     expect(history.location.pathname).toBe('/');
   });
@@ -112,21 +112,21 @@ describe('LoginPage', () => {
       token: 'generated-auth-token',
     });
 
-    const { getByText, getByLabelText, history, queryByText } = render(<LoginPage />, {
+    const { history } = render(<LoginPage />, {
       route: {
         pathname: '/login',
         state: { from: '/last-page' },
       },
     });
 
-    fireEvent.change(getByLabelText('Password'), {
+    fireEvent.change(screen.getByLabelText(/password/i), {
       target: { value: 'loginpassword' },
     });
-    fireEvent.click(getByText(/log in/i));
+    fireEvent.click(screen.getByRole('button', { name: /log in/i }));
 
-    await waitFor(() => expect(getByText(/log in/i)).toBeDisabled());
-    await waitFor(() => expect(getByText(/log in/i)).toBeEnabled());
-    expect(queryByText('Login failed')).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.getByRole('button', { name: /log in/i })).toBeDisabled());
+    await waitFor(() => expect(screen.getByRole('button', { name: /log in/i })).toBeEnabled());
+    expect(screen.queryByText('Login failed')).not.toBeInTheDocument();
 
     expect(history.location.pathname).toBe('/last-page');
   });
