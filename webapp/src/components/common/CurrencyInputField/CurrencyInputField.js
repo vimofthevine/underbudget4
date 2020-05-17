@@ -1,4 +1,6 @@
+// Disable rule because this is a generic component
 /* eslint-disable react/jsx-props-no-spreading */
+
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import currency from 'currency-codes';
@@ -35,12 +37,12 @@ const CurrencyInputField = ({
       options={currency.codes()}
       renderInput={(params) => (
         <TextField
-          {...props}
           error={showError}
           helperText={showError ? errorText : helperText}
           name={name}
           onBlur={onBlur}
           {...params}
+          {...props}
         />
       )}
       onChange={handleChange}

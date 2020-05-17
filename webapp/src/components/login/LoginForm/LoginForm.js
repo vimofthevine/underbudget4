@@ -17,20 +17,18 @@ const LoginForm = ({ className, onLogin }) => (
     validateOnBlur={false}
     validationSchema={schema}
   >
-    {({ isSubmitting, isValid }) => (
-      <Form className={className}>
-        <Field
-          autoComplete='current-password'
-          component={TextField}
-          fullWidth
-          id='password'
-          label='Password'
-          name='password'
-          type='password'
-        />
-        <SubmitButton disabled={isSubmitting || !isValid} text='Log in' />
-      </Form>
-    )}
+    <Form className={className}>
+      <Field
+        autoComplete='current-password'
+        component={TextField}
+        fullWidth
+        id='password'
+        label='Password'
+        name='password'
+        type='password'
+      />
+      <SubmitButton text='Log in' />
+    </Form>
   </Formik>
 );
 
