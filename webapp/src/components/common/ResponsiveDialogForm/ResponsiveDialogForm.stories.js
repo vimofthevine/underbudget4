@@ -11,7 +11,7 @@ export default {
   component: ResponsiveDialogForm,
 };
 
-export const Default = () => (
+export const Desktop = () => (
   <ResponsiveDialogForm
     actionText='Apply'
     formikProps={{
@@ -24,3 +24,23 @@ export const Default = () => (
     title='Dialog Title'
   />
 );
+
+export const Mobile = () => (
+  <ResponsiveDialogForm
+    actionText='Apply'
+    formikProps={{
+      initialValues: { fieldName: 'field value' },
+      onSubmit: action('submit'),
+    }}
+    FormComponent={Form}
+    onClose={action('close')}
+    open
+    title='Dialog Title'
+  />
+);
+
+Mobile.story = {
+  parameters: {
+    viewport: { defaultViewport: 'mobile1' },
+  },
+};
