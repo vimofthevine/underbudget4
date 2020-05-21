@@ -20,6 +20,13 @@ export default (darkMode) =>
           color: green[300],
         },
       },
+      MuiFormLabel: {
+        root: {
+          '&$focused': {
+            color: green[400],
+          },
+        },
+      },
       MuiTypography: {
         colorSecondary: {
           color: indigo[400],
