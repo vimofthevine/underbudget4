@@ -43,7 +43,7 @@ const ConfirmationDialog = ({
 
 ConfirmationDialog.propTypes = {
   confirmText: PropTypes.string,
-  message: PropTypes.string,
+  message: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   onConfirm: PropTypes.func,
   onReject: PropTypes.func,
   open: PropTypes.bool,
