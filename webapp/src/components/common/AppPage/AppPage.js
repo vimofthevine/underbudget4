@@ -1,5 +1,6 @@
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
@@ -10,10 +11,10 @@ import NavDrawer from '../NavDrawer';
 const useStyles = makeStyles((theme) => ({
   appBarSpacer: theme.mixins.toolbar,
   container: {
-    paddingBottom: theme.spacing(10),
+    paddingBottom: theme.spacing(4),
     paddingTop: theme.spacing(4),
     [theme.breakpoints.down('xs')]: {
-      padding: theme.spacing(0, 0, 10),
+      padding: theme.spacing(0),
     },
   },
   content: {
@@ -21,9 +22,12 @@ const useStyles = makeStyles((theme) => ({
     height: '100vh',
     overflow: 'auto',
   },
+  fab: {
+    paddingBottom: theme.spacing(11),
+  },
 }));
 
-const AppPage = ({ children, title }) => {
+const AppPage = ({ children, fab, title }) => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const handleToggleDrawer = () => setDrawerOpen((old) => !old);
   const handleCloseDrawer = () => setDrawerOpen(false);
@@ -45,7 +49,12 @@ const AppPage = ({ children, title }) => {
       <AccountMenu anchor={accountMenuAnchor} onClose={handleCloseAccountMenu} />
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <Container className={classes.container} maxWidth='lg'>
+        <Container
+          className={clsx(classes.container, {
+            [classes.fab]: fab,
+          })}
+          maxWidth='lg'
+        >
           {children}
         </Container>
       </main>
@@ -55,10 +64,12 @@ const AppPage = ({ children, title }) => {
 
 AppPage.propTypes = {
   children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]).isRequired,
+  fab: PropTypes.bool,
   title: PropTypes.string,
 };
 
 AppPage.defaultProps = {
+  fab: false,
   title: 'UnderBudget',
 };
 

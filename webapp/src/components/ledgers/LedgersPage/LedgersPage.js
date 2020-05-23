@@ -13,7 +13,7 @@ const LedgersPage = () => {
   const mobile = useMobile();
   return (
     <LedgersContextProvider>
-      <AppPage title='My Ledgers'>
+      <AppPage fab title='My Ledgers'>
         {mobile && <LedgersListing />}
         {!mobile && (
           <Paper>
