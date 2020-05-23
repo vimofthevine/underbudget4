@@ -12,6 +12,9 @@ const useStyles = makeStyles((theme) => ({
   container: {
     paddingBottom: theme.spacing(4),
     paddingTop: theme.spacing(4),
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(0),
+    },
   },
   content: {
     flexGrow: 1,
