@@ -10,10 +10,10 @@ import NavDrawer from '../NavDrawer';
 const useStyles = makeStyles((theme) => ({
   appBarSpacer: theme.mixins.toolbar,
   container: {
-    paddingBottom: theme.spacing(4),
+    paddingBottom: theme.spacing(10),
     paddingTop: theme.spacing(4),
     [theme.breakpoints.down('xs')]: {
-      padding: theme.spacing(0),
+      padding: theme.spacing(0, 0, 10),
     },
   },
   content: {

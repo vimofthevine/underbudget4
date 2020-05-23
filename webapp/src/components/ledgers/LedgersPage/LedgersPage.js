@@ -3,6 +3,7 @@ import React from 'react';
 
 import useMobile from '../../../hooks/useMobile';
 import AppPage from '../../common/AppPage';
+import CreateLedgerButton from '../CreateLedgerButton';
 import CreateLedgerDialog from '../CreateLedgerDialog';
 import { LedgersContextProvider } from '../LedgersContext';
 import LedgersListing from '../LedgersListing';
@@ -19,6 +20,7 @@ const LedgersPage = () => {
             <LedgersListing />
           </Paper>
         )}
+        <CreateLedgerButton />
         <CreateLedgerDialog />
         <ModifyLedgerDialog />
       </AppPage>
