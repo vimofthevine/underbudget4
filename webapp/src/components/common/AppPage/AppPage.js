@@ -47,7 +47,7 @@ const AppPage = ({ children, fab, title }) => {
       />
       <NavDrawer onClose={handleCloseDrawer} open={isDrawerOpen} />
       <AccountMenu anchor={accountMenuAnchor} onClose={handleCloseAccountMenu} />
-      <main className={classes.content}>
+      <main className={classes.content} id='app-content'>
         <div className={classes.appBarSpacer} />
         <Container
           className={clsx(classes.container, {
