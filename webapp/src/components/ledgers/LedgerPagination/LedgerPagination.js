@@ -1,5 +1,4 @@
 import TablePagination from '@material-ui/core/TablePagination';
-import Pagination from '@material-ui/lab/Pagination';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -29,18 +28,11 @@ const LedgerPagination = ({ count }) => {
       },
     });
 
-  return mobile ? (
-    <Pagination
-      count={Math.ceil(count / state.pagination.size)}
-      onChange={handleChangePage}
-      page={state.pagination.page}
-      siblingCount={0}
-    />
-  ) : (
+  return (
     <TablePagination
       component='div'
       count={count}
-      labelRowsPerPage='Ledgers per page'
+      labelRowsPerPage={mobile ? null : 'Ledgers per page'}
       onChangePage={handleChangePage}
       onChangeRowsPerPage={handleChangeRowsPerPage}
       page={state.pagination.page}
