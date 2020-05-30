@@ -22,7 +22,7 @@ const LedgerActionsMenu = ({ onDelete, onModify }) => {
 
   return (
     <>
-      <IconButton onClick={handleOpen}>
+      <IconButton aria-label='Open ledger actions menu' onClick={handleOpen}>
         <MoreVertIcon />
       </IconButton>
       <Menu anchorEl={anchor} onClose={handleClose} open={Boolean(anchor)}>

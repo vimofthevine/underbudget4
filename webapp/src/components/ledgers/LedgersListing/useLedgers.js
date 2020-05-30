@@ -14,12 +14,12 @@ export function useLedgers() {
 
   const createErrorMessage = useErrorMessage({ request: 'Unable to retrieve ledgers' });
 
-  const { error, isFetching, latestData, resolvedData, status } = usePaginatedQuery(
+  const { error, isFetching, resolvedData, status } = usePaginatedQuery(
     ['ledgers', state.pagination],
     fetchLedgers,
   );
   const ledgers = resolvedData ? resolvedData._embedded.ledgers : [];
-  const count = latestData ? latestData.page.totalElements : 0;
+  const count = resolvedData ? resolvedData.page.totalElements : 0;
 
   React.useEffect(() => {
     if (!isFetching) {
