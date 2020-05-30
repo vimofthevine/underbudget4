@@ -348,4 +348,54 @@ describe('LedgersPage', () => {
 
     await waitFor(() => expect(screen.queryAllByRole('row')).toHaveLength(2));
   });
+
+  it('should open modify ledger dialog on desktop', async () => {
+    window.matchMedia = createMediaQuery('800px');
+
+    const mockAxios = new MockAdapter(axios);
+    mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
+      _embedded: { ledgers: [ledger1, ledger2] },
+      page: { totalElements: 2 },
+    });
+
+    render();
+
+    await waitFor(() => expect(screen.queryAllByRole('row')).toHaveLength(3));
+
+    const rows = screen.queryAllByRole('row');
+    const row1 = within(rows[1]);
+    fireEvent.click(row1.getByRole('button', { name: /modify ledger/i }));
+
+    await waitFor(() => expect(screen.getByRole('heading', { name: /modify ledger/i })));
+  });
+
+  it('should open modify ledger dialog on mobile', async () => {
+    window.matchMedia = createMediaQuery('400px');
+
+    const mockAxios = new MockAdapter(axios);
+    mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
+      _embedded: { ledgers: [ledger1, ledger2] },
+      page: { totalElements: 2 },
+    });
+
+    render();
+
+    await waitFor(() => expect(screen.queryAllByRole('row')).toHaveLength(3));
+
+    const rows = screen.queryAllByRole('row');
+    const row1 = within(rows[1]);
+    fireEvent.click(row1.getByRole('button', { name: /open ledger actions menu/i }));
+    fireEvent.click(screen.getByRole('menuitem', { name: /modify ledger/i }));
+
+    await waitFor(() => expect(screen.getByRole('heading', { name: /modify ledger/i })));
+  });
+
+  it('should open create ledger dialog', async () => {
+    window.matchMedia = createMediaQuery('800px');
+
+    render();
+
+    fireEvent.click(screen.getByRole('button', { name: /create ledger/i }));
+    await waitFor(() => expect(screen.getByRole('heading', { name: /create ledger/i })));
+  });
 });

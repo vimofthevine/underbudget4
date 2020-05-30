@@ -7,7 +7,7 @@ import { useLedgersDispatch } from '../LedgersContext';
 const CreateLedgerButton = () => {
   const dispatch = useLedgersDispatch();
   return (
-    <Fab onClick={() => dispatch({ type: 'showCreateLedger' })}>
+    <Fab aria-label='Create ledger' onClick={() => dispatch({ type: 'showCreateLedger' })}>
       <AddIcon />
     </Fab>
   );
