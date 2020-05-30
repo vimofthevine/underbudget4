@@ -1,4 +1,3 @@
-import React from 'react';
 import { queryCache, useMutation } from 'react-query';
 
 import deleteLedger from '../../../api/ledgers/deleteLedger';
@@ -33,12 +32,10 @@ export function useLedgerActions(ledger) {
 
   const handleDelete = () =>
     confirm({
-      message: (
-        <>
-          {`Delete ledger ${ledger.name}?`}
-          <p>This action is permanent and will delete all transaction data in this ledger.</p>
-        </>
-      ),
+      message: [
+        `Delete ledger ${ledger.name}?`,
+        'This action is permanent and will delete all transaction data in this ledger.',
+      ],
     }).then(() => {
       mutate(ledger.id);
     });
