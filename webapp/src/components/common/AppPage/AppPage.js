@@ -9,7 +9,6 @@ import NavBar from '../NavBar';
 import NavDrawer from '../NavDrawer';
 
 const useStyles = makeStyles((theme) => ({
-  appBarSpacer: theme.mixins.toolbar,
   container: {
     paddingBottom: theme.spacing(4),
     paddingTop: theme.spacing(4),
@@ -19,7 +18,8 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: 1,
-    height: '100vh',
+    height: `calc(100vh - ${theme.mixins.toolbar.minHeight})`,
+    marginTop: theme.mixins.toolbar.minHeight,
     overflow: 'auto',
   },
   fab: {
@@ -48,7 +48,6 @@ const AppPage = ({ children, fab, title }) => {
       <NavDrawer onClose={handleCloseDrawer} open={isDrawerOpen} />
       <AccountMenu anchor={accountMenuAnchor} onClose={handleCloseAccountMenu} />
       <main className={classes.content} id='app-content'>
-        <div className={classes.appBarSpacer} />
         <Container
           className={clsx(classes.container, {
             [classes.fab]: fab,
