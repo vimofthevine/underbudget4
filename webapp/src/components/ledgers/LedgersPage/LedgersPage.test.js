@@ -367,6 +367,7 @@ describe('LedgersPage', () => {
     fireEvent.click(row1.getByRole('button', { name: /modify ledger/i }));
 
     await waitFor(() => expect(screen.getByRole('heading', { name: /modify ledger/i })));
+    expect(screen.getByLabelText(/name/i)).toHaveValue('My Ledger');
   });
 
   it('should open modify ledger dialog on mobile', async () => {
@@ -383,11 +384,12 @@ describe('LedgersPage', () => {
     await waitFor(() => expect(screen.queryAllByRole('row')).toHaveLength(3));
 
     const rows = screen.queryAllByRole('row');
-    const row1 = within(rows[1]);
-    fireEvent.click(row1.getByRole('button', { name: /open ledger actions menu/i }));
+    const row2 = within(rows[2]);
+    fireEvent.click(row2.getByRole('button', { name: /open ledger actions menu/i }));
     fireEvent.click(screen.getByRole('menuitem', { name: /modify ledger/i }));
 
     await waitFor(() => expect(screen.getByRole('heading', { name: /modify ledger/i })));
+    expect(screen.getByLabelText(/name/i)).toHaveValue('Demo Ledger');
   });
 
   it('should open create ledger dialog', async () => {

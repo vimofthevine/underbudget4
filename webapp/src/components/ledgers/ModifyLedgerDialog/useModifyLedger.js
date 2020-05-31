@@ -1,4 +1,4 @@
-import { queryCache, useMutation } from 'react-query';
+import { useMutation, useQueryCache } from 'react-query';
 
 import modifyLedger from '../../../api/ledgers/modifyLedger';
 import useErrorMessage from '../../../hooks/useErrorMessage';
@@ -12,6 +12,7 @@ const noLedger = {
 
 // eslint-disable-next-line import/prefer-default-export
 export function useModifyLedger() {
+  const queryCache = useQueryCache();
   const snackbar = useSnackbar();
   const dispatch = useLedgersDispatch();
   const state = useLedgersState();
