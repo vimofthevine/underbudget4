@@ -1,14 +1,19 @@
 import React from 'react';
 import { usePaginatedQuery } from 'react-query';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import fetchLedgers from '../../../api/ledgers/fetchLedgers';
 import useErrorMessage from '../../../hooks/useErrorMessage';
 import useMobile from '../../../hooks/useMobile';
+import { ACCOUNTS } from '../../../utils/routes';
 import scrollToTop from '../../../utils/scrollToTop';
+import setSelectedLedger from '../../../utils/setSelectedLedger';
 import { useLedgersState } from '../LedgersContext';
 
 // eslint-disable-next-line import/prefer-default-export
 export function useLedgers() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const mobile = useMobile();
   const state = useLedgersState();
 
@@ -27,10 +32,16 @@ export function useLedgers() {
     }
   }, [isFetching]);
 
+  const handleSelect = React.useCallback((ledger) => {
+    setSelectedLedger(ledger.id);
+    const { from } = location.state || { from: { pathname: ACCOUNTS } };
+    navigate(from);
+  }, []);
+
   return {
     count,
     error: createErrorMessage(error),
-    handleSelect: () => 0,
+    handleSelect,
     isFetching,
     ledgers,
     mobile,
