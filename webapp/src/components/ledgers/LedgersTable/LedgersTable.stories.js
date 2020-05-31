@@ -31,7 +31,7 @@ export const OneLedger = () => (
         name: 'Demo Ledger',
         currency: 860,
         created: moment().subtract(6, 'day').toISOString(),
-        lastModified: moment().subtract(5, 'hour').toISOString(),
+        lastUpdated: moment().subtract(5, 'hour').toISOString(),
       },
     ]}
     onSelect={handleSelect}
@@ -46,21 +46,21 @@ export const SeveralLedgers = () => (
         name: 'Demo Ledger',
         currency: 840,
         created: moment().subtract(86, 'day').toISOString(),
-        lastModified: moment().subtract(75, 'day').toISOString(),
+        lastUpdated: moment().subtract(75, 'day').toISOString(),
       },
       {
         id: 'ledgerId2',
         name: 'Foreign Ledger',
         currency: 980,
         created: moment().subtract(6, 'day').toISOString(),
-        lastModified: moment().subtract(5, 'hour').toISOString(),
+        lastUpdated: moment().subtract(5, 'hour').toISOString(),
       },
       {
         id: 'ledgerId3',
         name: 'My Ledger',
         currency: 840,
         created: moment().subtract(36, 'day').toISOString(),
-        lastModified: moment().subtract(25, 'day').toISOString(),
+        lastUpdated: moment().subtract(25, 'day').toISOString(),
       },
     ]}
     onSelect={handleSelect}
@@ -75,21 +75,21 @@ export const Mobile = () => (
         name: 'Demo Ledger',
         currency: 840,
         created: moment().subtract(86, 'day').toISOString(),
-        lastModified: moment().subtract(75, 'day').toISOString(),
+        lastUpdated: moment().subtract(75, 'day').toISOString(),
       },
       {
         id: 'ledgerId2',
         name: 'Foreign Ledger',
         currency: 980,
         created: moment().subtract(6, 'day').toISOString(),
-        lastModified: moment().subtract(5, 'hour').toISOString(),
+        lastUpdated: moment().subtract(5, 'hour').toISOString(),
       },
       {
         id: 'ledgerId3',
         name: 'My Ledger',
         currency: 840,
         created: moment().subtract(36, 'day').toISOString(),
-        lastModified: moment().subtract(25, 'day').toISOString(),
+        lastUpdated: moment().subtract(25, 'day').toISOString(),
       },
     ]}
     mobile

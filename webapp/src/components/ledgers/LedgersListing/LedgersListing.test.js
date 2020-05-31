@@ -41,7 +41,7 @@ const createLedgers = (from, to) => {
       id: `ledger-id-${i}`,
       name: `Ledger ${i}`,
       currency: currencies[i % currencies.length],
-      lastModified: moment()
+      lastUpdated: moment()
         .subtract(i * 2 + 4, 'day')
         .toISOString(),
     });

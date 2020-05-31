@@ -37,13 +37,13 @@ const ledger1 = {
   id: 'ledger-id-1',
   name: 'My Ledger',
   currency: 840,
-  lastModified: moment().subtract(1, 'hour'),
+  lastUpdated: moment().subtract(1, 'hour'),
 };
 const ledger2 = {
   id: 'ledger-id-2',
   name: 'Demo Ledger',
   currency: 978,
-  lastModified: moment().subtract(4, 'month'),
+  lastUpdated: moment().subtract(4, 'month'),
 };
 
 describe('LedgersPage', () => {
