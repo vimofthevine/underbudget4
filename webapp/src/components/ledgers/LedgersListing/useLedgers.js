@@ -32,11 +32,14 @@ export function useLedgers() {
     }
   }, [isFetching]);
 
-  const handleSelect = React.useCallback((ledger) => {
-    setSelectedLedger(ledger.id);
-    const { from } = location.state || { from: { pathname: ACCOUNTS } };
-    navigate(from);
-  }, []);
+  const handleSelect = React.useCallback(
+    (ledger) => {
+      setSelectedLedger(ledger.id);
+      const { from } = location.state || { from: { pathname: ACCOUNTS } };
+      navigate(from);
+    },
+    [location, navigate],
+  );
 
   return {
     count,

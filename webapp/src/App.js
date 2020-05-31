@@ -8,6 +8,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ConfirmationServiceProvider } from './components/common/ConfirmationService';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import { SnackbarServiceProvider } from './components/common/SnackbarService';
+import LedgersPage from './components/ledgers/LedgersPage';
 import LoginPage from './components/login/LoginPage';
 import LogoutPage from './components/logout/LogoutPage';
 import TokensPage from './components/tokens/TokensPage';
@@ -30,6 +31,7 @@ function App() {
               <Routes>
                 <Route path={routes.LOGIN} element={<LoginPage />} />
                 <Route path={routes.LOGOUT} element={<LogoutPage />} />
+                <ProtectedRoute path={`${routes.LEDGERS}/*`} element={<LedgersPage />} />
                 <ProtectedRoute path={`${routes.TOKENS}/*`} element={<TokensPage />} />
                 <ProtectedRoute path='*' element={<div>hi</div>} />
               </Routes>
