@@ -30,5 +30,47 @@
 			"import $1Icon from '@material-ui/icons/$1';",
 			"$0"
 		]
+	},
+	"Re-export default from...": {
+		"scope": "javascript",
+		"prefix": "reexport default",
+		"body": [
+			"export { default } from './$1';",
+			""
+		]
+	},
+	"Simple function component": {
+		"scope": "javascript",
+		"prefix": "comp simple",
+		"body": [
+			"const $1 = ($2) => (",
+			"  $0",
+			");",
+			"",
+			"export default $1;",
+			""
+		]
+	},
+	"Complete function component": {
+		"scope": "javascript",
+		"prefix": "comp full",
+		"body": [
+			"const $1 = ($2) => {",
+			"  $0",
+			"  return (",
+			"  );",
+			"};",
+			"",
+			"$1.propTypes = {",
+			"  $3",
+			"};",
+			"",
+			"$1.defaultProps = {",
+			"  $3",
+			"};",
+			"",
+			"export default $1;",
+			""
+		]
 	}
 }

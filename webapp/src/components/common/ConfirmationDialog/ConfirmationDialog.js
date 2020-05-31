@@ -7,6 +7,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+const toArray = (msg) => (Array.isArray(msg) ? msg : [msg]);
+
 const ConfirmationDialog = ({
   confirmText,
   message,
@@ -26,7 +28,10 @@ const ConfirmationDialog = ({
   >
     <DialogTitle id='confirmation-dialog-title'>{title}</DialogTitle>
     <DialogContent>
-      <DialogContentText>{message}</DialogContentText>
+      {toArray(message).map((m, i) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <DialogContentText key={i}>{m}</DialogContentText>
+      ))}
     </DialogContent>
     <DialogActions>
       {variant !== 'info' && (
@@ -43,7 +48,7 @@ const ConfirmationDialog = ({
 
 ConfirmationDialog.propTypes = {
   confirmText: PropTypes.string,
-  message: PropTypes.string,
+  message: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
   onConfirm: PropTypes.func,
   onReject: PropTypes.func,
   open: PropTypes.bool,

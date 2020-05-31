@@ -24,3 +24,7 @@ export const Customized = () => (
     {...dialogActions}
   />
 );
+
+export const MultipleLines = () => (
+  <ConfirmationDialog message={['Are you sure?', 'Are you really really sure?']} open />
+);

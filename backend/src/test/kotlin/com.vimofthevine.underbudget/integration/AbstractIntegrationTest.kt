@@ -29,6 +29,7 @@ abstract class AbstractIntegrationTest {
 
   @BeforeEach
   fun setup() {
+    RestAssured.reset()
     RestAssured.port = localServerPort
     RestAssured.requestSpecification =
       RequestSpecBuilder().setContentType("application/json").build()
@@ -46,5 +47,13 @@ abstract class AbstractIntegrationTest {
       } Extract {
         path("token")
       }
+  }
+
+  fun setupAuth() {
+    RestAssured.requestSpecification =
+      RequestSpecBuilder()
+        .setContentType("application/json")
+        .addHeader("Authorization", "Bearer ${jwt}")
+        .build()
   }
 }
