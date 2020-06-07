@@ -288,6 +288,51 @@ class AccountTest : AbstractIntegrationTest() {
   }
 
   @Test
+  fun `should prevent creating child account under another ledger`() {
+    setupAuth()
+
+    val ledgerId2: String =
+      Given {
+        body(mapOf(
+          "name" to "Another Ledger",
+          "currency" to 980
+        ))
+      } When {
+        post("/api/ledgers")
+      } Then {
+        statusCode(201)
+      } Extract {
+        path("id")
+      }
+
+    val ledger1AcctId: String =
+      Given {
+        body(mapOf(
+          "ledger" to "/api/ledgers/$ledgerId",
+          "name" to "Ledger 1 Account"
+        ))
+      } When {
+        post("/api/accounts")
+      } Then {
+        statusCode(201)
+      } Extract {
+        path("id")
+      }
+
+    Given {
+      body(mapOf(
+        "ledger" to "/api/ledgers/$ledgerId2",
+        "parent" to "/api/accounts/$ledger1AcctId",
+        "name" to "Ledger 2 account"
+      ))
+    } When {
+      post("/api/accounts")
+    } Then {
+      statusCode(400)
+    }
+  }
+
+  @Test
   fun `account resources can be nested in accounts`() {
     setupAuth()
 

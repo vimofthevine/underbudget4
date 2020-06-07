@@ -11,6 +11,9 @@ import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import org.springframework.data.rest.core.config.Projection
+import org.springframework.stereotype.Component
+import org.springframework.validation.Errors
+import org.springframework.validation.Validator
 
 @Entity
 @EntityListeners(AuditingEntityListener::class)
@@ -53,6 +56,23 @@ data class Account(
   @LastModifiedDate
   var lastUpdated: Instant?
 )
+
+@Component("beforeCreateAccountValidator")
+class AccountValidator: Validator {
+  override fun supports(clazz: Class<*>) = Account::class.java.isAssignableFrom(clazz)
+
+  override fun validate(target: Any, errors: Errors) {
+    if (target is Account) {
+      val parent = target.parent
+      if (parent is Account) {
+        if (parent.ledger != target.ledger) {
+          errors.rejectValue("ledger", "ledger.mismatch",
+            "Ledger in target does not match ledger in parent")
+        }
+      }
+    }
+  }
+}
 
 @Projection(name = "accountTreeNode", types = arrayOf(Account::class))
 interface AccountTreeNode {
