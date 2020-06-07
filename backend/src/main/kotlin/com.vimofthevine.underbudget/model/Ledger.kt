@@ -18,10 +18,11 @@ data class Ledger(
   val id: UUID = UUID.randomUUID(),
 
   @get:NotEmpty(message = "Name is required")
-  var name: String = "",
+  var name: String?,
 
   @get:Min(value = 1, message = "Currency code must be a positive number")
-  var currency: Int = 0,
+  @get:NotNull(message = "Currency is required")
+  var currency: Int?,
 
   @Column(updatable = false)
   @CreatedDate
@@ -29,5 +30,8 @@ data class Ledger(
 
   @Column(name = "last_updated")
   @LastModifiedDate
-  var lastUpdated: Instant?
+  var lastUpdated: Instant?,
+
+  @OneToMany(mappedBy = "ledger", cascade = [CascadeType.REMOVE])
+  var accounts: List<Account>? = null
 )
