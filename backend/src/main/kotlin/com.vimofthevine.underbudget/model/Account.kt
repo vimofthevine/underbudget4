@@ -54,7 +54,10 @@ data class Account(
 
   @Column(name = "last_updated")
   @LastModifiedDate
-  var lastUpdated: Instant?
+  var lastUpdated: Instant?,
+
+  @OneToMany(mappedBy = "parent", cascade = [CascadeType.REMOVE])
+  var children: List<Account>? = null
 )
 
 open class AccountValidator : Validator {

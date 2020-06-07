@@ -489,6 +489,57 @@ class AccountTest : AbstractIntegrationTest() {
   }
 
   @Test
+  fun `deletion of parent account cascades to children`() {
+    setupAuth()
+
+    val parentId: String =
+      Given {
+        body(mapOf(
+          "ledger" to "/api/ledgers/$ledgerId",
+          "name" to "Parent"
+        ))
+      } When {
+        post("/api/accounts")
+      } Then {
+        statusCode(201)
+      } Extract {
+        path("id")
+      }
+
+    Given {
+      body(mapOf(
+        "ledger" to "/api/ledgers/$ledgerId",
+        "parent" to "/api/accounts/$parentId",
+        "name" to "Child"
+      ))
+    } When {
+      post("/api/accounts")
+    } Then {
+      statusCode(201)
+    }
+
+    When {
+      get("/api/ledgers/$ledgerId/accounts")
+    } Then {
+      statusCode(200)
+      body("_embedded.accounts", hasSize<List<*>>(2))
+    }
+
+    When {
+      delete("/api/accounts/$parentId")
+    } Then {
+      statusCode(204)
+    }
+
+    When {
+      get("/api/ledgers/$ledgerId/accounts")
+    } Then {
+      statusCode(200)
+      body("_embedded.accounts", hasSize<List<*>>(0))
+    }
+  }
+
+  @Test
   fun `deletion of ledger cascades to accounts`() {
     setupAuth()
 
