@@ -330,6 +330,45 @@ class AccountTest : AbstractIntegrationTest() {
     } Then {
       statusCode(400)
     }
+
+    val acctId: String =
+      Given {
+        body(mapOf(
+          "ledger" to "/api/ledgers/$ledgerId",
+          "parent" to "/api/accounts/$ledger1AcctId",
+          "name" to "Ledger 1 sub-account"
+        ))
+      } When {
+        post("/api/accounts")
+      } Then {
+        statusCode(201)
+      } Extract {
+        path("id")
+      }
+
+    val ledger2AcctId: String =
+      Given {
+        body(mapOf(
+          "ledger" to "/api/ledgers/$ledgerId2",
+          "name" to "Ledger 2 Account"
+        ))
+      } When {
+        post("/api/accounts")
+      } Then {
+        statusCode(201)
+      } Extract {
+        path("id")
+      }
+
+    Given {
+      body(mapOf(
+        "parent" to "/api/accounts/$ledger2AcctId"
+      ))
+    } When {
+      patch("/api/accounts/$acctId")
+    } Then {
+      statusCode(400)
+    }
   }
 
   @Test
@@ -429,6 +468,23 @@ class AccountTest : AbstractIntegrationTest() {
         "archived", equalTo(false),
         "parentId", equalTo(acctId2)
       )
+    }
+
+    Given {
+      body(mapOf(
+        "parent" to "/api/accounts/$acctId2"
+      ))
+    } When {
+      patch("/api/accounts/$acctId3")
+    } Then {
+      statusCode(200)
+    }
+
+    When {
+      get("/api/accounts/$acctId3?projection=accountTreeNode")
+    } Then {
+      statusCode(200)
+      body("parentId", equalTo(acctId2))
     }
   }
 

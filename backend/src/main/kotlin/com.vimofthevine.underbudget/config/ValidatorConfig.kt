@@ -11,7 +11,7 @@ class ValidatorConfig(
   private val validators: Map<String, Validator>
 ) : InitializingBean {
   override fun afterPropertiesSet() {
-    val events = listOf("beforeCreate")
+    val events = listOf("beforeCreate", "beforeSave")
     for (entry in validators.entries) {
       events.stream().filter({ entry.key.startsWith(it) })
         .findFirst().ifPresent({ listener.addValidator(it, entry.value) })

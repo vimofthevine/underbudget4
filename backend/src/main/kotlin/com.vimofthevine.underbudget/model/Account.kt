@@ -57,8 +57,7 @@ data class Account(
   var lastUpdated: Instant?
 )
 
-@Component("beforeCreateAccountValidator")
-class AccountValidator: Validator {
+open class AccountValidator : Validator {
   override fun supports(clazz: Class<*>) = Account::class.java.isAssignableFrom(clazz)
 
   override fun validate(target: Any, errors: Errors) {
@@ -73,6 +72,12 @@ class AccountValidator: Validator {
     }
   }
 }
+
+@Component("beforeCreateAccountValidator")
+class BeforeCreateAccountValidator : AccountValidator()
+
+@Component("beforeSaveAccountValidator")
+class BeforeSaveAccountValidator : AccountValidator()
 
 @Projection(name = "accountTreeNode", types = arrayOf(Account::class))
 interface AccountTreeNode {
