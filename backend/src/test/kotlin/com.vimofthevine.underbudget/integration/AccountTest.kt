@@ -33,14 +33,9 @@ class AccountTest : AbstractIntegrationTest() {
   }
 
   @Test
-  fun `account resource requires authentication`() {
-    Given {
-      body(mapOf(
-        "ledger" to "/api/ledgers/$ledgerId",
-        "name" to "Account Name"
-      ))
-    } When {
-      post("/api/accounts")
+  fun `account resources requires authentication`() {
+    When {
+      get("/api/account-categories")
     } Then {
       statusCode(401)
     }
@@ -50,68 +45,11 @@ class AccountTest : AbstractIntegrationTest() {
     } Then {
       statusCode(401)
     }
-
-    When {
-      get("/api/accounts/11112222-3333-4444-5555-666677778888")
-    } Then {
-      statusCode(401)
-    }
-
-    Given {
-      body(mapOf(
-        "ledger" to "/api/ledgers/$ledgerId",
-        "name" to "Account Name"
-      ))
-    } When {
-      put("/api/accounts/11112222-3333-4444-5555-666677778888")
-    } Then {
-      statusCode(401)
-    }
-
-    When {
-      delete("/api/accounts/11112222-3333-4444-5555-666677778888")
-    } Then {
-      statusCode(401)
-    }
   }
 
   @Test
-  fun `account resource requires valid parameters`() {
+  fun `account category resource requires valid parameters`() {
     setupAuth()
-
-    // Invalid name
-    Given {
-      body(mapOf(
-        "ledger" to "/api/ledgers/$ledgerId",
-        "Name" to "Account Name"
-      ))
-    } When {
-      post("/api/accounts")
-    } Then {
-      statusCode(400)
-    }
-
-    Given {
-      body(mapOf(
-        "ledger" to "/api/ledgers/$ledgerId",
-        "name" to ""
-      ))
-    } When {
-      post("/api/accounts")
-    } Then {
-      statusCode(400)
-    }
-
-    Given {
-      body(mapOf(
-        "name" to null,
-        "ledger" to "/api/ledgers/$ledgerId"
-      ))
-    } When {
-      post("/api/accounts")
-    } Then {
-      statusCode(400)
-    }
 
     // Invalid ledger
     Given {
@@ -120,7 +58,7 @@ class AccountTest : AbstractIntegrationTest() {
         "name" to "Account name"
       ))
     } When {
-      post("/api/accounts")
+      post("/api/account-categories")
     } Then {
       statusCode(400)
     }
@@ -131,9 +69,152 @@ class AccountTest : AbstractIntegrationTest() {
         "name" to "Account name"
       ))
     } When {
+      post("/api/account-categories")
+    } Then {
+      statusCode(greaterThanOrEqualTo(400))
+    }
+
+    Given {
+      body(mapOf(
+        "ledger" to "/api/ledgers/00000000-0000-0000-0000-000000000000",
+        "name" to "Account name"
+      ))
+    } When {
+      post("/api/account-categories")
+    } Then {
+      statusCode(greaterThanOrEqualTo(400))
+    }
+
+    // Invalid name
+    Given {
+      body(mapOf(
+        "ledger" to "/api/ledgers/$ledgerId",
+        "Name" to "Category Name"
+      ))
+    } When {
+      post("/api/account-categories")
+    } Then {
+      statusCode(400)
+    }
+
+    Given {
+      body(mapOf(
+        "ledger" to "/api/ledgers/$ledgerId",
+        "name" to ""
+      ))
+    } When {
+      post("/api/account-categories")
+    } Then {
+      statusCode(400)
+    }
+
+    Given {
+      body(mapOf(
+        "ledger" to "/api/ledgers/$ledgerId",
+        "name" to null
+      ))
+    } When {
+      post("/api/account-categories")
+    } Then {
+      statusCode(400)
+    }
+  }
+
+  @Test
+  fun `account resource requires valid parameters`() {
+    setupAuth()
+
+    val catId: String =
+      Given {
+        body(mapOf(
+          "ledger" to "/api/ledgers/$ledgerId",
+          "name" to "Category name"
+        ))
+      } When {
+        post("/api/account-categories")
+      } Then {
+        statusCode(201)
+      } Extract {
+        path("id")
+      }
+
+    // Invalid category
+    Given {
+      body(mapOf(
+        "Category" to "/api/account-categories/$catId",
+        "name" to "Account name"
+      ))
+    } When {
+      post("/api/accounts")
+    } Then {
+      statusCode(400)
+    }
+
+    Given {
+      body(mapOf(
+        "category" to "/api/ledgers/$ledgerId",
+        "name" to "Account name"
+      ))
+    } When {
       post("/api/accounts")
     } Then {
       statusCode(greaterThanOrEqualTo(400))
+    }
+
+    Given {
+      body(mapOf(
+        "category" to "/api/account-categories/00000000-0000-0000-0000-000000000000",
+        "name" to "Account name"
+      ))
+    } When {
+      post("/api/accounts")
+    } Then {
+      statusCode(greaterThanOrEqualTo(400))
+    }
+
+    Given {
+      body(mapOf(
+        "category" to "$catId",
+        "name" to "Account name"
+      ))
+    } When {
+      post("/api/accounts")
+    } Then {
+      statusCode(greaterThanOrEqualTo(400))
+    }
+
+    // Invalid name
+    Given {
+      body(mapOf(
+        "category" to "/api/account-categories/$catId",
+        "Name" to "Account Name"
+      ))
+    } When {
+      post("/api/accounts")
+    } Then {
+      statusCode(400)
+    }
+
+    Given {
+      body(mapOf(
+        "category" to "/api/account-categories/$catId",
+        "name" to ""
+      ))
+    } When {
+      post("/api/accounts")
+    } Then {
+      statusCode(400)
+    }
+
+    Given {
+      body(mapOf(
+        "category" to "/api/account-categories/$catId",
+        "name" to null
+      ))
+    } When {
+      post("/api/accounts")
+    } Then {
+      statusCode(400)
     }
 
     // Invalid institution
@@ -187,29 +268,30 @@ class AccountTest : AbstractIntegrationTest() {
     } Then {
       statusCode(400)
     }
-
-    // Invalid institution
-    Given {
-      body(mapOf(
-        "ledger" to "/api/ledgers/$ledgerId",
-        "name" to "Account name",
-        "institution" to null
-      ))
-    } When {
-      post("/api/accounts")
-    } Then {
-      statusCode(400)
-    }
   }
 
   @Test
   fun `ledger resource is audited`() {
     setupAuth()
 
-    val postResponse =
+    val catId: String =
       Given {
         body(mapOf(
           "ledger" to "/api/ledgers/$ledgerId",
+          "name" to "Category name"
+        ))
+      } When {
+        post("/api/account-categories")
+      } Then {
+        statusCode(201)
+      } Extract {
+        path("id")
+      }
+
+    val postResponse =
+      Given {
+        body(mapOf(
+          "category" to "/api/account-categories/$catId",
           "name" to "Acount name"
         ))
       } When {
@@ -231,7 +313,7 @@ class AccountTest : AbstractIntegrationTest() {
 
     Given {
       body(mapOf(
-        "ledger" to "/api/ledgers/$ledgerId",
+        "category" to "/api/account-categories/$catId",
         "name" to "Account name"
       ))
     } When {
@@ -245,7 +327,7 @@ class AccountTest : AbstractIntegrationTest() {
 
     Given {
       body(mapOf(
-        "ledger" to "/api/ledgers/$ledgerId",
+        "category" to "/api/account-categories/$catId",
         "name" to "Account name",
         "institution" to "Bank of Dad",
         "accountNumber" to "1",
@@ -288,98 +370,56 @@ class AccountTest : AbstractIntegrationTest() {
   }
 
   @Test
-  fun `should prevent creating child account under another ledger`() {
+  fun `can fetch all accounts by category`() {
     setupAuth()
 
-    val ledgerId2: String =
-      Given {
-        body(mapOf(
-          "name" to "Another Ledger",
-          "currency" to 980
-        ))
-      } When {
-        post("/api/ledgers")
-      } Then {
-        statusCode(201)
-      } Extract {
-        path("id")
-      }
-
-    val ledger1AcctId: String =
+    val catId1: String =
       Given {
         body(mapOf(
           "ledger" to "/api/ledgers/$ledgerId",
-          "name" to "Ledger 1 Account"
+          "name" to "Category 1"
         ))
       } When {
-        post("/api/accounts")
+        post("/api/account-categories")
       } Then {
         statusCode(201)
       } Extract {
         path("id")
       }
 
-    Given {
-      body(mapOf(
-        "ledger" to "/api/ledgers/$ledgerId2",
-        "parent" to "/api/accounts/$ledger1AcctId",
-        "name" to "Ledger 2 account"
-      ))
-    } When {
-      post("/api/accounts")
-    } Then {
-      statusCode(400)
-    }
-
-    val acctId: String =
+    val catId2: String =
       Given {
         body(mapOf(
           "ledger" to "/api/ledgers/$ledgerId",
-          "parent" to "/api/accounts/$ledger1AcctId",
-          "name" to "Ledger 1 sub-account"
+          "name" to "Category 2"
         ))
       } When {
-        post("/api/accounts")
+        post("/api/account-categories")
       } Then {
         statusCode(201)
       } Extract {
         path("id")
       }
 
-    val ledger2AcctId: String =
+    val catId3: String =
       Given {
         body(mapOf(
-          "ledger" to "/api/ledgers/$ledgerId2",
-          "name" to "Ledger 2 Account"
+          "ledger" to "/api/ledgers/$ledgerId",
+          "name" to "Category 3"
         ))
       } When {
-        post("/api/accounts")
+        post("/api/account-categories")
       } Then {
         statusCode(201)
       } Extract {
         path("id")
       }
-
-    Given {
-      body(mapOf(
-        "parent" to "/api/accounts/$ledger2AcctId"
-      ))
-    } When {
-      patch("/api/accounts/$acctId")
-    } Then {
-      statusCode(400)
-    }
-  }
-
-  @Test
-  fun `account resources can be nested in accounts`() {
-    setupAuth()
 
     val acctId1: String =
       Given {
         body(mapOf(
-          "ledger" to "/api/ledgers/$ledgerId",
-          "name" to "Parent"
+          "category" to "/api/account-categories/$catId2",
+          "name" to "Account 1"
         ))
       } When {
         post("/api/accounts")
@@ -388,13 +428,12 @@ class AccountTest : AbstractIntegrationTest() {
       } Extract {
         path("id")
       }
-    
+
     val acctId2: String =
       Given {
         body(mapOf(
-          "ledger" to "/api/ledgers/$ledgerId",
-          "parent" to "/api/accounts/$acctId1",
-          "name" to "Child"
+          "category" to "/api/account-categories/$catId1",
+          "name" to "Account 2"
         ))
       } When {
         post("/api/accounts")
@@ -407,25 +446,8 @@ class AccountTest : AbstractIntegrationTest() {
     val acctId3: String =
       Given {
         body(mapOf(
-          "ledger" to "/api/ledgers/$ledgerId",
-          "parent" to "/api/accounts/$acctId1",
-          "name" to "Sibling",
-          "archived" to true
-        ))
-      } When {
-        post("/api/accounts")
-      } Then {
-        statusCode(201)
-      } Extract {
-        path("id")
-      }
-
-    val acctId4: String =
-      Given {
-        body(mapOf(
-          "ledger" to "/api/ledgers/$ledgerId",
-          "parent" to "/api/accounts/$acctId2",
-          "name" to "Grandchild"
+          "category" to "/api/account-categories/$catId2",
+          "name" to "Account 3"
         ))
       } When {
         post("/api/accounts")
@@ -436,70 +458,42 @@ class AccountTest : AbstractIntegrationTest() {
       }
 
     When {
-      get("/api/ledgers/$ledgerId/accounts?projection=accountTreeNode")
+      get("/api/ledgers/$ledgerId/accountCategories?projection=categoryWithAccounts")
     } Then {
       statusCode(200)
-      body("_embedded.accounts.id", contains(acctId1, acctId2, acctId3, acctId4))
+      body("_embedded.accountCategories.id", contains(catId1, catId2, catId3))
 
-      rootPath("_embedded.accounts.find { it.id == '$acctId1' }")
-      body("id", equalTo(acctId1),
-        "name", equalTo("Parent"),
-        "archived", equalTo(false),
-        "parentId", equalTo(null)
-      )
+      rootPath("_embedded.accountCategories.find { it.id == '$catId1' }")
+      body("name", equalTo("Category 1"))
+      body("accounts", hasSize<List<*>>(1))
+      body("accounts[0].id", equalTo(acctId2))
+      body("accounts[0].name", equalTo("Account 2"))
+      body("accounts[0].archived", equalTo(false))
+      body("accounts[0]", not(hasKey<String>("accountNumber")))
 
-      rootPath("_embedded.accounts.find { it.id == '$acctId2' }")
-      body("id", equalTo(acctId2),
-        "name", equalTo("Child"),
-        "archived", equalTo(false),
-        "parentId", equalTo(acctId1)
-      )
+      rootPath("_embedded.accountCategories.find { it.id == '$catId2' }")
+      body("name", equalTo("Category 2"))
+      body("accounts.id", contains(acctId1, acctId3))
+      body("accounts.name", contains("Account 1", "Account 3"))
 
-      rootPath("_embedded.accounts.find { it.id == '$acctId3' }")
-      body("id", equalTo(acctId3),
-        "name", equalTo("Sibling"),
-        "archived", equalTo(true),
-        "parentId", equalTo(acctId1)
-      )
-
-      rootPath("_embedded.accounts.find { it.id == '$acctId4' }")
-      body("id", equalTo(acctId4),
-        "name", equalTo("Grandchild"),
-        "archived", equalTo(false),
-        "parentId", equalTo(acctId2)
-      )
-    }
-
-    Given {
-      body(mapOf(
-        "parent" to "/api/accounts/$acctId2"
-      ))
-    } When {
-      patch("/api/accounts/$acctId3")
-    } Then {
-      statusCode(200)
-    }
-
-    When {
-      get("/api/accounts/$acctId3?projection=accountTreeNode")
-    } Then {
-      statusCode(200)
-      body("parentId", equalTo(acctId2))
+      rootPath("_embedded.accountCategories.find { it.id == '$catId3' }")
+      body("name", equalTo("Category 3"))
+      body("accounts", hasSize<List<*>>(0))
     }
   }
 
   @Test
-  fun `deletion of parent account cascades to children`() {
+  fun `deletion of account category cascades to accounts`() {
     setupAuth()
 
-    val parentId: String =
+    val catId: String =
       Given {
         body(mapOf(
           "ledger" to "/api/ledgers/$ledgerId",
-          "name" to "Parent"
+          "name" to "Category Name"
         ))
       } When {
-        post("/api/accounts")
+        post("/api/account-categories")
       } Then {
         statusCode(201)
       } Extract {
@@ -508,9 +502,8 @@ class AccountTest : AbstractIntegrationTest() {
 
     Given {
       body(mapOf(
-        "ledger" to "/api/ledgers/$ledgerId",
-        "parent" to "/api/accounts/$parentId",
-        "name" to "Child"
+        "category" to "/api/account-categories/$catId",
+        "name" to "Account Name"
       ))
     } When {
       post("/api/accounts")
@@ -519,38 +512,38 @@ class AccountTest : AbstractIntegrationTest() {
     }
 
     When {
-      get("/api/ledgers/$ledgerId/accounts")
+      get("/api/accounts")
     } Then {
       statusCode(200)
-      body("_embedded.accounts", hasSize<List<*>>(2))
+      body("_embedded.accounts.size()", equalTo(1))
     }
 
     When {
-      delete("/api/accounts/$parentId")
+      delete("/api/account-categories/$catId")
     } Then {
       statusCode(204)
     }
 
     When {
-      get("/api/ledgers/$ledgerId/accounts")
+      get("/api/accounts")
     } Then {
       statusCode(200)
-      body("_embedded.accounts", hasSize<List<*>>(0))
+      body("_embedded.accounts.size()", equalTo(0))
     }
   }
 
   @Test
-  fun `deletion of ledger cascades to accounts`() {
+  fun `deletion of ledger cascades to account categories`() {
     setupAuth()
 
-    val acctId: String =
+    val catId: String =
       Given {
         body(mapOf(
           "ledger" to "/api/ledgers/$ledgerId",
-          "name" to "Account"
+          "name" to "Category Name"
         ))
       } When {
-        post("/api/accounts")
+        post("/api/account-categories")
       } Then {
         statusCode(201)
       } Extract {
@@ -558,7 +551,7 @@ class AccountTest : AbstractIntegrationTest() {
       }
 
     When {
-      get("/api/accounts/${acctId}")
+      get("/api/account-categories/${catId}")
     } Then {
       statusCode(200)
     }
@@ -570,7 +563,7 @@ class AccountTest : AbstractIntegrationTest() {
     }
 
     When {
-      get("/api/accounts/${acctId}")
+      get("/api/account-categories/${catId}")
     } Then {
       statusCode(404)
     }

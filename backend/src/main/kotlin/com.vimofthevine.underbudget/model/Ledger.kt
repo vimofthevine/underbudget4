@@ -33,5 +33,5 @@ data class Ledger(
   var lastUpdated: Instant?,
 
   @OneToMany(mappedBy = "ledger", cascade = [CascadeType.REMOVE])
-  var accounts: List<Account>? = null
+  var accountCategories: List<AccountCategory>? = null
 )

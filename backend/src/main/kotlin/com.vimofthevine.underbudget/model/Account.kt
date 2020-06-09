@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import org.springframework.data.rest.core.config.Projection
 import org.springframework.stereotype.Component
-import org.springframework.validation.Errors
-import org.springframework.validation.Validator
 
 @Entity
 @EntityListeners(AuditingEntityListener::class)
@@ -23,13 +21,9 @@ data class Account(
   val id: UUID = UUID.randomUUID(),
 
   @ManyToOne
-  @JoinColumn(name = "parent_id")
-  var parent: Account? = null,
-
-  @ManyToOne
-  @JoinColumn(name = "ledger_id", nullable = false)
-  @get:NotNull(message = "Ledger is required")
-  var ledger: Ledger? = null,
+  @JoinColumn(name = "category_id", nullable = false)
+  @get:NotNull(message = "Category is required")
+  var category: AccountCategory? = null,
 
   @get:NotEmpty(message = "Name is required")
   var name: String?,
@@ -54,40 +48,12 @@ data class Account(
 
   @Column(name = "last_updated")
   @LastModifiedDate
-  var lastUpdated: Instant?,
-
-  @OneToMany(mappedBy = "parent", cascade = [CascadeType.REMOVE])
-  var children: List<Account>? = null
+  var lastUpdated: Instant?
 )
 
-open class AccountValidator : Validator {
-  override fun supports(clazz: Class<*>) = Account::class.java.isAssignableFrom(clazz)
-
-  override fun validate(target: Any, errors: Errors) {
-    if (target is Account) {
-      val parent = target.parent
-      if (parent is Account) {
-        if (parent.ledger != target.ledger) {
-          errors.rejectValue("ledger", "ledger.mismatch",
-            "Ledger in target does not match ledger in parent")
-        }
-      }
-    }
-  }
-}
-
-@Component("beforeCreateAccountValidator")
-class BeforeCreateAccountValidator : AccountValidator()
-
-@Component("beforeSaveAccountValidator")
-class BeforeSaveAccountValidator : AccountValidator()
-
-@Projection(name = "accountTreeNode", types = arrayOf(Account::class))
-interface AccountTreeNode {
+@Projection(name = "accountOverview", types = arrayOf(Account::class))
+interface AccountOverview {
   fun getId(): UUID
   fun getName(): String
   fun isArchived(): Boolean
-
-  @Value("#{target.parent?.id}")
-  fun getParentId(): UUID
 }
