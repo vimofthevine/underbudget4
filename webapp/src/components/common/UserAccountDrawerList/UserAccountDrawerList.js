@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 
 import * as routes from '../../../utils/routes';
 
-const AccountDrawerList = () => {
+const UserAccountDrawerList = () => {
   const navigate = useNavigate();
   return (
     <List>
@@ -29,4 +29,4 @@ const AccountDrawerList = () => {
   );
 };
 
-export default AccountDrawerList;
+export default UserAccountDrawerList;

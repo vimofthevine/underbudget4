@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import useMobile from '../../../hooks/useMobile';
-import AccountMenu from '../AccountMenu';
+import AccountMenu from '../UserAccountMenu';
 
-const AccountToolbarButton = ({ edge }) => {
+const UserAccountToolbarButton = ({ edge }) => {
   const [anchor, setAnchor] = React.useState(null);
   const handleOpen = (e) => setAnchor(e.currentTarget);
   const handleClose = () => setAnchor(null);
@@ -21,12 +21,12 @@ const AccountToolbarButton = ({ edge }) => {
   );
 };
 
-AccountToolbarButton.propTypes = {
+UserAccountToolbarButton.propTypes = {
   edge: PropTypes.string,
 };
 
-AccountToolbarButton.defaultProps = {
+UserAccountToolbarButton.defaultProps = {
   edge: false,
 };
 
-export default AccountToolbarButton;
+export default UserAccountToolbarButton;

@@ -7,7 +7,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import AccountToolbarButton from '../AccountToolbarButton';
+import UserAccountToolbarButton from '../UserAccountToolbarButton';
 
 const useStyles = makeStyles((theme) => ({
   accountButton: {
@@ -49,7 +49,7 @@ const NavBar = ({ actionElement, onToggleDrawer, title }) => {
           {title}
         </Typography>
 
-        <AccountToolbarButton edge={actionElement ? false : 'end'} />
+        <UserAccountToolbarButton edge={actionElement ? false : 'end'} />
         {actionElement}
       </Toolbar>
     </AppBar>

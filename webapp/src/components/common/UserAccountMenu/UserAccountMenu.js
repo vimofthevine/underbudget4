@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import * as routes from '../../../utils/routes';
 
-const AccountMenu = ({ anchor, onClose }) => {
+const UserAccountMenu = ({ anchor, onClose }) => {
   const navigate = useNavigate();
   return (
     <Menu
@@ -28,13 +28,13 @@ const AccountMenu = ({ anchor, onClose }) => {
   );
 };
 
-AccountMenu.propTypes = {
+UserAccountMenu.propTypes = {
   anchor: PropTypes.shape({}),
   onClose: PropTypes.func.isRequired,
 };
 
-AccountMenu.defaultProps = {
+UserAccountMenu.defaultProps = {
   anchor: null,
 };
 
-export default AccountMenu;
+export default UserAccountMenu;

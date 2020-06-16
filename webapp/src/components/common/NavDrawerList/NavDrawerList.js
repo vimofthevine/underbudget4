@@ -15,7 +15,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import * as routes from '../../../utils/routes';
-import AccountDrawerList from '../AccountDrawerList';
+import UserAccountDrawerList from '../UserAccountDrawerList';
 
 const NavDrawerList = ({ showAccountItems }) => {
   const navigate = useNavigate();
@@ -78,7 +78,7 @@ const NavDrawerList = ({ showAccountItems }) => {
       {showAccountItems && (
         <>
           <Divider />
-          <AccountDrawerList />
+          <UserAccountDrawerList />
         </>
       )}
     </>
