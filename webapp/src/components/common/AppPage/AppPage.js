@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
-import AccountMenu from '../AccountMenu';
 import NavBar from '../NavBar';
 import NavDrawer from '../NavDrawer';
 
@@ -27,26 +26,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AppPage = ({ children, fab, title }) => {
+const AppPage = ({ children, fab, title, toolbarAction }) => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const handleToggleDrawer = () => setDrawerOpen((old) => !old);
   const handleCloseDrawer = () => setDrawerOpen(false);
-
-  const [accountMenuAnchor, setAccountMenuAnchor] = useState(null);
-  const handleOpenAccountMenu = (event) => setAccountMenuAnchor(event.currentTarget);
-  const handleCloseAccountMenu = () => setAccountMenuAnchor(null);
 
   const classes = useStyles();
 
   return (
     <div style={{ display: 'flex' }}>
-      <NavBar
-        onOpenAccountMenu={handleOpenAccountMenu}
-        onToggleDrawer={handleToggleDrawer}
-        title={title}
-      />
+      <NavBar actionElement={toolbarAction} onToggleDrawer={handleToggleDrawer} title={title} />
       <NavDrawer onClose={handleCloseDrawer} open={isDrawerOpen} />
-      <AccountMenu anchor={accountMenuAnchor} onClose={handleCloseAccountMenu} />
       <main className={classes.content} id='app-content'>
         <Container
           className={clsx(classes.container, {
@@ -65,11 +55,13 @@ AppPage.propTypes = {
   children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]).isRequired,
   fab: PropTypes.bool,
   title: PropTypes.string,
+  toolbarAction: PropTypes.element,
 };
 
 AppPage.defaultProps = {
   fab: false,
   title: 'UnderBudget',
+  toolbarAction: null,
 };
 
 export default AppPage;

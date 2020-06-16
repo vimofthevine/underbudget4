@@ -1,4 +1,7 @@
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { action } from '@storybook/addon-actions';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -58,3 +61,11 @@ export const SnackbarMessage = () => (
     </AppPage>
   </SnackbarServiceProvider>
 );
+
+const ActionButton = () => (
+  <IconButton color='inherit' edge='end' onClick={action('onActionClick')}>
+    <MoreVertIcon />
+  </IconButton>
+);
+
+export const ToolbarActionButton = () => <AppPage toolbarAction={<ActionButton />} />;

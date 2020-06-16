@@ -3,10 +3,11 @@ import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import MenuIcon from '@material-ui/icons/Menu';
 import PropTypes from 'prop-types';
 import React from 'react';
+
+import AccountToolbarButton from '../AccountToolbarButton';
 
 const useStyles = makeStyles((theme) => ({
   accountButton: {
@@ -22,17 +23,15 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 1,
   },
   menuButton: {
-    marginRight: 36,
+    marginRight: theme.spacing(4),
   },
   title: {
     flexGrow: 1,
   },
-  toolbar: {
-    paddingRight: 24,
-  },
+  toolbar: {},
 }));
 
-const NavBar = ({ onOpenAccountMenu, onToggleDrawer, title }) => {
+const NavBar = ({ actionElement, onToggleDrawer, title }) => {
   const classes = useStyles();
   return (
     <AppBar className={classes.appBar} position='absolute'>
@@ -50,24 +49,21 @@ const NavBar = ({ onOpenAccountMenu, onToggleDrawer, title }) => {
           {title}
         </Typography>
 
-        <IconButton
-          aria-label='open account menu'
-          className={classes.accountButton}
-          color='inherit'
-          edge='end'
-          onClick={onOpenAccountMenu}
-        >
-          <AccountCircleIcon />
-        </IconButton>
+        <AccountToolbarButton edge={actionElement ? false : 'end'} />
+        {actionElement}
       </Toolbar>
     </AppBar>
   );
 };
 
 NavBar.propTypes = {
-  onOpenAccountMenu: PropTypes.func.isRequired,
+  actionElement: PropTypes.element,
   onToggleDrawer: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
+};
+
+NavBar.defaultProps = {
+  actionElement: null,
 };
 
 export default NavBar;
