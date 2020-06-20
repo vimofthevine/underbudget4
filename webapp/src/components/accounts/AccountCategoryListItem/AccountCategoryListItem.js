@@ -17,7 +17,7 @@ const AccountCategoryListItem = ({ category }) => {
       <ListSubheader button>
         {category.name}
         <ListItemSecondaryAction>
-          <IconButton onClick={handleExpand}>
+          <IconButton edge='end' onClick={handleExpand}>
             {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           </IconButton>
         </ListItemSecondaryAction>

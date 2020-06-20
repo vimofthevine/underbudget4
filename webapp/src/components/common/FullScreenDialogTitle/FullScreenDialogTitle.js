@@ -13,7 +13,7 @@ const FullScreenDialogTitle = ({ actionText, onClose, title }) => {
   return (
     <AppBar style={{ position: 'relative' }}>
       <Toolbar>
-        <IconButton aria-label='close' color='inherit' onClick={onClose}>
+        <IconButton aria-label='close' color='inherit' edge='start' onClick={onClose}>
           <CloseIcon />
         </IconButton>
 
