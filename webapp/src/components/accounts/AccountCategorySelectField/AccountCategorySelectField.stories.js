@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
+import { action } from '@storybook/addon-actions';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import { Formik } from 'formik';
+import { Field, Form, Formik } from 'formik';
 import React from 'react';
 import { MemoryRouter } from 'react-router';
 
@@ -25,7 +26,7 @@ export const FetchError = ({ mock }) => {
   mock.onGet('/api/ledgers/ledger-id/accountCategories?projection=categoryWithAccounts').reply(500);
   return (
     <Formik initialValues={{ category: '' }}>
-      <AccountCategorySelectField id='category' label='Category' name='category' />
+      <Field component={AccountCategorySelectField} label='Category' name='category' />
     </Formik>
   );
 };
@@ -38,8 +39,8 @@ export const NoCategories = ({ mock }) => {
     });
   return (
     <Formik initialValues={{ category: '' }}>
-      <AccountCategorySelectField
-        id='category'
+      <Field
+        component={AccountCategorySelectField}
         label='Category'
         name='category'
         variant='outlined'
@@ -48,7 +49,7 @@ export const NoCategories = ({ mock }) => {
   );
 };
 
-export const FewCategories = ({ mock }) => {
+export const InitiallyEmpty = ({ mock }) => {
   mock
     .onGet('/api/ledgers/ledger-id/accountCategories?projection=categoryWithAccounts')
     .reply(200, {
@@ -61,8 +62,33 @@ export const FewCategories = ({ mock }) => {
       },
     });
   return (
-    <Formik initialValues={{ category: '' }}>
-      <AccountCategorySelectField id='category' label='Category' name='category' />
+    <Formik initialValues={{ category: '' }} onSubmit={action('submit')}>
+      <Form>
+        <Field component={AccountCategorySelectField} label='Category' name='category' />
+        <button type='submit'>submit</button>
+      </Form>
+    </Formik>
+  );
+};
+
+export const InitiallyPopulated = ({ mock }) => {
+  mock
+    .onGet('/api/ledgers/ledger-id/accountCategories?projection=categoryWithAccounts')
+    .reply(200, {
+      _embedded: {
+        accountCategories: [
+          { id: 'cat-id-1', name: 'Category 1' },
+          { id: 'cat-id-2', name: 'Category 2' },
+          { id: 'cat-id-3', name: 'Category 3' },
+        ],
+      },
+    });
+  return (
+    <Formik initialValues={{ category: 'cat-id-2' }} onSubmit={action('submit')}>
+      <Form>
+        <Field component={AccountCategorySelectField} label='Category' name='category' />
+        <button type='submit'>submit</button>
+      </Form>
     </Formik>
   );
 };
