@@ -1,12 +1,17 @@
+import Divider from '@material-ui/core/Divider';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { useNavigate } from 'react-router';
 
+import { ACCOUNT_CATEGORIES } from '../../../utils/routes';
 import { useAccountsDispatch } from '../AccountsContext';
 
 const AccountsListMenu = ({ anchor, onClose }) => {
   const dispatch = useAccountsDispatch();
+  const navigate = useNavigate();
+
   const handleAddAccount = () => {
     onClose();
     dispatch({ type: 'showCreateAccount' });
@@ -15,6 +20,7 @@ const AccountsListMenu = ({ anchor, onClose }) => {
     onClose();
     dispatch({ type: 'showCreateAccountCategory' });
   };
+  const handleEditCategories = () => navigate(ACCOUNT_CATEGORIES);
 
   return (
     <Menu
@@ -32,6 +38,8 @@ const AccountsListMenu = ({ anchor, onClose }) => {
     >
       <MenuItem onClick={handleAddAccount}>Add Account</MenuItem>
       <MenuItem onClick={handleAddAccountCategory}>Add Category</MenuItem>
+      <Divider />
+      <MenuItem onClick={handleEditCategories}>Edit Categories</MenuItem>
     </Menu>
   );
 };

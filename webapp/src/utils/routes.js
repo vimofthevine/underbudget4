@@ -5,6 +5,7 @@ export const TOKENS = '/tokens';
 export const DASHBOARD = '/';
 export const LEDGERS = '/ledgers';
 export const ACCOUNTS = '/accounts';
+export const ACCOUNT_CATEGORIES = '/account-categories';
 export const ENVELOPES = '/envelopes';
 export const INCOMES = '/incomes';
 export const EXPENSES = '/expenses';
