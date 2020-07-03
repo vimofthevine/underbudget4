@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
 import React from 'react';
 
-import AccountCategoryListItem from '../AccountCategoryListItem';
+import AccountCategoryListSection from '../AccountCategoryListSection';
 import useAccounts from '../hooks/useAccounts';
 
 const useStyles = makeStyles((theme) => ({
@@ -22,7 +22,7 @@ const AccountsList = () => {
       {status === 'success' && (
         <List className={classes.list} disablePadding>
           {categories.map((cat) => (
-            <AccountCategoryListItem category={cat} key={cat.id} />
+            <AccountCategoryListSection category={cat} key={cat.id} />
           ))}
         </List>
       )}

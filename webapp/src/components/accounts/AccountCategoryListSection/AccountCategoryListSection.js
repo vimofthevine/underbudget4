@@ -9,7 +9,7 @@ import React from 'react';
 
 import AccountListItem from '../AccountListItem';
 
-const AccountCategoryListItem = ({ category }) => {
+const AccountCategoryListSection = ({ category }) => {
   const [open, setOpen] = React.useState(true);
   const handleExpand = () => setOpen((old) => !old);
   return (
@@ -31,11 +31,11 @@ const AccountCategoryListItem = ({ category }) => {
   );
 };
 
-AccountCategoryListItem.propTypes = {
+AccountCategoryListSection.propTypes = {
   category: PropTypes.shape({
     accounts: PropTypes.arrayOf(PropTypes.shape({ id: PropTypes.string.isRequired })).isRequired,
     name: PropTypes.string.isRequired,
   }).isRequired,
 };
 
-export default AccountCategoryListItem;
+export default AccountCategoryListSection;
