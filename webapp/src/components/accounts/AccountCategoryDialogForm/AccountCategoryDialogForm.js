@@ -19,6 +19,7 @@ const AccountCategoryDialogForm = ({
 }) => (
   <ResponsiveDialogForm
     actionText={actionText}
+    disableFullScreen
     formikProps={{
       initialValues,
       onSubmit,

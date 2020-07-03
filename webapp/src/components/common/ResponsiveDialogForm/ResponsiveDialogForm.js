@@ -22,13 +22,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const ResponsiveDialogForm = ({
   actionText,
   cancelText,
+  disableFullScreen,
   formikProps,
   FormComponent,
   onClose,
   open,
   title,
 }) => {
-  const mobile = useMobile();
+  const mobile = useMobile() && !disableFullScreen;
 
   return (
     <Dialog
@@ -65,6 +66,7 @@ const ResponsiveDialogForm = ({
 ResponsiveDialogForm.propTypes = {
   actionText: PropTypes.string.isRequired,
   cancelText: PropTypes.string,
+  disableFullScreen: PropTypes.bool,
   formikProps: PropTypes.shape({}),
   FormComponent: PropTypes.elementType.isRequired,
   onClose: PropTypes.func.isRequired,
@@ -74,6 +76,7 @@ ResponsiveDialogForm.propTypes = {
 
 ResponsiveDialogForm.defaultProps = {
   cancelText: 'Cancel',
+  disableFullScreen: false,
   formikProps: null,
 };
 
