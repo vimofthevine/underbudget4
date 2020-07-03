@@ -1,9 +1,11 @@
+import LinearProgress from '@material-ui/core/LinearProgress';
 import List from '@material-ui/core/List';
 import { makeStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
+import Alert from '@material-ui/lab/Alert';
 import React from 'react';
 
 import AccountCategoryListItem from '../AccountCategoryListItem';
+import useAccounts from '../hooks/useAccounts';
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -11,25 +13,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AccountsList = ({ accountCategories }) => {
+const AccountsList = () => {
   const classes = useStyles();
-  return (
-    <List className={classes.list}>
-      {accountCategories.map((cat) => (
-        <AccountCategoryListItem category={cat} key={cat.id} />
-      ))}
-    </List>
-  );
-};
+  const { categories, error, status } = useAccounts();
 
-AccountsList.propTypes = {
-  accountCategories: PropTypes.arrayOf(
-    PropTypes.shape({
-      accounts: PropTypes.arrayOf(PropTypes.shape({ id: PropTypes.string.isRequired })).isRequired,
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-    }),
-  ).isRequired,
+  return (
+    <>
+      {status === 'success' && (
+        <List className={classes.list} disablePadding>
+          {categories.map((cat) => (
+            <AccountCategoryListItem category={cat} key={cat.id} />
+          ))}
+        </List>
+      )}
+      {status === 'loading' && <LinearProgress />}
+      {status === 'error' && <Alert severity='error'>{error}</Alert>}
+    </>
+  );
 };
 
 export default AccountsList;

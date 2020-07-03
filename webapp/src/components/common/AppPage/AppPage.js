@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: 1,
-    height: `calc(100vh - ${theme.mixins.toolbar.minHeight})`,
+    height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`,
     marginTop: theme.mixins.toolbar.minHeight,
     overflow: 'auto',
   },

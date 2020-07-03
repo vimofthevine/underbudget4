@@ -14,7 +14,7 @@ const AccountCategoryListItem = ({ category }) => {
   const handleExpand = () => setOpen((old) => !old);
   return (
     <>
-      <ListSubheader button>
+      <ListSubheader>
         {category.name}
         <ListItemSecondaryAction>
           <IconButton edge='end' onClick={handleExpand}>

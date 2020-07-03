@@ -13,7 +13,7 @@ export default function useSelectedLedger() {
     if (!ledger) {
       navigate(ACCOUNTS, { state: { from: location } });
     }
-  }, []);
+  }, [ledger, location, navigate]);
 
   return ledger;
 }
