@@ -41,9 +41,22 @@
   },
   "overrides": [
     {
-      "files": ["**/*.stories.js"],
+      "files": ["src/components/common/**"],
       "rules": {
         "react/jsx-props-no-spreading": "off"
+      }
+    },
+    {
+      "files": ["**/use*.js"],
+      "rules": {
+        "import/prefer-default-export": "off"
+      }
+    },
+    {
+      "files": ["**/*.stories.js"],
+      "rules": {
+        "react/jsx-props-no-spreading": "off",
+        "react/prop-types": "off"
       }
     }
   ]

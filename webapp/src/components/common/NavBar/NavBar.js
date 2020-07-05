@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     }),
     zIndex: theme.zIndex.drawer + 1,
   },
-  menuButton: {
+  primaryButton: {
     marginRight: theme.spacing(4),
   },
   title: {
@@ -31,39 +31,53 @@ const useStyles = makeStyles((theme) => ({
   toolbar: {},
 }));
 
-const NavBar = ({ actionElement, onToggleDrawer, title }) => {
+const NavBar = ({
+  actions,
+  disableUserAccountButton,
+  onPrimaryAction,
+  primaryActionIcon,
+  primaryActionLabel,
+  title,
+}) => {
   const classes = useStyles();
   return (
     <AppBar className={classes.appBar} position='absolute'>
       <Toolbar className={classes.toolbar}>
         <IconButton
-          aria-label='open drawer'
-          className={classes.menuButton}
+          aria-label={primaryActionLabel || 'open drawer'}
+          className={classes.primaryButton}
           color='inherit'
           edge='start'
-          onClick={onToggleDrawer}
+          onClick={onPrimaryAction}
         >
-          <MenuIcon />
+          {primaryActionIcon || <MenuIcon />}
         </IconButton>
+
         <Typography className={classes.title} color='inherit' component='h1' noWrap variant='h6'>
           {title}
         </Typography>
 
-        <UserAccountToolbarButton edge={actionElement ? false : 'end'} />
-        {actionElement}
+        {actions}
+        {!disableUserAccountButton && <UserAccountToolbarButton edge='end' />}
       </Toolbar>
     </AppBar>
   );
 };
 
 NavBar.propTypes = {
-  actionElement: PropTypes.element,
-  onToggleDrawer: PropTypes.func.isRequired,
+  actions: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]),
+  disableUserAccountButton: PropTypes.bool,
+  onPrimaryAction: PropTypes.func.isRequired,
+  primaryActionIcon: PropTypes.node,
+  primaryActionLabel: PropTypes.string,
   title: PropTypes.string.isRequired,
 };
 
 NavBar.defaultProps = {
-  actionElement: null,
+  actions: null,
+  disableUserAccountButton: false,
+  primaryActionIcon: null,
+  primaryActionLabel: null,
 };
 
 export default NavBar;

@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AppPage = ({ children, fab, title, toolbarAction }) => {
+const AppPage = ({ children, fab, navBarProps, title, toolbarAction }) => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const handleToggleDrawer = () => setDrawerOpen((old) => !old);
   const handleCloseDrawer = () => setDrawerOpen(false);
@@ -35,7 +35,12 @@ const AppPage = ({ children, fab, title, toolbarAction }) => {
 
   return (
     <div style={{ display: 'flex' }}>
-      <NavBar actionElement={toolbarAction} onToggleDrawer={handleToggleDrawer} title={title} />
+      <NavBar
+        actions={toolbarAction}
+        onPrimaryAction={handleToggleDrawer}
+        title={title}
+        {...navBarProps}
+      />
       <NavDrawer onClose={handleCloseDrawer} open={isDrawerOpen} />
       <main className={classes.content} id='app-content'>
         <Container
@@ -54,12 +59,14 @@ const AppPage = ({ children, fab, title, toolbarAction }) => {
 AppPage.propTypes = {
   children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]).isRequired,
   fab: PropTypes.bool,
+  navBarProps: PropTypes.shape({}),
   title: PropTypes.string,
   toolbarAction: PropTypes.element,
 };
 
 AppPage.defaultProps = {
   fab: false,
+  navBarProps: null,
   title: 'UnderBudget',
   toolbarAction: null,
 };

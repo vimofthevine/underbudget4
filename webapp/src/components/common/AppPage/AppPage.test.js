@@ -1,4 +1,7 @@
-import { fireEvent, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import EditIcon from '@material-ui/icons/Edit';
+import { fireEvent, screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import mediaQuery from 'css-mediaquery';
 import React from 'react';
 
@@ -30,6 +33,36 @@ describe('AppPage', () => {
     );
 
     expect(getByText('Page Title')).toBeInTheDocument();
+  });
+
+  it('should render with forwarded NavBar properties', async () => {
+    const handlePrimaryAction = jest.fn();
+    const handleSecondaryAction = jest.fn();
+
+    render(
+      <AppPage
+        navBarProps={{
+          actions: (
+            <IconButton aria-label='edit' onClick={handleSecondaryAction}>
+              <EditIcon />
+            </IconButton>
+          ),
+          onPrimaryAction: handlePrimaryAction,
+          primaryActionLabel: 'go back',
+          primaryActionIcon: <CloseIcon />,
+          title: '2 Selected',
+        }}
+      >
+        <div />
+      </AppPage>,
+    );
+
+    expect(screen.getByText('2 Selected')).toBeInTheDocument();
+    fireEvent.click(screen.getByLabelText('go back'));
+    expect(handlePrimaryAction).toHaveBeenCalled();
+
+    fireEvent.click(screen.getByLabelText('edit'));
+    expect(handleSecondaryAction).toHaveBeenCalled();
   });
 
   describe('should toggle drawer when menu button is clicked', () => {
