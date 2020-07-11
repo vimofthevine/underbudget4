@@ -1,20 +1,19 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import PropTypes from 'prop-types';
 import React, { useContext, useRef, useState } from 'react';
 
-import ConfirmationDialog from '../ConfirmationDialog';
+import ConfirmationDialog from '../../components/ConfirmationDialog';
 
 const ConfirmationContext = React.createContext();
 
-export const useConfirmation = () => {
+const useConfirmation = () => {
   const context = useContext(ConfirmationContext);
   if (context === undefined) {
-    throw new Error('useConfirmation must be used within a ConfirmationServiceProvider');
+    throw new Error('useConfirmation must be used within a ConfirmationContextProvider');
   }
   return context;
 };
 
-export const ConfirmationServiceProvider = ({ children }) => {
+const ConfirmationContextProvider = ({ children }) => {
   const promiseRef = useRef({
     reject: () => 0,
     resolve: () => 0,
@@ -57,6 +56,8 @@ export const ConfirmationServiceProvider = ({ children }) => {
   );
 };
 
-ConfirmationServiceProvider.propTypes = {
+ConfirmationContextProvider.propTypes = {
   children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]).isRequired,
 };
+
+export { ConfirmationContextProvider, useConfirmation };

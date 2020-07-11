@@ -4,15 +4,15 @@ import React from 'react';
 
 const SnackbarContext = React.createContext();
 
-export const useSnackbar = () => {
+const useSnackbar = () => {
   const context = React.useContext(SnackbarContext);
   if (context === undefined) {
-    throw new Error('useSnackbar must be used within a SnackbarServiceProvider');
+    throw new Error('useSnackbar must be used within a SnackbarContextProvider');
   }
   return context;
 };
 
-export const SnackbarServiceProvider = ({ children }) => {
+const SnackbarContextProvider = ({ children }) => {
   const [message, setMessage] = React.useState(null);
 
   const showMessage = (msg) => setMessage(msg);
@@ -32,6 +32,8 @@ export const SnackbarServiceProvider = ({ children }) => {
   );
 };
 
-SnackbarServiceProvider.propTypes = {
+SnackbarContextProvider.propTypes = {
   children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]).isRequired,
 };
+
+export { SnackbarContextProvider, useSnackbar };
