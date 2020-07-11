@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import * as yup from 'yup';
 
-import ResponsiveDialogForm from '../../common/ResponsiveDialogForm';
+import ResponsiveDialogForm from '../../../common/components/ResponsiveDialogForm';
 import AccountCategoryForm from '../AccountCategoryForm';
 
 const validationSchema = yup.object().shape({

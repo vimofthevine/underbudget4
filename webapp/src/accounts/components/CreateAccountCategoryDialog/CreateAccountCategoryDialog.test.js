@@ -6,29 +6,27 @@ import React from 'react';
 import { ReactQueryCacheProvider, makeQueryCache, setConsole } from 'react-query';
 
 import renderWithRouter from '../../../tests/renderWithRouter';
-import { AccountsContextProvider, useAccountsDispatch } from '../AccountsContext';
+import { AccountContextProvider } from '../../contexts/account';
+import useCreateAccountCategory from '../../hooks/useCreateAccountCategory';
 import CreateAccountCategoryDialog from './CreateAccountCategoryDialog';
 
-const OpenDialogButton = () => {
-  const dispatch = useAccountsDispatch();
-  return (
-    <button onClick={() => dispatch({ type: 'showCreateAccountCategory' })} type='button'>
-      Open
-    </button>
-  );
-};
+const OpenDialogButton = () => (
+  <button onClick={useCreateAccountCategory()} type='button'>
+    Open
+  </button>
+);
 
 const render = () => {
   const queryCache = makeQueryCache();
   return {
     ...renderWithRouter(
       <ReactQueryCacheProvider queryCache={queryCache}>
-        <AccountsContextProvider>
+        <AccountContextProvider>
           <>
             <OpenDialogButton />
             <CreateAccountCategoryDialog />
           </>
-        </AccountsContextProvider>
+        </AccountContextProvider>
       </ReactQueryCacheProvider>,
     ),
     queryCache,

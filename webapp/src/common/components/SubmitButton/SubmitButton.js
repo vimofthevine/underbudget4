@@ -1,6 +1,3 @@
-// Disable rule because this is a generic component
-/* eslint-disable react/jsx-props-no-spreading */
-
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useTheme } from '@material-ui/core/styles';

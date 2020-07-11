@@ -19,7 +19,7 @@ AccountContextProvider.propTypes = {
   children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]).isRequired,
 };
 
-const useAccountsState = () => {
+const useAccountState = () => {
   const context = React.useContext(StateContext);
   if (context === undefined) {
     throw new Error('useAccountsState must be used within an AccountContextProvider');
@@ -27,7 +27,7 @@ const useAccountsState = () => {
   return context;
 };
 
-const useAccountsDispatch = () => {
+const useAccountDispatch = () => {
   const context = React.useContext(DispatchContext);
   if (context === undefined) {
     throw new Error('useAccountsDispatch must be used within an AccountContextProvider');
@@ -35,4 +35,4 @@ const useAccountsDispatch = () => {
   return context;
 };
 
-export { AccountContextProvider, useAccountsDispatch, useAccountsState };
+export { AccountContextProvider, useAccountDispatch, useAccountState };

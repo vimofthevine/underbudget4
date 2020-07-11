@@ -1,7 +1,7 @@
-import { useAccountsDispatch } from '../contexts/account';
+import { useAccountDispatch } from '../contexts/account';
 
 export function useCreateAccountCategory() {
-  const dispatch = useAccountsDispatch();
+  const dispatch = useAccountDispatch();
   return () =>
     dispatch({
       type: 'showCreateAccountCategory',
