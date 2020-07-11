@@ -41,7 +41,7 @@
   },
   "overrides": [
     {
-      "files": ["src/components/common/**"],
+      "files": ["src/common/**", "src/components/common/**"],
       "rules": {
         "react/jsx-props-no-spreading": "off"
       }
