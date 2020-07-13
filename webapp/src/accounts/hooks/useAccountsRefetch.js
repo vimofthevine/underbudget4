@@ -2,7 +2,7 @@ import { useQueryCache } from 'react-query';
 
 import useSelectedLedger from '../../ledgers/hooks/useSelectedLedger';
 
-export function useAccountsRefetch() {
+export default function useAccountsRefetch() {
   const queryCache = useQueryCache();
   const ledger = useSelectedLedger();
 

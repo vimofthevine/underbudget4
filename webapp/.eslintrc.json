@@ -53,7 +53,7 @@
       }
     },
     {
-      "files": ["**/*.stories.js"],
+      "files": ["**/*.stories.js", "**/*.test.js"],
       "rules": {
         "react/jsx-props-no-spreading": "off",
         "react/prop-types": "off"

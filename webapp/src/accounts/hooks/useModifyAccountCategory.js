@@ -1,6 +1,6 @@
 import { useAccountDispatch } from '../contexts/account';
 
-export function useModifyAccountCategory(category) {
+export default function useModifyAccountCategory(category) {
   const dispatch = useAccountDispatch();
   return () =>
     dispatch({

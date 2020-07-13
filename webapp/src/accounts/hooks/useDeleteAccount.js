@@ -6,7 +6,7 @@ import useSnackbar from '../../common/hooks/useSnackbar';
 import deleteAccount from '../api/deleteAccount';
 import useAccountsRefetch from './useAccountsRefetch';
 
-export function useDeleteAccount(account) {
+export default function useDeleteAccount(account) {
   const confirm = useConfirmation();
   const snackbar = useSnackbar();
   const refetch = useAccountsRefetch();

@@ -1,6 +1,6 @@
 import { useAccountDispatch } from '../contexts/account';
 
-export function useCreateAccountCategory() {
+export default function useCreateAccountCategory() {
   const dispatch = useAccountDispatch();
   return () =>
     dispatch({

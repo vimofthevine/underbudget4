@@ -1,6 +1,6 @@
 import { useAccountDispatch } from '../contexts/account';
 
-export function useModifyAccount(account) {
+export default function useModifyAccount(account) {
   const dispatch = useAccountDispatch();
   return () =>
     dispatch({
