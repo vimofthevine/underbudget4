@@ -6,7 +6,7 @@ import { Field, Form, Formik } from 'formik';
 import React from 'react';
 import { MemoryRouter } from 'react-router';
 
-import setSelectedLedger from '../../../utils/setSelectedLedger';
+import setSelectedLedger from '../../../ledgers/utils/setSelectedLedger';
 import AccountCategorySelectField from './AccountCategorySelectField';
 
 export default {

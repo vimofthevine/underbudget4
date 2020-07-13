@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import useMobile from '../../../hooks/useMobile';
+import useMobile from '../../../common/hooks/useMobile';
 import NavDrawerList from '../NavDrawerList';
 
 const drawerWidth = 240;

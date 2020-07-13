@@ -3,8 +3,7 @@ import moment from 'moment';
 import React from 'react';
 import { MemoryRouter } from 'react-router';
 
-import { ConfirmationServiceProvider } from '../../common/ConfirmationService';
-import { SnackbarServiceProvider } from '../../common/SnackbarService';
+import AppProviders from '../../../common/components/AppProviders';
 import { LedgersContextProvider } from '../LedgersContext';
 import LedgersTable from './LedgersTable';
 
@@ -15,8 +14,7 @@ export default {
   component: LedgersTable,
   decorators: [
     (story) => <LedgersContextProvider>{story()}</LedgersContextProvider>,
-    (story) => <ConfirmationServiceProvider>{story()}</ConfirmationServiceProvider>,
-    (story) => <SnackbarServiceProvider>{story()}</SnackbarServiceProvider>,
+    (story) => <AppProviders>{story()}</AppProviders>,
     (story) => <MemoryRouter>{story()}</MemoryRouter>,
   ],
 };

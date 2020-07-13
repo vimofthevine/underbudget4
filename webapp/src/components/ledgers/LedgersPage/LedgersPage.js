@@ -1,7 +1,7 @@
 import { Paper } from '@material-ui/core';
 import React from 'react';
 
-import useMobile from '../../../hooks/useMobile';
+import useMobile from '../../../common/hooks/useMobile';
 import AppPage from '../../common/AppPage';
 import CreateLedgerButton from '../CreateLedgerButton';
 import CreateLedgerDialog from '../CreateLedgerDialog';

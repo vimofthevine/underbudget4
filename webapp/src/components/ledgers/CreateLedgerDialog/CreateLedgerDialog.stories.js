@@ -5,7 +5,7 @@ import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
-import { SnackbarServiceProvider } from '../../common/SnackbarService';
+import AppProviders from '../../../common/components/AppProviders';
 import { LedgersContextProvider, useLedgersDispatch } from '../LedgersContext';
 import CreateLedgerDialog from './CreateLedgerDialog';
 
@@ -30,7 +30,7 @@ export default {
       </>
     ),
     (story) => <LedgersContextProvider>{story()}</LedgersContextProvider>,
-    (story) => <SnackbarServiceProvider>{story()}</SnackbarServiceProvider>,
+    (story) => <AppProviders>{story()}</AppProviders>,
     (story) => <MemoryRouter>{story()}</MemoryRouter>,
   ],
 };

@@ -3,7 +3,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import useMobile from '../../../hooks/useMobile';
+import useMobile from '../../../common/hooks/useMobile';
 import AccountMenu from '../UserAccountMenu';
 
 const UserAccountToolbarButton = ({ edge }) => {

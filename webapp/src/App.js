@@ -5,16 +5,15 @@ import React, { useMemo } from 'react';
 import { ReactQueryConfigProvider } from 'react-query';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import { ConfirmationServiceProvider } from './components/common/ConfirmationService';
+import AppProviders from './common/components/AppProviders';
+import createTheme from './common/utils/createTheme';
+import queryConfig from './common/utils/queryConfig';
+import * as routes from './common/utils/routes';
 import ProtectedRoute from './components/common/ProtectedRoute';
-import { SnackbarServiceProvider } from './components/common/SnackbarService';
 import LedgersPage from './components/ledgers/LedgersPage';
 import LoginPage from './components/login/LoginPage';
 import LogoutPage from './components/logout/LogoutPage';
 import TokensPage from './components/tokens/TokensPage';
-import createTheme from './utils/createTheme';
-import queryConfig from './utils/queryConfig';
-import * as routes from './utils/routes';
 
 function App() {
   const darkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -26,17 +25,15 @@ function App() {
       <CssBaseline />
       <ReactQueryConfigProvider config={queryConfig}>
         <BrowserRouter>
-          <ConfirmationServiceProvider>
-            <SnackbarServiceProvider>
-              <Routes>
-                <Route path={routes.LOGIN} element={<LoginPage />} />
-                <Route path={routes.LOGOUT} element={<LogoutPage />} />
-                <ProtectedRoute path={`${routes.LEDGERS}/*`} element={<LedgersPage />} />
-                <ProtectedRoute path={`${routes.TOKENS}/*`} element={<TokensPage />} />
-                <ProtectedRoute path='*' element={<div>hi</div>} />
-              </Routes>
-            </SnackbarServiceProvider>
-          </ConfirmationServiceProvider>
+          <AppProviders>
+            <Routes>
+              <Route path={routes.LOGIN} element={<LoginPage />} />
+              <Route path={routes.LOGOUT} element={<LogoutPage />} />
+              <ProtectedRoute path={`${routes.LEDGERS}/*`} element={<LedgersPage />} />
+              <ProtectedRoute path={`${routes.TOKENS}/*`} element={<TokensPage />} />
+              <ProtectedRoute path='*' element={<div>hi</div>} />
+            </Routes>
+          </AppProviders>
         </BrowserRouter>
       </ReactQueryConfigProvider>
     </ThemeProvider>

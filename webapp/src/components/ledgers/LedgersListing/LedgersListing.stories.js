@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import moment from 'moment';
@@ -6,8 +5,7 @@ import React from 'react';
 import { ReactQueryConfigProvider, queryCache } from 'react-query';
 import { MemoryRouter } from 'react-router-dom';
 
-import { ConfirmationServiceProvider } from '../../common/ConfirmationService';
-import { SnackbarServiceProvider } from '../../common/SnackbarService';
+import AppProviders from '../../../common/components/AppProviders';
 import { LedgersContextProvider } from '../LedgersContext';
 import LedgersListing from './LedgersListing';
 
@@ -24,8 +22,7 @@ export default {
     (story) => <LedgersContextProvider>{story()}</LedgersContextProvider>,
     (story) => story({ mock: new MockAdapter(axios, { delayResponse: 1000 }) }),
     (story) => <MemoryRouter>{story()}</MemoryRouter>,
-    (story) => <ConfirmationServiceProvider>{story()}</ConfirmationServiceProvider>,
-    (story) => <SnackbarServiceProvider>{story()}</SnackbarServiceProvider>,
+    (story) => <AppProviders>{story()}</AppProviders>,
     (story) => <ReactQueryConfigProvider config={queryConfig}>{story()}</ReactQueryConfigProvider>,
   ],
 };

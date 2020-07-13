@@ -2,7 +2,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import useMobile from '../../../hooks/useMobile';
+import useMobile from '../../../common/hooks/useMobile';
 import { useLedgersDispatch, useLedgersState } from '../LedgersContext';
 
 const LedgerPagination = ({ count }) => {

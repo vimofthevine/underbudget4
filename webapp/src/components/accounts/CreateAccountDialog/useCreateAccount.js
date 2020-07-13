@@ -1,9 +1,9 @@
 import { useMutation, useQueryCache } from 'react-query';
 
-import createAccount from '../../../api/accounts/createAccount';
-import useErrorMessage from '../../../hooks/useErrorMessage';
-import useSelectedLedger from '../../../hooks/useSelectedLedger';
-import { useSnackbar } from '../../common/SnackbarService';
+import createAccount from '../../../accounts/api/createAccount';
+import useErrorMessage from '../../../common/hooks/useErrorMessage';
+import useSnackbar from '../../../common/hooks/useSnackbar';
+import useSelectedLedger from '../../../ledgers/hooks/useSelectedLedger';
 import { useAccountsDispatch, useAccountsState } from '../AccountsContext';
 
 // eslint-disable-next-line import/prefer-default-export

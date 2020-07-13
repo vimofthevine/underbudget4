@@ -2,12 +2,11 @@ import { queryCache, useMutation, useQuery } from 'react-query';
 
 import deleteToken from '../../../api/tokens/deleteToken';
 import fetchTokens from '../../../api/tokens/fetchTokens';
-import useErrorMessage from '../../../hooks/useErrorMessage';
-import useMobile from '../../../hooks/useMobile';
-import { useConfirmation } from '../../common/ConfirmationService';
-import { useSnackbar } from '../../common/SnackbarService';
+import useConfirmation from '../../../common/hooks/useConfirmation';
+import useErrorMessage from '../../../common/hooks/useErrorMessage';
+import useMobile from '../../../common/hooks/useMobile';
+import useSnackbar from '../../../common/hooks/useSnackbar';
 
-// eslint-disable-next-line import/prefer-default-export
 export function useTokens() {
   const mobile = useMobile();
   const confirm = useConfirmation();

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import * as yup from 'yup';
 
-import SubmitButton from '../../common/SubmitButton';
+import SubmitButton from '../../../common/components/SubmitButton';
 
 const schema = yup.object().shape({
   password: yup.string().required('Required'),

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { useNavigate } from 'react-router';
 
-import { accountRoute } from '../../../utils/routes';
+import { accountRoute } from '../../../common/utils/routes';
 
 const useStyles = makeStyles((theme) => ({
   item: {

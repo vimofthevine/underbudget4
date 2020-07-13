@@ -6,8 +6,7 @@ import React from 'react';
 import { ReactQueryConfigProvider, queryCache } from 'react-query';
 import { MemoryRouter } from 'react-router-dom';
 
-import { ConfirmationServiceProvider } from '../../common/ConfirmationService';
-import { SnackbarServiceProvider } from '../../common/SnackbarService';
+import AppProviders from '../../../common/components/AppProviders';
 import TokensPage from './TokensPage';
 
 const queryConfig = { retry: false };
@@ -22,8 +21,7 @@ export default {
     },
     (story) => story({ mock: new MockAdapter(axios, { delayResponse: 1000 }) }),
     (story) => <MemoryRouter>{story()}</MemoryRouter>,
-    (story) => <ConfirmationServiceProvider>{story()}</ConfirmationServiceProvider>,
-    (story) => <SnackbarServiceProvider>{story()}</SnackbarServiceProvider>,
+    (story) => <AppProviders>{story()}</AppProviders>,
     (story) => <ReactQueryConfigProvider config={queryConfig}>{story()}</ReactQueryConfigProvider>,
   ],
 };

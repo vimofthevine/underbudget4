@@ -14,7 +14,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import * as routes from '../../../utils/routes';
+import * as routes from '../../../common/utils/routes';
 import UserAccountDrawerList from '../UserAccountDrawerList';
 
 const NavDrawerList = ({ showAccountItems }) => {

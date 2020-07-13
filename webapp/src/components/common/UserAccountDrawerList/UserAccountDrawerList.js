@@ -7,7 +7,7 @@ import TokenIcon from '@material-ui/icons/VpnKey';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import * as routes from '../../../utils/routes';
+import * as routes from '../../../common/utils/routes';
 
 const UserAccountDrawerList = () => {
   const navigate = useNavigate();

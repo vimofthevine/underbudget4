@@ -1,13 +1,11 @@
-/* eslint-disable react/prop-types */
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 import { ReactQueryCacheProvider, ReactQueryConfigProvider, makeQueryCache } from 'react-query';
 import { MemoryRouter } from 'react-router-dom';
 
-import setSelectedLedger from '../../../utils/setSelectedLedger';
-import { ConfirmationServiceProvider } from '../../common/ConfirmationService';
-import { SnackbarServiceProvider } from '../../common/SnackbarService';
+import AppProviders from '../../../common/components/AppProviders';
+import setSelectedLedger from '../../../ledgers/utils/setSelectedLedger';
 import MobileAccountsListPage from './MobileAccountsListPage';
 
 const queryCache = makeQueryCache();
@@ -19,8 +17,7 @@ export default {
   decorators: [
     (story) => story({ mock: new MockAdapter(axios, { delayResponse: 1000 }) }),
     (story) => <MemoryRouter>{story()}</MemoryRouter>,
-    (story) => <ConfirmationServiceProvider>{story()}</ConfirmationServiceProvider>,
-    (story) => <SnackbarServiceProvider>{story()}</SnackbarServiceProvider>,
+    (story) => <AppProviders>{story()}</AppProviders>,
     (story) => <ReactQueryCacheProvider queryCache={queryCache}>{story()}</ReactQueryCacheProvider>,
     (story) => <ReactQueryConfigProvider config={queryConfig}>{story()}</ReactQueryConfigProvider>,
     (story) => {

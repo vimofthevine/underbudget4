@@ -3,11 +3,11 @@ import { usePaginatedQuery } from 'react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import fetchLedgers from '../../../api/ledgers/fetchLedgers';
-import useErrorMessage from '../../../hooks/useErrorMessage';
-import useMobile from '../../../hooks/useMobile';
-import { ACCOUNTS } from '../../../utils/routes';
-import scrollToTop from '../../../utils/scrollToTop';
-import setSelectedLedger from '../../../utils/setSelectedLedger';
+import useErrorMessage from '../../../common/hooks/useErrorMessage';
+import useMobile from '../../../common/hooks/useMobile';
+import { ACCOUNTS } from '../../../common/utils/routes';
+import scrollToTop from '../../../common/utils/scrollToTop';
+import setSelectedLedger from '../../../ledgers/utils/setSelectedLedger';
 import { useLedgersState } from '../LedgersContext';
 
 // eslint-disable-next-line import/prefer-default-export

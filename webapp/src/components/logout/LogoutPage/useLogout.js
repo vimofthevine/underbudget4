@@ -3,7 +3,7 @@ import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import deleteToken from '../../../api/tokens/deleteToken';
-import { getApiToken, removeApiToken, routes } from '../../../utils';
+import { getApiToken, removeApiToken, routes } from '../../../common/utils';
 
 // eslint-disable-next-line import/prefer-default-export
 export function useLogout() {

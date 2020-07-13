@@ -10,11 +10,6 @@ import React from 'react';
 import UserAccountToolbarButton from '../UserAccountToolbarButton';
 
 const useStyles = makeStyles((theme) => ({
-  accountButton: {
-    [theme.breakpoints.down('sm')]: {
-      display: 'none',
-    },
-  },
   appBar: {
     transition: theme.transitions.create(['margin', 'width'], {
       duration: theme.transitions.duration.leavingScreen,

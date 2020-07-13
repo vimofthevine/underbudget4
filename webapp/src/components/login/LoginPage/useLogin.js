@@ -2,8 +2,8 @@ import { useCallback, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import authenticate from '../../../api/auth/authenticate';
-import { DASHBOARD } from '../../../utils/routes';
-import setApiToken from '../../../utils/setApiToken';
+import { DASHBOARD } from '../../../common/utils/routes';
+import setApiToken from '../../../common/utils/setApiToken';
 
 // eslint-disable-next-line import/prefer-default-export
 export function useLogin() {

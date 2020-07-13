@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import getAuthHeaders from '../../utils/getAuthHeaders';
+import getAuthHeaders from '../../common/utils/getAuthHeaders';
 
 export default (data) =>
   axios.post('/api/ledgers', data, {

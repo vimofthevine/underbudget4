@@ -1,10 +1,10 @@
 import { queryCache, useMutation } from 'react-query';
 
 import deleteLedger from '../../../api/ledgers/deleteLedger';
-import useErrorMessage from '../../../hooks/useErrorMessage';
-import useMobile from '../../../hooks/useMobile';
-import { useConfirmation } from '../../common/ConfirmationService';
-import { useSnackbar } from '../../common/SnackbarService';
+import useConfirmation from '../../../common/hooks/useConfirmation';
+import useErrorMessage from '../../../common/hooks/useErrorMessage';
+import useMobile from '../../../common/hooks/useMobile';
+import useSnackbar from '../../../common/hooks/useSnackbar';
 import { useLedgersDispatch, useLedgersState } from '../LedgersContext';
 
 // eslint-disable-next-line import/prefer-default-export

@@ -5,12 +5,9 @@ import { action } from '@storybook/addon-actions';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
-import {
-  ConfirmationServiceProvider,
-  useConfirmation,
-} from '../../../components/common/ConfirmationService';
-import { SnackbarServiceProvider, useSnackbar } from '../../../components/common/SnackbarService';
-import { useSelection } from '../../contexts/selection';
+import useConfirmation from '../../hooks/useConfirmation';
+import useSelection from '../../hooks/useSelection';
+import useSnackbar from '../../hooks/useSnackbar';
 import AppProviders from '../AppProviders';
 import AppPage from './AppPage';
 
@@ -49,11 +46,9 @@ const ConfirmButton = () => {
 };
 
 export const ConfirmationDialog = () => (
-  <ConfirmationServiceProvider>
-    <AppPage>
-      <ConfirmButton />
-    </AppPage>
-  </ConfirmationServiceProvider>
+  <AppPage>
+    <ConfirmButton />
+  </AppPage>
 );
 
 const SnackbarButton = () => {
@@ -63,11 +58,9 @@ const SnackbarButton = () => {
 };
 
 export const SnackbarMessage = () => (
-  <SnackbarServiceProvider>
-    <AppPage>
-      <SnackbarButton />
-    </AppPage>
-  </SnackbarServiceProvider>
+  <AppPage>
+    <SnackbarButton />
+  </AppPage>
 );
 
 const ActionButton = () => (

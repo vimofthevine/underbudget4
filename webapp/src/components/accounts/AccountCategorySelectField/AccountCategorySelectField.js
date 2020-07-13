@@ -3,8 +3,8 @@
 
 import React from 'react';
 
+import useAccounts from '../../../accounts/hooks/useAccounts';
 import EntitySelectField from '../../common/EntitySelectField';
-import useAccounts from '../hooks/useAccounts';
 
 const AccountCategorySelectField = (props) => {
   const { categories } = useAccounts();

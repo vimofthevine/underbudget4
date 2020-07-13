@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import getAuthHeaders from '../../utils/getAuthHeaders';
+import getAuthHeaders from '../../common/utils/getAuthHeaders';
 
 export default async () => {
   const { data } = await axios.get('/api/tokens', {

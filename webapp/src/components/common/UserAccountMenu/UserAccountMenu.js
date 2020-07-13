@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import * as routes from '../../../utils/routes';
+import * as routes from '../../../common/utils/routes';
 
 const UserAccountMenu = ({ anchor, onClose }) => {
   const navigate = useNavigate();

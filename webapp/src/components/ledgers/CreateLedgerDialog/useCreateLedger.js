@@ -1,8 +1,8 @@
 import { useMutation, useQueryCache } from 'react-query';
 
 import createLedger from '../../../api/ledgers/createLedger';
-import useErrorMessage from '../../../hooks/useErrorMessage';
-import { useSnackbar } from '../../common/SnackbarService';
+import useErrorMessage from '../../../common/hooks/useErrorMessage';
+import useSnackbar from '../../../common/hooks/useSnackbar';
 import { useLedgersDispatch, useLedgersState } from '../LedgersContext';
 
 // eslint-disable-next-line import/prefer-default-export

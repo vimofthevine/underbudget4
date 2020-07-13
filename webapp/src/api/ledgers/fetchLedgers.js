@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import getAuthHeaders from '../../utils/getAuthHeaders';
+import getAuthHeaders from '../../common/utils/getAuthHeaders';
 
 export default async (key, { page, size }) => {
   const { data } = await axios.get(`/api/ledgers?page=${page}&size=${size}`, {

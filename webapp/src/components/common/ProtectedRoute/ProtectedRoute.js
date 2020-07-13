@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { Route, useLocation, useNavigate } from 'react-router-dom';
 
-import getApiToken from '../../../utils/getApiToken';
-import * as routes from '../../../utils/routes';
+import getApiToken from '../../../common/utils/getApiToken';
+import * as routes from '../../../common/utils/routes';
 
 const ProtectedRoute = ({ element, path }) => {
   const location = useLocation();

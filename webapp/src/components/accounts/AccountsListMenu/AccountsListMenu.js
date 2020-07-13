@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { useNavigate } from 'react-router';
 
-import { ACCOUNT_CATEGORIES } from '../../../utils/routes';
+import { ACCOUNT_CATEGORIES } from '../../../common/utils/routes';
 import { useAccountsDispatch } from '../AccountsContext';
 
 const AccountsListMenu = ({ anchor, onClose }) => {

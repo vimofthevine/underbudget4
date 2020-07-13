@@ -4,8 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
 import React from 'react';
 
+import useAccounts from '../../../accounts/hooks/useAccounts';
 import AccountCategoryListSection from '../AccountCategoryListSection';
-import useAccounts from '../hooks/useAccounts';
 
 const useStyles = makeStyles((theme) => ({
   list: {

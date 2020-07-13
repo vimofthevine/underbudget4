@@ -3,8 +3,8 @@ import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
-import removeApiToken from '../../../utils/removeApiToken';
-import setApiToken from '../../../utils/setApiToken';
+import removeApiToken from '../../../common/utils/removeApiToken';
+import setApiToken from '../../../common/utils/setApiToken';
 import LogoutPage from './LogoutPage';
 
 const TEST_TOKEN =

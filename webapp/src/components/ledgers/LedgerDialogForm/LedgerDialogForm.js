@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import * as yup from 'yup';
 
-import ResponsiveDialogForm from '../../common/ResponsiveDialogForm';
+import ResponsiveDialogForm from '../../../common/components/ResponsiveDialogForm';
 import LedgerForm from '../LedgerForm';
 
 const validationSchema = yup.object().shape({

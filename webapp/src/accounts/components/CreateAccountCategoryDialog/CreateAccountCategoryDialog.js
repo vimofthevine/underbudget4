@@ -1,7 +1,7 @@
 import React from 'react';
 
 import AccountCategoryDialogForm from '../AccountCategoryDialogForm';
-import useCreateAccountCategoryialog from './useCreateAccountCategoryialog';
+import useCreateAccountCategoryDialog from './useCreateAccountCategoryDialog';
 
 const initialValues = {
   name: '',

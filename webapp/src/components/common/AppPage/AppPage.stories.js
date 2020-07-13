@@ -5,14 +5,18 @@ import { action } from '@storybook/addon-actions';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
-import { ConfirmationServiceProvider, useConfirmation } from '../ConfirmationService';
-import { SnackbarServiceProvider, useSnackbar } from '../SnackbarService';
+import AppProviders from '../../../common/components/AppProviders';
+import useConfirmation from '../../../common/hooks/useConfirmation';
+import useSnackbar from '../../../common/hooks/useSnackbar';
 import AppPage from './AppPage';
 
 export default {
   title: 'common/AppPage',
   component: AppPage,
-  decorators: [(story) => <MemoryRouter>{story()}</MemoryRouter>],
+  decorators: [
+    (story) => <AppProviders>{story()}</AppProviders>,
+    (story) => <MemoryRouter>{story()}</MemoryRouter>,
+  ],
 };
 
 export const DefaultTitle = () => (
@@ -41,11 +45,9 @@ const ConfirmButton = () => {
 };
 
 export const ConfirmationDialog = () => (
-  <ConfirmationServiceProvider>
-    <AppPage>
-      <ConfirmButton />
-    </AppPage>
-  </ConfirmationServiceProvider>
+  <AppPage>
+    <ConfirmButton />
+  </AppPage>
 );
 
 const SnackbarButton = () => {
@@ -55,11 +57,9 @@ const SnackbarButton = () => {
 };
 
 export const SnackbarMessage = () => (
-  <SnackbarServiceProvider>
-    <AppPage>
-      <SnackbarButton />
-    </AppPage>
-  </SnackbarServiceProvider>
+  <AppPage>
+    <SnackbarButton />
+  </AppPage>
 );
 
 const ActionButton = () => (

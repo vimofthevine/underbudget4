@@ -6,6 +6,8 @@ const initialState = {
 
   accountCategoryToModify: null,
   accountToModify: null,
+
+  // selectedAccountCategories: [],
 };
 
 const reducer = (state, action) => {
@@ -61,6 +63,21 @@ const reducer = (state, action) => {
         accountToModify: null,
       };
     }
+
+    // case 'selectAccountCategory': {
+    //   return {
+    //     ...state,
+    //     selectedAccountCategories: [...state.selectedAccountCategories, action.payload],
+    //   };
+    // }
+    // case 'unselectAccountCategory': {
+    //   return {
+    //     ...state,
+    //     selectedAccountCategories: state.selectedAccountCategories.filter(
+    //       (i) => i !== action.payload,
+    //     ),
+    //   };
+    // }
 
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
