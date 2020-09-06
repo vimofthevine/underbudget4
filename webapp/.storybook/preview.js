@@ -15,3 +15,7 @@ addDecorator(story => (
 ));
 
 addDecorator(withA11y);
+
+export const parameters = {
+  layout: 'fullscreen',
+};
