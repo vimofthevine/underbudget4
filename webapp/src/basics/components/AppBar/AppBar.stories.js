@@ -35,7 +35,7 @@ WithSingleAction.args = {
   actionProps: {
     'aria-label': 'open account menu',
     children: <AccountCircleIcon />,
-    onClick: action('open account menu')
+    onClick: action('open account menu'),
   },
 };
 
@@ -56,7 +56,7 @@ WithActions.args = {
     {
       'aria-label': 'open account menu',
       children: <AccountCircleIcon />,
-      onClick: action('open account menu')
+      onClick: action('open account menu'),
     },
   ],
 };
