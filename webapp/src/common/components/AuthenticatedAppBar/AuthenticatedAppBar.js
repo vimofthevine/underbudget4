@@ -9,19 +9,10 @@ import ActionMenu from '../../../basics/components/ActionMenu';
 import AppBar from '../../../basics/components/AppBar';
 import Drawer from '../../../basics/components/Drawer';
 import actionPropsShape from '../../../basics/utils/action-props';
+import toList from '../../../basics/utils/to-list';
 import useMobile from '../../hooks/useMobile';
 import useSelection from '../../hooks/useSelection';
 import UserMenu from '../UserMenu';
-
-const toList = (args) => {
-  if (args) {
-    if (Array.isArray(args)) {
-      return [...args];
-    }
-    return [args];
-  }
-  return [];
-};
 
 const AuthenticatedAppBar = ({ primaryActions, selectionActions, title }) => {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
