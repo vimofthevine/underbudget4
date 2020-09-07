@@ -22,41 +22,46 @@ WithTitle.args = { title: 'Page Title' };
 export const WithNavAction = Template.bind({});
 WithNavAction.args = {
   ...WithTitle.args,
-  navActionProps: {
+  navAction: {
     'aria-label': 'open nav drawer',
-    children: <MenuIcon />,
+    icon: <MenuIcon />,
     onClick: action('open nav drawer'),
+    text: 'Nav drawer',
   },
 };
 
 export const WithSingleAction = Template.bind({});
 WithSingleAction.args = {
   ...WithNavAction.args,
-  actionProps: {
+  actions: {
     'aria-label': 'open account menu',
-    children: <AccountCircleIcon />,
+    icon: <AccountCircleIcon />,
     onClick: action('open account menu'),
+    text: 'Account actions',
   },
 };
 
 export const WithActions = Template.bind({});
 WithActions.args = {
   ...WithNavAction.args,
-  actionProps: [
+  actions: [
     {
       'aria-label': 'create',
-      children: <AddIcon />,
+      icon: <AddIcon />,
       onClick: action('create'),
+      text: 'Create',
     },
     {
       'aria-label': 'edit',
-      children: <EditIcon />,
+      icon: <EditIcon />,
       onClick: action('edit'),
+      text: 'Edit',
     },
     {
       'aria-label': 'open account menu',
-      children: <AccountCircleIcon />,
+      icon: <AccountCircleIcon />,
       onClick: action('open account menu'),
+      text: 'Account actions',
     },
   ],
 };

@@ -8,6 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import actionPropsShape from '../../utils/action-props';
+
 const useStyles = makeStyles((theme) => ({
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -23,55 +25,48 @@ const useStyles = makeStyles((theme) => ({
 const iterate = (arrayOfProps, func) => {
   if (arrayOfProps) {
     if (Array.isArray(arrayOfProps)) {
-      return arrayOfProps.map((p, i) => func(p, i, i === arrayOfProps.length - 1));
+      return arrayOfProps.map((p, i) => func(p, i === arrayOfProps.length - 1));
     }
-    return func(arrayOfProps, 0, true);
+    return func(arrayOfProps, true);
   }
   return null;
 };
 
-const AppBar = ({ actionProps, navActionProps, title }) => {
+const AppBar = ({ actions, navAction, title }) => {
   const classes = useStyles();
 
   return (
     <MuiAppBar className={classes.appBar} position='absolute'>
       <Toolbar>
-        {navActionProps && (
-          <IconButton
-            className={classes.navButton}
-            color='inherit'
-            edge='start'
-            {...navActionProps}
-          />
+        {navAction && (
+          <IconButton className={classes.navButton} color='inherit' edge='start' {...navAction}>
+            {navAction.icon}
+          </IconButton>
         )}
 
         <Typography className={classes.title} color='inherit' component='h1' noWrap variant='h6'>
           {title}
         </Typography>
 
-        {iterate(actionProps, (props, key, last) => (
-          <IconButton color='inherit' edge={last ? 'end' : false} key={key} {...props} />
+        {iterate(actions, (action, last) => (
+          <IconButton color='inherit' edge={last ? 'end' : false} key={action.text} {...action}>
+            {action.icon}
+          </IconButton>
         ))}
       </Toolbar>
     </MuiAppBar>
   );
 };
 
-const actionPropsShape = PropTypes.shape({
-  'aria-label': PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired,
-  onClick: PropTypes.func.isRequired,
-});
-
 AppBar.propTypes = {
-  actionProps: PropTypes.oneOfType([actionPropsShape, PropTypes.arrayOf(actionPropsShape)]),
-  navActionProps: actionPropsShape,
+  actions: PropTypes.oneOfType([actionPropsShape, PropTypes.arrayOf(actionPropsShape)]),
+  navAction: actionPropsShape,
   title: PropTypes.string,
 };
 
 AppBar.defaultProps = {
-  actionProps: null,
-  navActionProps: null,
+  actions: null,
+  navAction: null,
   title: 'UnderBudget',
 };
 
