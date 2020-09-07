@@ -1,1 +1,1 @@
-export { default, actionPropsShape } from './AppBar';
+export { default } from './AppBar';

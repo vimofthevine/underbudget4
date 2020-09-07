@@ -12,6 +12,7 @@ import actionPropsShape from '../../../basics/utils/action-props';
 import toList from '../../../basics/utils/to-list';
 import useMobile from '../../hooks/useMobile';
 import useSelection from '../../hooks/useSelection';
+import NavIconList from '../NavIconList';
 import UserMenu from '../UserMenu';
 
 const AuthenticatedAppBar = ({ primaryActions, selectionActions, title }) => {
@@ -81,7 +82,7 @@ const AuthenticatedAppBar = ({ primaryActions, selectionActions, title }) => {
       <UserMenu anchor={userMenuAnchor} onClose={handleCloseUserMenu} />
       {overflowMenu}
       <Drawer onClose={toggleDrawer} open={drawerOpen} variant={mobile ? 'temporary' : 'permanent'}>
-        hi
+        <NavIconList />
       </Drawer>
     </>
   );
