@@ -1,7 +1,7 @@
 import React from 'react';
 
 import CreateAccountCategoryDialog from '../../../accounts/components/CreateAccountCategoryDialog';
-import AppPage from '../../common/AppPage';
+import AppPage from '../../../common/components/FullAppPage';
 import { AccountsContextProvider } from '../AccountsContext';
 import AccountsList from '../AccountsList';
 import AccountsListToolbarButton from '../AccountsListToolbarButton';
