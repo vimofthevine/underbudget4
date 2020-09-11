@@ -4,8 +4,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
 import React from 'react';
 
-import useAccounts from '../../../accounts/hooks/useAccounts';
-import AccountCategoryListSection from '../AccountCategoryListSection';
+import useMobile from '../../../common/hooks/useMobile';
+import useAccounts from '../../hooks/useAccounts';
+import AccountCategoryListItem from '../AccountCategoryListItem';
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -15,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
 
 const AccountsList = () => {
   const classes = useStyles();
+  const mobile = useMobile();
   const { categories, error, status } = useAccounts();
 
   return (
@@ -22,7 +24,7 @@ const AccountsList = () => {
       {status === 'success' && (
         <List className={classes.list} disablePadding>
           {categories.map((cat) => (
-            <AccountCategoryListSection category={cat} key={cat.id} />
+            <AccountCategoryListItem category={cat} dense={!mobile} key={cat.id} />
           ))}
         </List>
       )}
