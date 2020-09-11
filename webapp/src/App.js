@@ -5,6 +5,7 @@ import React, { useMemo } from 'react';
 import { ReactQueryConfigProvider } from 'react-query';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
+import AccountPages from './accounts/components/AccountPages';
 import LoginPage from './auth/components/LoginPage';
 import LogoutPage from './auth/components/LogoutPage';
 import AppProviders from './common/components/AppProviders';
@@ -29,6 +30,7 @@ function App() {
             <Routes>
               <Route path={routes.LOGIN} element={<LoginPage />} />
               <Route path={routes.LOGOUT} element={<LogoutPage />} />
+              <ProtectedRoute path={`${routes.ACCOUNTS}/*`} element={<AccountPages />} />
               <ProtectedRoute path={`${routes.LEDGERS}/*`} element={<LedgerPages />} />
               <ProtectedRoute path={`${routes.TOKENS}/*`} element={<TokensPage />} />
               <ProtectedRoute path='*' element={<div>hi</div>} />
