@@ -13,10 +13,8 @@ import springfox.documentation.spi.DocumentationType
 import springfox.documentation.spi.service.contexts.SecurityContext
 import springfox.documentation.spring.data.rest.configuration.SpringDataRestConfiguration
 import springfox.documentation.spring.web.plugins.Docket
-import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc
 
 @Configuration
-@EnableSwagger2WebMvc
 @Import(value = [
   BeanValidatorPluginsConfiguration::class,
   SpringDataRestConfiguration::class
@@ -31,7 +29,7 @@ class SwaggerConfig {
 
   private fun securityContext() = SecurityContext.builder()
     .securityReferences(defaultAuth())
-    .forPaths(PathSelectors.any())
+    .operationSelector({ _ -> true })
     .build()
 
   private fun defaultAuth() = listOf(
