@@ -5,7 +5,7 @@ import { addDecorator } from '@storybook/react';
 import React from 'react';
 import { useDarkMode } from 'storybook-dark-mode';
 
-import createTheme from '../src/utils/createTheme';
+import createTheme from '../src/common/utils/createTheme';
 
 addDecorator(story => (
   <ThemeProvider theme={createTheme(useDarkMode())}>
@@ -15,3 +15,7 @@ addDecorator(story => (
 ));
 
 addDecorator(withA11y);
+
+export const parameters = {
+  layout: 'fullscreen',
+};

@@ -141,5 +141,24 @@
 			"  lateinit var mvc: MockMvc",
 			"}"
 		]
-	}
+	},
+	"Integration test boilerplate": {
+		"scope": "kotlin",
+		"prefix": "integtest",
+		"body": [
+			"package com.vimofthevine.underbudget.integration",
+			"",
+			"import org.hamcrest.Matchers.*",
+			"",
+			"import io.restassured.RestAssured.*",
+			"import io.restassured.module.kotlin.extensions.*",
+			"",
+			"import org.junit.jupiter.api.Assertions.*",
+			"import org.junit.jupiter.api.Test",
+			"",
+			"class $1 : AbstractIntegrationTest() {",
+			"  $0",
+			"}"
+		]
+	},
 }

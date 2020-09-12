@@ -1,7 +1,7 @@
 app.jwt.secret: IOUBcepBESQqQ_rPFK84rQqMmLQhtggR9dENmn761o7iys8kYXQZa_FC-CsC2h-LMGUThkuC6rXdJRBZgsXVFg0
 app.user.password: $2a$09$sWeZgjLYI63OzFEp8sAk/.PUTm0VieMEX7o62XNTtHs6DRhreWfzS
 logging.level.org.hibernate:
-  SQL: DEBUG
-  type.descriptor.sql.BasicBinder: TRACE
+  SQL: OFF
+  type.descriptor.sql.BasicBinder: OFF
 spring.datasource.url: jdbc:h2:mem:testdb
 spring.jpa.hibernate.ddl-auto: create-drop

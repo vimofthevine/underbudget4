@@ -3,8 +3,7 @@ import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Router } from 'react-router-dom';
 
-import { ConfirmationServiceProvider } from '../components/common/ConfirmationService';
-import { SnackbarServiceProvider } from '../components/common/SnackbarService';
+import AppProviders from '../common/components/AppProviders';
 
 export default (
   ui,
@@ -13,9 +12,7 @@ export default (
   // eslint-disable-next-line react/prop-types
   const Wrapper = ({ children }) => (
     <Router history={history}>
-      <ConfirmationServiceProvider>
-        <SnackbarServiceProvider>{children}</SnackbarServiceProvider>
-      </ConfirmationServiceProvider>
+      <AppProviders>{children}</AppProviders>
     </Router>
   );
 

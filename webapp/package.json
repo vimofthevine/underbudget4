@@ -17,6 +17,7 @@
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "jest-localstorage-mock": "^2.4.0",
     "jwt-decode": "^2.2.0",
+    "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
@@ -25,7 +26,7 @@
     "react-router": "^6.0.0-alpha.3",
     "react-router-dom": "^6.0.0-alpha.3",
     "react-scripts": "^3.4.1",
-    "storybook-dark-mode": "^0.4.1",
+    "storybook-dark-mode": "^1.0.2",
     "yup": "^0.28.3"
   },
   "scripts": {
@@ -54,13 +55,13 @@
     ]
   },
   "devDependencies": {
-    "@storybook/addon-a11y": "^5.3.18",
-    "@storybook/addon-actions": "^5.3.17",
-    "@storybook/addon-links": "^5.3.17",
-    "@storybook/addon-viewport": "^5.3.18",
-    "@storybook/addons": "^5.3.17",
-    "@storybook/preset-create-react-app": "^2.1.1",
-    "@storybook/react": "^5.3.17",
+    "@storybook/addon-a11y": "^6.0.21",
+    "@storybook/addon-actions": "^6.0.21",
+    "@storybook/addon-links": "^6.0.21",
+    "@storybook/addon-viewport": "^6.0.21",
+    "@storybook/addons": "^6.0.21",
+    "@storybook/preset-create-react-app": "^3.1.4",
+    "@storybook/react": "^6.0.21",
     "@testing-library/jest-dom": "^5.8.0",
     "@testing-library/react": "^10.0.4",
     "@testing-library/user-event": "^10.4.0",

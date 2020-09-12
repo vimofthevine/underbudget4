@@ -9,9 +9,34 @@ import io.restassured.RestAssured.*
 import io.restassured.module.kotlin.extensions.*
 
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class LedgerTest : AbstractIntegrationTest() {
+  @BeforeEach
+  fun deleteLedgers() {
+    val ledgerIds =
+      Given {
+        header("Authorization", "Bearer $jwt")
+      } When {
+        get("/api/ledgers")
+      } Then {
+        statusCode(200)
+      } Extract {
+        path<List<String>>("_embedded.ledgers.id")
+      }
+
+    for (ledgerId in ledgerIds) {
+      Given {
+        header("Authorization", "Bearer $jwt")
+      } When {
+        delete("/api/ledgers/$ledgerId")
+      } Then {
+        statusCode(204)
+      }
+    }
+  }
+
   @Test
   fun `ledger resource requires authentication`() {
     Given {
