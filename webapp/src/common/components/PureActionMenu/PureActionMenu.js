@@ -22,7 +22,14 @@ const PureActionMenu = ({ actions, anchor, onClose }) => (
     }}
   >
     {actions.map((action) => (
-      <MenuItem key={action.text} {...action}>
+      <MenuItem
+        key={action.text}
+        {...action}
+        onClick={() => {
+          onClose();
+          action.onClick();
+        }}
+      >
         {action.text}
       </MenuItem>
     ))}
