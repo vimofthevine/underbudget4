@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { action } from '@storybook/addon-actions';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
@@ -22,7 +21,7 @@ export default {
   ],
 };
 
-export const FetchError = ({ mock }) => {
+export const FetchError = (_, { mock }) => {
   mock.onGet('/api/ledgers/ledger-id/accountCategories?projection=categoryWithAccounts').reply(500);
   return (
     <Formik initialValues={{ category: '' }}>
@@ -31,7 +30,7 @@ export const FetchError = ({ mock }) => {
   );
 };
 
-export const NoCategories = ({ mock }) => {
+export const NoCategories = (_, { mock }) => {
   mock
     .onGet('/api/ledgers/ledger-id/accountCategories?projection=categoryWithAccounts')
     .reply(200, {
@@ -49,7 +48,7 @@ export const NoCategories = ({ mock }) => {
   );
 };
 
-export const InitiallyEmpty = ({ mock }) => {
+export const InitiallyEmpty = (_, { mock }) => {
   mock
     .onGet('/api/ledgers/ledger-id/accountCategories?projection=categoryWithAccounts')
     .reply(200, {
@@ -71,7 +70,7 @@ export const InitiallyEmpty = ({ mock }) => {
   );
 };
 
-export const InitiallyPopulated = ({ mock }) => {
+export const InitiallyPopulated = (_, { mock }) => {
   mock
     .onGet('/api/ledgers/ledger-id/accountCategories?projection=categoryWithAccounts')
     .reply(200, {

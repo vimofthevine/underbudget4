@@ -1,7 +1,7 @@
 import React from 'react';
 
 import AccountDialogForm from '../AccountDialogForm';
-import { useCreateAccount } from './useCreateAccount';
+import useCreateAccountDialog from './useCreateAccountDialog';
 
 const initialValues = {
   name: '',
@@ -11,7 +11,7 @@ const initialValues = {
 };
 
 const CreateAccountDialog = () => {
-  const { dialogOpen, handleCloseDialog, handleCreate } = useCreateAccount();
+  const { dialogOpen, handleCloseDialog, handleCreate } = useCreateAccountDialog();
   return (
     <AccountDialogForm
       actionText='Create'

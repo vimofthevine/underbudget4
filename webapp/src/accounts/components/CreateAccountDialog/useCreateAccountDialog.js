@@ -1,18 +1,16 @@
-import { useMutation, useQueryCache } from 'react-query';
+import { useMutation } from 'react-query';
 
-import createAccount from '../../../accounts/api/createAccount';
 import useErrorMessage from '../../../common/hooks/useErrorMessage';
 import useSnackbar from '../../../common/hooks/useSnackbar';
-import useSelectedLedger from '../../../ledgers/hooks/useSelectedLedger';
-import { useAccountsDispatch, useAccountsState } from '../AccountsContext';
+import createAccount from '../../api/createAccount';
+import { useAccountDispatch, useAccountState } from '../../contexts/account';
+import useAccountsRefetch from '../../hooks/useAccountsRefetch';
 
-// eslint-disable-next-line import/prefer-default-export
-export function useCreateAccount() {
-  const queryCache = useQueryCache();
+export default function useCreateAccountDialog() {
   const snackbar = useSnackbar();
-  const dispatch = useAccountsDispatch();
-  const state = useAccountsState();
-  const ledger = useSelectedLedger();
+  const dispatch = useAccountDispatch();
+  const state = useAccountState();
+  const refetch = useAccountsRefetch();
 
   const dialogOpen = state.showCreateAccount;
   const handleCloseDialog = () => dispatch({ type: 'hideCreateAccount' });
@@ -22,7 +20,7 @@ export function useCreateAccount() {
   const [mutate] = useMutation(createAccount, {
     onError: (err) => snackbar(createErrorMessage(err)),
     onSuccess: () => {
-      queryCache.refetchQueries(['accountCategories', { ledger }]);
+      refetch();
       handleCloseDialog();
     },
   });

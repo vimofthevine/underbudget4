@@ -11,21 +11,19 @@ import {
 } from 'react-query';
 
 import renderWithRouter from '../../../tests/renderWithRouter';
-import { AccountsContextProvider, useAccountsDispatch } from '../AccountsContext';
+import { AccountContextProvider } from '../../contexts/account';
+import useCreateAccount from '../../hooks/useCreateAccount';
 import CreateAccountDialog from './CreateAccountDialog';
 
 const queryConfig = {
   staleTime: Infinity,
 };
 
-const OpenDialogButton = () => {
-  const dispatch = useAccountsDispatch();
-  return (
-    <button onClick={() => dispatch({ type: 'showCreateAccount' })} type='button'>
-      Open
-    </button>
-  );
-};
+const OpenDialogButton = () => (
+  <button onClick={useCreateAccount()} type='button'>
+    Open
+  </button>
+);
 
 const render = () => {
   localStorage.setItem('underbudget.selected.ledger', 'ledger-id');
@@ -47,12 +45,12 @@ const render = () => {
     ...renderWithRouter(
       <ReactQueryConfigProvider config={queryConfig}>
         <ReactQueryCacheProvider queryCache={queryCache}>
-          <AccountsContextProvider>
+          <AccountContextProvider>
             <>
               <OpenDialogButton />
               <CreateAccountDialog />
             </>
-          </AccountsContextProvider>
+          </AccountContextProvider>
         </ReactQueryCacheProvider>
       </ReactQueryConfigProvider>,
     ),

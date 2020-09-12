@@ -13,15 +13,13 @@ const validationSchema = yup.object().shape({
 const AccountDialogForm = ({ actionText, initialValues, onClose, onSubmit, open, title }) => (
   <ResponsiveDialogForm
     actionText={actionText}
-    formikProps={{
-      initialValues,
-      onSubmit,
-      validationSchema,
-    }}
     FormComponent={AccountForm}
+    initialValues={initialValues}
     onClose={onClose}
+    onSubmit={onSubmit}
     open={open}
     title={title}
+    validationSchema={validationSchema}
   />
 );
 

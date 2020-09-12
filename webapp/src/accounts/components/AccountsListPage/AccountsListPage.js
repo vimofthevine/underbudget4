@@ -7,6 +7,7 @@ import useCreateAccount from '../../hooks/useCreateAccount';
 import useCreateAccountCategory from '../../hooks/useCreateAccountCategory';
 import AccountsList from '../AccountsList';
 import CreateAccountCategoryDialog from '../CreateAccountCategoryDialog';
+import CreateAccountDialog from '../CreateAccountDialog';
 import ModifyAccountCategoryDialog from '../ModifyAccountCategoryDialog';
 
 const AccountsListPage = () => {
@@ -30,6 +31,7 @@ const AccountsListPage = () => {
       <AccountsList />
       <CreateAccountCategoryDialog />
       <ModifyAccountCategoryDialog />
+      <CreateAccountDialog />
     </FullAppPage>
   );
 };
