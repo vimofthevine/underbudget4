@@ -7,6 +7,7 @@ import AccountCategorySelectField from '../AccountCategorySelectField';
 const AccountForm = () => (
   <>
     <Field
+      autoComplete='off'
       autoFocus
       component={TextField}
       fullWidth
@@ -36,6 +37,7 @@ const AccountForm = () => (
       variant='outlined'
     />
     <Field
+      autoComplete='off'
       component={TextField}
       fullWidth
       id='account-number'

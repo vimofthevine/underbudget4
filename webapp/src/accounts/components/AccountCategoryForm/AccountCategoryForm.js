@@ -4,6 +4,7 @@ import React from 'react';
 
 const AccountCategoryForm = () => (
   <Field
+    autoComplete='off'
     autoFocus
     component={TextField}
     id='account-category-name'
