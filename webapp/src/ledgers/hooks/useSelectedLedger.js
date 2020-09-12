@@ -1,7 +1,8 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { ACCOUNTS } from '../../common/utils/routes';
+import useMountEffect from '../../common/hooks/useMountEffect';
+import { LEDGERS } from '../../common/utils/routes';
 import getSelectedLedger from '../utils/getSelectedLedger';
 
 export default function useSelectedLedger() {
@@ -9,11 +10,11 @@ export default function useSelectedLedger() {
   const navigate = useNavigate();
   const [ledger] = React.useState(getSelectedLedger);
 
-  React.useEffect(() => {
+  useMountEffect(() => {
     if (!ledger) {
-      navigate(ACCOUNTS, { state: { from: location } });
+      navigate(LEDGERS, { state: { from: location } });
     }
-  }, []);
+  });
 
   return ledger;
 }

@@ -21,13 +21,18 @@ export default function useCreateAccountCategory() {
 
   const createErrorMessage = useErrorMessage({ request: 'Unable to modify account category' });
 
-  const [handleModify] = useMutation(modifyAccountCategory, {
+  const [mutate] = useMutation(modifyAccountCategory, {
     onError: (err) => snackbar(createErrorMessage(err)),
     onSuccess: () => {
       refetch();
       handleCloseDialog();
     },
   });
+  const handleModify = (values) =>
+    mutate({
+      ...values,
+      accounts: undefined,
+    });
 
   const category = state.accountCategoryToModify || noCategory;
 
