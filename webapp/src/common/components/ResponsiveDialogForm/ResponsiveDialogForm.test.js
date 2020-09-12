@@ -83,13 +83,11 @@ describe('ResponsiveDialogForm', () => {
     render(
       <ResponsiveDialogForm
         actionText='Apply'
-        formikProps={{
-          initialErrors: { fieldName: 'not valid' },
-          initialValues: { fieldName: 'field value' },
-          onSubmit: () => 0,
-        }}
         FormComponent={Form}
+        initialErrors={{ fieldName: 'not valid' }}
+        initialValues={{ fieldName: 'field value' }}
         onClose={() => 0}
+        onSubmit={() => 0}
         open
         title='Dialog Title'
       />,
@@ -103,13 +101,11 @@ describe('ResponsiveDialogForm', () => {
     render(
       <ResponsiveDialogForm
         actionText='Apply'
-        formikProps={{
-          initialErrors: { fieldName: 'not valid' },
-          initialValues: { fieldName: 'field value' },
-          onSubmit: () => 0,
-        }}
         FormComponent={Form}
+        initialErrors={{ fieldName: 'not valid' }}
+        initialValues={{ fieldName: 'field value' }}
         onClose={() => 0}
+        onSubmit={() => 0}
         open
         title='Dialog Title'
       />,
@@ -124,12 +120,10 @@ describe('ResponsiveDialogForm', () => {
     render(
       <ResponsiveDialogForm
         actionText='Apply'
-        formikProps={{
-          initialValues: { fieldName: 'field value' },
-          onSubmit: handleSubmit,
-        }}
         FormComponent={Form}
+        initialValues={{ fieldName: 'field value' }}
         onClose={() => 0}
+        onSubmit={handleSubmit}
         open
         title='Dialog Title'
       />,
@@ -150,12 +144,10 @@ describe('ResponsiveDialogForm', () => {
     render(
       <ResponsiveDialogForm
         actionText='Apply'
-        formikProps={{
-          initialValues: { fieldName: 'field value' },
-          onSubmit: handleSubmit,
-        }}
         FormComponent={Form}
+        initialValues={{ fieldName: 'field value' }}
         onClose={() => 0}
+        onSubmit={handleSubmit}
         open
         title='Dialog Title'
       />,

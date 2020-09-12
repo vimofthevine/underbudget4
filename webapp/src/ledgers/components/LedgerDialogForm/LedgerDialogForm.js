@@ -20,15 +20,13 @@ const validationSchema = yup.object().shape({
 const LedgerDialogForm = ({ actionText, initialValues, onClose, onSubmit, open, title }) => (
   <ResponsiveDialogForm
     actionText={actionText}
-    formikProps={{
-      initialValues,
-      onSubmit,
-      validationSchema,
-    }}
     FormComponent={LedgerForm}
+    initialValues={initialValues}
     onClose={onClose}
+    onSubmit={onSubmit}
     open={open}
     title={title}
+    validationSchema={validationSchema}
   />
 );
 

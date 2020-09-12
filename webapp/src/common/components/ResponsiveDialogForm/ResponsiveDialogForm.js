@@ -20,11 +20,11 @@ const ResponsiveDialogForm = ({
   actionText,
   cancelText,
   disableFullScreen,
-  formikProps,
   FormComponent,
   onClose,
   open,
   title,
+  ...props
 }) => {
   const mobile = useMobile() && !disableFullScreen;
 
@@ -35,7 +35,7 @@ const ResponsiveDialogForm = ({
       onClose={onClose}
       TransitionComponent={mobile ? Transition : undefined}
     >
-      <Formik {...formikProps}>
+      <Formik {...props}>
         <Form>
           {!mobile && <DialogTitle>{title}</DialogTitle>}
           {mobile && (
@@ -64,7 +64,6 @@ ResponsiveDialogForm.propTypes = {
   actionText: PropTypes.string.isRequired,
   cancelText: PropTypes.string,
   disableFullScreen: PropTypes.bool,
-  formikProps: PropTypes.shape({}),
   FormComponent: PropTypes.elementType.isRequired,
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
@@ -74,7 +73,6 @@ ResponsiveDialogForm.propTypes = {
 ResponsiveDialogForm.defaultProps = {
   cancelText: 'Cancel',
   disableFullScreen: false,
-  formikProps: null,
 };
 
 export default ResponsiveDialogForm;

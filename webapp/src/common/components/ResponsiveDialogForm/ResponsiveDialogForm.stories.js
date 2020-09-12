@@ -11,36 +11,21 @@ export default {
   component: ResponsiveDialogForm,
 };
 
-export const Desktop = () => (
-  <ResponsiveDialogForm
-    actionText='Apply'
-    formikProps={{
-      initialValues: { fieldName: 'field value' },
-      onSubmit: action('submit'),
-    }}
-    FormComponent={Form}
-    onClose={action('close')}
-    open
-    title='Dialog Title'
-  />
-);
+const Template = (args) => <ResponsiveDialogForm {...args} />;
 
-export const Mobile = () => (
-  <ResponsiveDialogForm
-    actionText='Apply'
-    formikProps={{
-      initialValues: { fieldName: 'field value' },
-      onSubmit: action('submit'),
-    }}
-    FormComponent={Form}
-    onClose={action('close')}
-    open
-    title='Dialog Title'
-  />
-);
+export const Desktop = Template.bind({});
+Desktop.args = {
+  actionText: 'Apply',
+  FormComponent: Form,
+  initialValues: { fieldName: 'field value' },
+  onClose: action('close'),
+  onSubmit: action('submit'),
+  open: true,
+  title: 'Dialog Title',
+};
 
-Mobile.story = {
-  parameters: {
-    viewport: { defaultViewport: 'mobile1' },
-  },
+export const Mobile = Template.bind({});
+Mobile.args = Desktop.args;
+Mobile.parameters = {
+  viewport: { defaultViewport: 'mobile1' },
 };

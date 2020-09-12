@@ -6,6 +6,7 @@ import FullAppPage from '../../../common/components/FullAppPage';
 import useCreateAccount from '../../hooks/useCreateAccount';
 import useCreateAccountCategory from '../../hooks/useCreateAccountCategory';
 import AccountsList from '../AccountsList';
+import CreateAccountCategoryDialog from '../CreateAccountCategoryDialog';
 
 const AccountsListPage = () => {
   const actions = [
@@ -26,6 +27,7 @@ const AccountsListPage = () => {
   return (
     <FullAppPage primaryActions={actions} title='Accounts'>
       <AccountsList />
+      <CreateAccountCategoryDialog />
     </FullAppPage>
   );
 };

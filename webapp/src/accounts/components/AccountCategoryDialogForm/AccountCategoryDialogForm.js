@@ -20,15 +20,13 @@ const AccountCategoryDialogForm = ({
   <ResponsiveDialogForm
     actionText={actionText}
     disableFullScreen
-    formikProps={{
-      initialValues,
-      onSubmit,
-      validationSchema,
-    }}
     FormComponent={AccountCategoryForm}
+    initialValues={initialValues}
     onClose={onClose}
+    onSubmit={onSubmit}
     open={open}
     title={title}
+    validationSchema={validationSchema}
   />
 );
 

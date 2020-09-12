@@ -1,3 +1,4 @@
+import Paper from '@material-ui/core/Paper';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -28,7 +29,8 @@ const FullAppPage = ({ children, primaryActions, selectionActions, title, useFab
 
   return (
     <PureAppPage appBar={appBar} hasFab={hasFab}>
-      {children}
+      {mobile && children}
+      {!mobile && <Paper>{children}</Paper>}
       {fabAction && !hasSelection && <PureFab action={fabAction} />}
     </PureAppPage>
   );
