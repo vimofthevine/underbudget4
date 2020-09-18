@@ -500,22 +500,25 @@ class AccountTest : AbstractIntegrationTest() {
         path("id")
       }
 
-    Given {
-      body(mapOf(
-        "category" to "/api/account-categories/$catId",
-        "name" to "Account Name"
-      ))
-    } When {
-      post("/api/accounts")
-    } Then {
-      statusCode(201)
-    }
+    val acctId: String =
+      Given {
+        body(mapOf(
+          "category" to "/api/account-categories/$catId",
+          "name" to "Account Name"
+        ))
+      } When {
+        post("/api/accounts")
+      } Then {
+        statusCode(201)
+      } Extract {
+        path("id")
+      }
 
     When {
       get("/api/accounts")
     } Then {
       statusCode(200)
-      body("_embedded.accounts.size()", equalTo(1))
+      body("_embedded.accounts.id", hasItems(acctId))
     }
 
     When {
@@ -528,7 +531,7 @@ class AccountTest : AbstractIntegrationTest() {
       get("/api/accounts")
     } Then {
       statusCode(200)
-      body("_embedded.accounts.size()", equalTo(0))
+      body("_embedded.accounts.id", not(hasItems(acctId)))
     }
   }
 

@@ -465,22 +465,25 @@ class EnvelopeTest : AbstractIntegrationTest() {
         path("id")
       }
 
-    Given {
-      body(mapOf(
-        "category" to "/api/envelope-categories/$catId",
-        "name" to "Envelope Name"
-      ))
-    } When {
-      post("/api/envelopes")
-    } Then {
-      statusCode(201)
-    }
+    val envId: String = 
+      Given {
+        body(mapOf(
+          "category" to "/api/envelope-categories/$catId",
+          "name" to "Envelope Name"
+        ))
+      } When {
+        post("/api/envelopes")
+      } Then {
+        statusCode(201)
+      } Extract {
+        path("id")
+      }
 
     When {
       get("/api/envelopes")
     } Then {
       statusCode(200)
-      body("_embedded.envelopes.size()", equalTo(1))
+      body("_embedded.envelopes.id", hasItems(envId))
     }
 
     When {
@@ -493,7 +496,7 @@ class EnvelopeTest : AbstractIntegrationTest() {
       get("/api/envelopes")
     } Then {
       statusCode(200)
-      body("_embedded.envelopes.size()", equalTo(0))
+      body("_embedded.envelopes.id", not(hasItems(envId)))
     }
   }
 
