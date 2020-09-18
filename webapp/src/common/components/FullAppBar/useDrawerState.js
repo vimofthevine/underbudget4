@@ -9,6 +9,6 @@ export default function useDrawerState() {
   const handleToggle = () => {
     setDrawerState(!open);
     setOpen(!open);
-  }
+  };
   return [open, handleToggle];
 }

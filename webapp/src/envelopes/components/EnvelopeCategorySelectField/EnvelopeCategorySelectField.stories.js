@@ -22,7 +22,9 @@ export default {
 };
 
 export const FetchError = (_, { mock }) => {
-  mock.onGet('/api/ledgers/ledger-id/envelopeCategories?projection=categoryWithEnvelopes').reply(500);
+  mock
+    .onGet('/api/ledgers/ledger-id/envelopeCategories?projection=categoryWithEnvelopes')
+    .reply(500);
   return (
     <Formik initialValues={{ category: '' }}>
       <Field component={EnvelopeCategorySelectField} label='Category' name='category' />
