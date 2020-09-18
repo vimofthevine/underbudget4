@@ -4,9 +4,9 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import AccountIcon from '@material-ui/icons/AccountBalance';
+import BookIcon from '@material-ui/icons/Book';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import LogoutIcon from '@material-ui/icons/ExitToApp';
-import LedgerIcon from '@material-ui/icons/Folder';
 import ReportIcon from '@material-ui/icons/InsertChart';
 import EnvelopeIcon from '@material-ui/icons/Mail';
 import IncomeIcon from '@material-ui/icons/MonetizationOn';
@@ -33,7 +33,7 @@ const NavIconList = () => {
         </ListItem>
         <ListItem button onClick={() => navigate(routes.LEDGERS)}>
           <ListItemIcon>
-            <LedgerIcon />
+            <BookIcon />
           </ListItemIcon>
           <ListItemText primary='Ledgers' />
         </ListItem>
