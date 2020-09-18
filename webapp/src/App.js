@@ -13,6 +13,7 @@ import ProtectedRoute from './common/components/ProtectedRoute';
 import createTheme from './common/utils/createTheme';
 import queryConfig from './common/utils/queryConfig';
 import * as routes from './common/utils/routes';
+import EnvelopePages from './envelopes/components/EnvelopePages';
 import LedgerPages from './ledgers/components/LedgerPages';
 import TokensPage from './tokens/components/TokensPage';
 
@@ -31,6 +32,7 @@ function App() {
               <Route path={routes.LOGIN} element={<LoginPage />} />
               <Route path={routes.LOGOUT} element={<LogoutPage />} />
               <ProtectedRoute path={`${routes.ACCOUNTS}/*`} element={<AccountPages />} />
+              <ProtectedRoute path={`${routes.ENVELOPES}/*`} element={<EnvelopePages />} />
               <ProtectedRoute path={`${routes.LEDGERS}/*`} element={<LedgerPages />} />
               <ProtectedRoute path={`${routes.TOKENS}/*`} element={<TokensPage />} />
               <ProtectedRoute path='*' element={<div>hi</div>} />

@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class AccountTest : AbstractIntegrationTest() {
+class EnvelopeTest : AbstractIntegrationTest() {
   var ledgerId: String = ""
 
   @BeforeEach
@@ -33,32 +33,32 @@ class AccountTest : AbstractIntegrationTest() {
   }
 
   @Test
-  fun `account resources requires authentication`() {
+  fun `envelope resources requires authentication`() {
     When {
-      get("/api/account-categories")
+      get("/api/envelope-categories")
     } Then {
       statusCode(401)
     }
 
     When {
-      get("/api/accounts")
+      get("/api/envelopes")
     } Then {
       statusCode(401)
     }
   }
 
   @Test
-  fun `account category resource requires valid parameters`() {
+  fun `envelope category resource requires valid parameters`() {
     setupAuth()
 
     // Invalid ledger
     Given {
       body(mapOf(
         "Ledger" to "/api/ledgers/$ledgerId",
-        "name" to "Account name"
+        "name" to "Envelope name"
       ))
     } When {
-      post("/api/account-categories")
+      post("/api/envelope-categories")
     } Then {
       statusCode(400)
     }
@@ -66,10 +66,10 @@ class AccountTest : AbstractIntegrationTest() {
     Given {
       body(mapOf(
         "ledger" to "$ledgerId",
-        "name" to "Account name"
+        "name" to "Envelope name"
       ))
     } When {
-      post("/api/account-categories")
+      post("/api/envelope-categories")
     } Then {
       statusCode(greaterThanOrEqualTo(400))
     }
@@ -77,10 +77,10 @@ class AccountTest : AbstractIntegrationTest() {
     Given {
       body(mapOf(
         "ledger" to "/api/ledgers/00000000-0000-0000-0000-000000000000",
-        "name" to "Account name"
+        "name" to "Envelope name"
       ))
     } When {
-      post("/api/account-categories")
+      post("/api/envelope-categories")
     } Then {
       statusCode(greaterThanOrEqualTo(400))
     }
@@ -89,10 +89,10 @@ class AccountTest : AbstractIntegrationTest() {
     Given {
       body(mapOf(
         "ledger" to "/api/ledgers/$ledgerId",
-        "Name" to "Category Name"
+        "Name" to "Envelope Name"
       ))
     } When {
-      post("/api/account-categories")
+      post("/api/envelope-categories")
     } Then {
       statusCode(400)
     }
@@ -103,7 +103,7 @@ class AccountTest : AbstractIntegrationTest() {
         "name" to ""
       ))
     } When {
-      post("/api/account-categories")
+      post("/api/envelope-categories")
     } Then {
       statusCode(400)
     }
@@ -114,14 +114,14 @@ class AccountTest : AbstractIntegrationTest() {
         "name" to null
       ))
     } When {
-      post("/api/account-categories")
+      post("/api/envelope-categories")
     } Then {
       statusCode(400)
     }
   }
 
   @Test
-  fun `account resource requires valid parameters`() {
+  fun `envelope resource requires valid parameters`() {
     setupAuth()
 
     val catId: String =
@@ -131,7 +131,7 @@ class AccountTest : AbstractIntegrationTest() {
           "name" to "Category name"
         ))
       } When {
-        post("/api/account-categories")
+        post("/api/envelope-categories")
       } Then {
         statusCode(201)
       } Extract {
@@ -141,11 +141,11 @@ class AccountTest : AbstractIntegrationTest() {
     // Invalid category
     Given {
       body(mapOf(
-        "Category" to "/api/account-categories/$catId",
-        "name" to "Account name"
+        "Category" to "/api/envelope-categories/$catId",
+        "name" to " name"
       ))
     } When {
-      post("/api/accounts")
+      post("/api/envelopes")
     } Then {
       statusCode(400)
     }
@@ -153,21 +153,21 @@ class AccountTest : AbstractIntegrationTest() {
     Given {
       body(mapOf(
         "category" to "/api/ledgers/$ledgerId",
-        "name" to "Account name"
+        "name" to "Envelope name"
       ))
     } When {
-      post("/api/accounts")
+      post("/api/envelopes")
     } Then {
       statusCode(greaterThanOrEqualTo(400))
     }
 
     Given {
       body(mapOf(
-        "category" to "/api/account-categories/00000000-0000-0000-0000-000000000000",
-        "name" to "Account name"
+        "category" to "/api/envelope-categories/00000000-0000-0000-0000-000000000000",
+        "name" to "Envelope name"
       ))
     } When {
-      post("/api/accounts")
+      post("/api/envelopes")
     } Then {
       statusCode(greaterThanOrEqualTo(400))
     }
@@ -175,10 +175,10 @@ class AccountTest : AbstractIntegrationTest() {
     Given {
       body(mapOf(
         "category" to "$catId",
-        "name" to "Account name"
+        "name" to "Envelope name"
       ))
     } When {
-      post("/api/accounts")
+      post("/api/envelopes")
     } Then {
       statusCode(greaterThanOrEqualTo(400))
     }
@@ -186,59 +186,33 @@ class AccountTest : AbstractIntegrationTest() {
     // Invalid name
     Given {
       body(mapOf(
-        "category" to "/api/account-categories/$catId",
-        "Name" to "Account Name"
+        "category" to "/api/envelope-categories/$catId",
+        "Name" to "Envelope Name"
       ))
     } When {
-      post("/api/accounts")
+      post("/api/envelopes")
     } Then {
       statusCode(400)
     }
 
     Given {
       body(mapOf(
-        "category" to "/api/account-categories/$catId",
+        "category" to "/api/envelope-categories/$catId",
         "name" to ""
       ))
     } When {
-      post("/api/accounts")
+      post("/api/envelopes")
     } Then {
       statusCode(400)
     }
 
     Given {
       body(mapOf(
-        "category" to "/api/account-categories/$catId",
+        "category" to "/api/envelope-categories/$catId",
         "name" to null
       ))
     } When {
-      post("/api/accounts")
-    } Then {
-      statusCode(400)
-    }
-
-    // Invalid institution
-    Given {
-      body(mapOf(
-        "ledger" to "/api/ledgers/$ledgerId",
-        "name" to "Account name",
-        "institution" to null
-      ))
-    } When {
-      post("/api/accounts")
-    } Then {
-      statusCode(400)
-    }
-
-    // Invalid account number
-    Given {
-      body(mapOf(
-        "ledger" to "/api/ledgers/$ledgerId",
-        "name" to "Account name",
-        "accountNumber" to null
-      ))
-    } When {
-      post("/api/accounts")
+      post("/api/envelopes")
     } Then {
       statusCode(400)
     }
@@ -247,11 +221,11 @@ class AccountTest : AbstractIntegrationTest() {
     Given {
       body(mapOf(
         "ledger" to "/api/ledgers/$ledgerId",
-        "name" to "Account name",
+        "name" to "Envelope name",
         "archived" to null
       ))
     } When {
-      post("/api/accounts")
+      post("/api/envelopes")
     } Then {
       statusCode(400)
     }
@@ -260,18 +234,18 @@ class AccountTest : AbstractIntegrationTest() {
     Given {
       body(mapOf(
         "ledger" to "/api/ledgers/$ledgerId",
-        "name" to "Account name",
+        "name" to "Envelope name",
         "externalId" to null
       ))
     } When {
-      post("/api/accounts")
+      post("/api/envelopes")
     } Then {
       statusCode(400)
     }
   }
 
   @Test
-  fun `ledger resource is audited`() {
+  fun `envelope resource is audited`() {
     setupAuth()
 
     val catId: String =
@@ -281,7 +255,7 @@ class AccountTest : AbstractIntegrationTest() {
           "name" to "Category name"
         ))
       } When {
-        post("/api/account-categories")
+        post("/api/envelope-categories")
       } Then {
         statusCode(201)
       } Extract {
@@ -291,16 +265,14 @@ class AccountTest : AbstractIntegrationTest() {
     val postResponse =
       Given {
         body(mapOf(
-          "category" to "/api/account-categories/$catId",
-          "name" to "Acount name"
+          "category" to "/api/envelope-categories/$catId",
+          "name" to "Envlope name"
         ))
       } When {
-        post("/api/accounts")
+        post("/api/envelopes")
       } Then {
         statusCode(201)
-        body("name", equalTo("Acount name"))
-        body("institution", equalTo(""))
-        body("accountNumber", equalTo(""))
+        body("name", equalTo("Envlope name"))
         body("archived", equalTo(false))
         body("externalId", equalTo(""))
       } Extract {
@@ -313,36 +285,32 @@ class AccountTest : AbstractIntegrationTest() {
 
     Given {
       body(mapOf(
-        "category" to "/api/account-categories/$catId",
-        "name" to "Account name"
+        "category" to "/api/envelope-categories/$catId",
+        "name" to "Envelope name"
       ))
     } When {
-      put("/api/accounts/$id")
+      put("/api/envelopes/$id")
     } Then {
       statusCode(200)
-      body("name", equalTo("Account name"))
+      body("name", equalTo("Envelope name"))
       body("created", equalTo(created.toString()))
       body("lastUpdated", not(equalTo(created.toString())))
     }
 
     Given {
       body(mapOf(
-        "category" to "/api/account-categories/$catId",
-        "name" to "Account name",
-        "institution" to "Bank of Dad",
-        "accountNumber" to "1",
+        "category" to "/api/envelope-categories/$catId",
+        "name" to "Envelope name",
         "archived" to true,
         "externalId" to "firstborn",
         "created" to Instant.ofEpochSecond(1000),
         "lastUpdated" to Instant.ofEpochSecond(2000)
       ))
     } When {
-      put("/api/accounts/$id")
+      put("/api/envelopes/$id")
     } Then {
       statusCode(200)
-      body("name", equalTo("Account name"))
-      body("institution", equalTo("Bank of Dad"))
-      body("accountNumber", equalTo("1"))
+      body("name", equalTo("Envelope name"))
       body("archived", equalTo(true))
       body("externalId", equalTo("firstborn"))
       body("created", equalTo(created.toString()))
@@ -351,17 +319,15 @@ class AccountTest : AbstractIntegrationTest() {
 
     Given {
       body(mapOf(
-        "name" to "Patched Account",
+        "name" to "Patched Envelope",
         "created" to Instant.ofEpochSecond(1000),
         "lastUpdated" to Instant.ofEpochSecond(2000)
       ))
     } When {
-      patch("/api/accounts/$id")
+      patch("/api/envelopes/$id")
     } Then {
       statusCode(200)
-      body("name", equalTo("Patched Account"))
-      body("institution", equalTo("Bank of Dad"))
-      body("accountNumber", equalTo("1"))
+      body("name", equalTo("Patched Envelope"))
       body("archived", equalTo(true))
       body("externalId", equalTo("firstborn"))
       body("created", equalTo(created.toString()))
@@ -370,7 +336,7 @@ class AccountTest : AbstractIntegrationTest() {
   }
 
   @Test
-  fun `can fetch all accounts by category`() {
+  fun `can fetch all envelopes by category`() {
     setupAuth()
 
     val catId1: String =
@@ -380,7 +346,7 @@ class AccountTest : AbstractIntegrationTest() {
           "name" to "Category 1"
         ))
       } When {
-        post("/api/account-categories")
+        post("/api/envelope-categories")
       } Then {
         statusCode(201)
       } Extract {
@@ -394,7 +360,7 @@ class AccountTest : AbstractIntegrationTest() {
           "name" to "Category 2"
         ))
       } When {
-        post("/api/account-categories")
+        post("/api/envelope-categories")
       } Then {
         statusCode(201)
       } Extract {
@@ -408,7 +374,7 @@ class AccountTest : AbstractIntegrationTest() {
           "name" to "Category 3"
         ))
       } When {
-        post("/api/account-categories")
+        post("/api/envelope-categories")
       } Then {
         statusCode(201)
       } Extract {
@@ -418,11 +384,11 @@ class AccountTest : AbstractIntegrationTest() {
     val acctId1: String =
       Given {
         body(mapOf(
-          "category" to "/api/account-categories/$catId2",
-          "name" to "Account 1"
+          "category" to "/api/envelope-categories/$catId2",
+          "name" to "Envelope 1"
         ))
       } When {
-        post("/api/accounts")
+        post("/api/envelopes")
       } Then {
         statusCode(201)
       } Extract {
@@ -432,11 +398,11 @@ class AccountTest : AbstractIntegrationTest() {
     val acctId2: String =
       Given {
         body(mapOf(
-          "category" to "/api/account-categories/$catId1",
-          "name" to "Account 2"
+          "category" to "/api/envelope-categories/$catId1",
+          "name" to "Envelope 2"
         ))
       } When {
-        post("/api/accounts")
+        post("/api/envelopes")
       } Then {
         statusCode(201)
       } Extract {
@@ -446,11 +412,11 @@ class AccountTest : AbstractIntegrationTest() {
     val acctId3: String =
       Given {
         body(mapOf(
-          "category" to "/api/account-categories/$catId2",
-          "name" to "Account 3"
+          "category" to "/api/envelope-categories/$catId2",
+          "name" to "Envelope 3"
         ))
       } When {
-        post("/api/accounts")
+        post("/api/envelopes")
       } Then {
         statusCode(201)
       } Extract {
@@ -458,32 +424,31 @@ class AccountTest : AbstractIntegrationTest() {
       }
 
     When {
-      get("/api/ledgers/$ledgerId/accountCategories?projection=categoryWithAccounts")
+      get("/api/ledgers/$ledgerId/envelopeCategories?projection=categoryWithEnvelopes")
     } Then {
       statusCode(200)
-      body("_embedded.accountCategories.id", contains(catId1, catId2, catId3))
+      body("_embedded.envelopeCategories.id", contains(catId1, catId2, catId3))
 
-      rootPath("_embedded.accountCategories.find { it.id == '$catId1' }")
+      rootPath("_embedded.envelopeCategories.find { it.id == '$catId1' }")
       body("name", equalTo("Category 1"))
-      body("accounts", hasSize<List<*>>(1))
-      body("accounts[0].id", equalTo(acctId2))
-      body("accounts[0].name", equalTo("Account 2"))
-      body("accounts[0].archived", equalTo(false))
-      body("accounts[0]", not(hasKey<String>("accountNumber")))
+      body("envelopes", hasSize<List<*>>(1))
+      body("envelopes[0].id", equalTo(acctId2))
+      body("envelopes[0].name", equalTo("Envelope 2"))
+      body("envelopes[0].archived", equalTo(false))
 
-      rootPath("_embedded.accountCategories.find { it.id == '$catId2' }")
+      rootPath("_embedded.envelopeCategories.find { it.id == '$catId2' }")
       body("name", equalTo("Category 2"))
-      body("accounts.id", contains(acctId1, acctId3))
-      body("accounts.name", contains("Account 1", "Account 3"))
+      body("envelopes.id", contains(acctId1, acctId3))
+      body("envelopes.name", contains("Envelope 1", "Envelope 3"))
 
-      rootPath("_embedded.accountCategories.find { it.id == '$catId3' }")
+      rootPath("_embedded.envelopeCategories.find { it.id == '$catId3' }")
       body("name", equalTo("Category 3"))
-      body("accounts", hasSize<List<*>>(0))
+      body("envelopes", hasSize<List<*>>(0))
     }
   }
 
   @Test
-  fun `deletion of account category cascades to accounts`() {
+  fun `deletion of envelope category cascades to envelopes`() {
     setupAuth()
 
     val catId: String =
@@ -493,21 +458,21 @@ class AccountTest : AbstractIntegrationTest() {
           "name" to "Category Name"
         ))
       } When {
-        post("/api/account-categories")
+        post("/api/envelope-categories")
       } Then {
         statusCode(201)
       } Extract {
         path("id")
       }
 
-    val acctId: String =
+    val envId: String = 
       Given {
         body(mapOf(
-          "category" to "/api/account-categories/$catId",
-          "name" to "Account Name"
+          "category" to "/api/envelope-categories/$catId",
+          "name" to "Envelope Name"
         ))
       } When {
-        post("/api/accounts")
+        post("/api/envelopes")
       } Then {
         statusCode(201)
       } Extract {
@@ -515,28 +480,28 @@ class AccountTest : AbstractIntegrationTest() {
       }
 
     When {
-      get("/api/accounts")
+      get("/api/envelopes")
     } Then {
       statusCode(200)
-      body("_embedded.accounts.id", hasItems(acctId))
+      body("_embedded.envelopes.id", hasItems(envId))
     }
 
     When {
-      delete("/api/account-categories/$catId")
+      delete("/api/envelope-categories/$catId")
     } Then {
       statusCode(204)
     }
 
     When {
-      get("/api/accounts")
+      get("/api/envelopes")
     } Then {
       statusCode(200)
-      body("_embedded.accounts.id", not(hasItems(acctId)))
+      body("_embedded.envelopes.id", not(hasItems(envId)))
     }
   }
 
   @Test
-  fun `deletion of ledger cascades to account categories`() {
+  fun `deletion of ledger cascades to envelope categories`() {
     setupAuth()
 
     val catId: String =
@@ -546,7 +511,7 @@ class AccountTest : AbstractIntegrationTest() {
           "name" to "Category Name"
         ))
       } When {
-        post("/api/account-categories")
+        post("/api/envelope-categories")
       } Then {
         statusCode(201)
       } Extract {
@@ -554,7 +519,7 @@ class AccountTest : AbstractIntegrationTest() {
       }
 
     When {
-      get("/api/account-categories/${catId}")
+      get("/api/envelope-categories/${catId}")
     } Then {
       statusCode(200)
     }
@@ -566,7 +531,7 @@ class AccountTest : AbstractIntegrationTest() {
     }
 
     When {
-      get("/api/account-categories/${catId}")
+      get("/api/envelope-categories/${catId}")
     } Then {
       statusCode(404)
     }

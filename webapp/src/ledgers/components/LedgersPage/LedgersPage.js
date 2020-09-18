@@ -1,4 +1,4 @@
-import AddIcon from '@material-ui/icons/Add';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 import React from 'react';
 
 import FullAppPage from '../../../common/components/FullAppPage';
@@ -12,13 +12,13 @@ const LedgersPage = () => {
 
   const createLedger = {
     'aria-label': 'Create ledger',
-    icon: <AddIcon />,
+    icon: <AddCircleIcon />,
     onClick: () => dispatch({ type: 'showCreateLedger' }),
     text: 'Create ledger',
   };
 
   return (
-    <FullAppPage primaryActions={createLedger} title='My Ledgers' useFab>
+    <FullAppPage primaryActions={createLedger} title='Ledgers' useFab>
       <LedgersListing />
       <CreateLedgerDialog />
       <ModifyLedgerDialog />

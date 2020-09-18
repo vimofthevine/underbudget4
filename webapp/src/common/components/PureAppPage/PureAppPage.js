@@ -6,11 +6,15 @@ import React from 'react';
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    bottom: 0,
     display: 'flex',
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
   },
   content: {
     flexGrow: 1,
-    height: '100vh',
     overflow: 'auto',
   },
   appBarSpacer: theme.mixins.toolbar,

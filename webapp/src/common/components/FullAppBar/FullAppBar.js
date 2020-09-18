@@ -14,10 +14,10 @@ import PureActionMenu from '../PureActionMenu';
 import PureAppBar from '../PureAppBar';
 import PureDrawer from '../PureDrawer';
 import UserMenu from '../UserMenu';
+import useDrawerState from './useDrawerState';
 
 const FullAppBar = ({ primaryActions, selectionActions, title }) => {
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
-  const toggleDrawer = () => setDrawerOpen((old) => !old);
+  const [drawerOpen, toggleDrawer] = useDrawerState();
 
   const { clear, selected } = useSelection();
   const hasSelection = selected && selected.length > 0;

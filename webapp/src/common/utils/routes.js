@@ -11,3 +11,4 @@ export const EXPENSES = '/expenses';
 export const REPORTS = '/reports';
 
 export const accountRoute = (id) => `${ACCOUNTS}/${id}`;
+export const envelopeRoute = (id) => `${ENVELOPES}/${id}`;
