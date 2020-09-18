@@ -27,7 +27,7 @@ const EnvelopesListPage = () => {
   ];
 
   return (
-    <FullAppPage primaryActions={actions} title='My Envelopes'>
+    <FullAppPage primaryActions={actions} title='Envelopes'>
       <EnvelopesList />
       <CreateEnvelopeCategoryDialog />
       <ModifyEnvelopeCategoryDialog />

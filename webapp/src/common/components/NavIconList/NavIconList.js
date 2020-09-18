@@ -31,17 +31,17 @@ const NavIconList = () => {
           </ListItemIcon>
           <ListItemText primary='Dashboard' />
         </ListItem>
+      </List>
+
+      <Divider />
+
+      <List>
         <ListItem button onClick={() => navigate(routes.LEDGERS)}>
           <ListItemIcon>
             <BookIcon />
           </ListItemIcon>
           <ListItemText primary='Ledgers' />
         </ListItem>
-      </List>
-
-      <Divider />
-
-      <List>
         <ListItem button onClick={() => navigate(routes.ACCOUNTS)}>
           <ListItemIcon>
             <AccountIcon />
@@ -54,6 +54,11 @@ const NavIconList = () => {
           </ListItemIcon>
           <ListItemText primary='Envelopes' />
         </ListItem>
+      </List>
+
+      <Divider />
+
+      <List>
         <ListItem button onClick={() => navigate(routes.INCOMES)}>
           <ListItemIcon>
             <IncomeIcon />

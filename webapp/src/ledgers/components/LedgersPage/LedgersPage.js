@@ -18,7 +18,7 @@ const LedgersPage = () => {
   };
 
   return (
-    <FullAppPage primaryActions={createLedger} title='My Ledgers' useFab>
+    <FullAppPage primaryActions={createLedger} title='Ledgers' useFab>
       <LedgersListing />
       <CreateLedgerDialog />
       <ModifyLedgerDialog />

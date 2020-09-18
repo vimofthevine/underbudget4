@@ -27,7 +27,7 @@ const AccountsListPage = () => {
   ];
 
   return (
-    <FullAppPage primaryActions={actions} title='My Accounts'>
+    <FullAppPage primaryActions={actions} title='Accounts'>
       <AccountsList />
       <CreateAccountCategoryDialog />
       <ModifyAccountCategoryDialog />
