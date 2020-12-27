@@ -5,6 +5,11 @@ target/
 !**/src/test/**
 /package.json
 
+### Python ###
+*.egg-info
+*.pyc
+venv/
+
 ### STS ###
 .apt_generated
 .classpath
