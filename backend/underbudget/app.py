@@ -1,6 +1,7 @@
 """Flask application factory"""
 from typing import Tuple, Dict
 from flask import Flask
+from flask_restful import Api
 from sqlalchemy.exc import SQLAlchemyError
 
 
@@ -9,10 +10,16 @@ def create_app() -> Flask:
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_pyfile("config.py", silent=True)
 
+    api = Api(app)
+
     # pylint: disable=import-outside-toplevel
     from underbudget.database import db
 
     db.init_app(app)
+
+    from underbudget.resources.user import UserResource
+
+    api.add_resource(UserResource, "/users")
 
     # pylint: disable=unused-variable
     @app.route("/")
