@@ -2,7 +2,6 @@
 from typing import Tuple, Dict
 from flask import Flask
 from flask_restful import Api
-from flask_jwt_extended import JWTManager
 from sqlalchemy.exc import SQLAlchemyError
 
 
@@ -12,7 +11,6 @@ def create_app() -> Flask:
     app.config.from_pyfile("config.py", silent=True)
 
     api = Api(app)
-    JWTManager(app)
 
     # pylint: disable=import-outside-toplevel
     from underbudget.database import db
