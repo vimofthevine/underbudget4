@@ -8,4 +8,10 @@
   "prettier.trailingComma": "all",
   "sort-imports.default-sort-style": "module",
   "python.pythonPath": "backend/venv/bin/python",
+  "python.formatting.provider": "black",
+  "python.linting.pylintArgs": [
+    "--load-plugins",
+    "pylint_flask_sqlalchemy",
+    "pylint_flask"
+  ]
 }
