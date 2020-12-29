@@ -1,0 +1,49 @@
+version: '3.3'
+
+networks:
+  net:
+    driver: bridge
+
+services:
+  proxy:
+    image: jwilder/nginx-proxy
+    container_name: underbudget-proxy
+    networks:
+      - net
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./proxy.conf:/etc/nginx/proxy.conf:ro
+      - proxy-conf:/etc/nginx/conf.d
+      - proxy-vhost:/etc/nginx/vhost.d
+      - proxy-html:/usr/share/nginx/html
+      - proxy-dhparam:/etc/nginx/dhparam
+      - proxy-certs:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
+  certs:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: underbudget-certs
+    networks:
+      - net
+    volumes_from:
+      - proxy
+    volumes:
+      - proxy-certs:/etc/nginx/certs:rw
+      - certs-acme:/etc/acme.sh
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  api:
+    image: tutum/hello-world
+    container_name: underbudget-api
+    networks:
+      - net
+
+volumes:
+  proxy-conf:
+  proxy-vhost:
+  proxy-html:
+  proxy-dhparam:
+  proxy-certs:
+  certs-acme:
