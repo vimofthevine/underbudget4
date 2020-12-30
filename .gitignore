@@ -5,6 +5,16 @@ target/
 !**/src/test/**
 /package.json
 
+### Docker ###
+.proxy.env
+/proxy/*
+!/proxy
+/proxy/nginx/*
+!/proxy/nginx
+/proxy/nginx/proxy-confs/*
+!/proxy/nginx/proxy-confs
+!/proxy/nginx/proxy-confs/*.conf
+
 ### Python ###
 *.egg-info
 *.pyc
