@@ -1,0 +1,27 @@
+version: '3.3'
+
+services:
+  proxy:
+    image: linuxserver/swag
+    container_name: underbudget-proxy
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped
+    env_file: .proxy.env
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./proxy:/config
+
+  authelia:
+    image: authelia/authelia
+    container_name: underbudget-auth
+    restart: unless-stopped
+    env_file: .auth.env
+    volumes:
+      - ./authelia:/config
+
+  api:
+    image: tutum/hello-world
+    container_name: underbudget-api

@@ -5,6 +5,18 @@ target/
 !**/src/test/**
 /package.json
 
+### Docker ###
+.auth.env
+.proxy.env
+/authelia/
+/proxy/*
+!/proxy
+/proxy/nginx/*
+!/proxy/nginx
+/proxy/nginx/proxy-confs/*
+!/proxy/nginx/proxy-confs
+!/proxy/nginx/proxy-confs/*.conf
+
 ### Python ###
 *.egg-info
 *.pyc
