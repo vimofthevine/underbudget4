@@ -14,6 +14,14 @@ services:
     volumes:
       - ./proxy:/config
 
+  authelia:
+    image: authelia/authelia
+    container_name: underbudget-auth
+    restart: unless-stopped
+    env_file: .auth.env
+    volumes:
+      - ./authelia:/config
+
   api:
     image: tutum/hello-world
     container_name: underbudget-api

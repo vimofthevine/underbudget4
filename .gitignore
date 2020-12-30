@@ -6,7 +6,9 @@ target/
 /package.json
 
 ### Docker ###
+.auth.env
 .proxy.env
+/authelia/
 /proxy/*
 !/proxy
 /proxy/nginx/*
