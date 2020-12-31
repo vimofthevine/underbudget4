@@ -15,7 +15,11 @@ mccabe==0.6.1
 mypy==0.790
 mypy-extensions==0.4.3
 pathspec==0.8.1
+psycopg2-binary==2.8.6
 pylint==2.6.0
+pylint-flask==0.6
+pylint-flask-sqlalchemy==0.2.0
+pylint-plugin-utils==0.6
 pytz==2020.5
 regex==2020.11.13
 six==1.15.0

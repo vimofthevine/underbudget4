@@ -1,6 +1,6 @@
 TAG=latest
 
-.PHONY: black pylint mypy style image run start stop
+.PHONY: black pylint mypy style pip-freeze image run start stop
 
 black:
 	black --check underbudget/
@@ -12,6 +12,9 @@ mypy:
 	mypy --disallow-untyped-defs underbudget/
 
 style: pylint mypy black
+
+pip-freeze:
+	pip freeze | grep -v git > requirements.txt
 
 image:
 	DOCKER_BUILDKIT=1 docker build -t vimofthevine/underbudget-api:$(TAG) .

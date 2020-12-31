@@ -22,6 +22,21 @@ services:
     volumes:
       - ./authelia:/config
 
+  db:
+    image: postgres
+    container_name: underbudget-db
+    restart: unless-stopped
+    env_file: .db.env
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
   api:
-    image: tutum/hello-world
+    build: backend
     container_name: underbudget-api
+    restart: always
+    depends_on:
+      - db
+    env_file: .db.env
+
+volumes:
+  db-data:

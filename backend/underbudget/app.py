@@ -4,10 +4,13 @@ from flask import Flask
 from flask_restful import Api
 from sqlalchemy.exc import SQLAlchemyError
 
+from underbudget import config 
 
-def create_app() -> Flask:
+
+def create_app(app_config=config.BaseConfig) -> Flask:
     """Creates the Flask application instance"""
     app = Flask(__name__, instance_relative_config=True)
+    app.config.from_object(app_config)
     app.config.from_pyfile("config.py", silent=True)
 
     api = Api(app)
@@ -17,9 +20,9 @@ def create_app() -> Flask:
 
     db.init_app(app)
 
-    from underbudget.resources.user import UserResource
+    from underbudget.resources.ledgers import LedgerResource
 
-    api.add_resource(UserResource, "/users")
+    api.add_resource(LedgerResource, "/api/ledgers")
 
     # pylint: disable=unused-variable
     @app.route("/")
