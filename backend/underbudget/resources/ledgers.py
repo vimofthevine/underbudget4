@@ -2,7 +2,8 @@
 from datetime import datetime
 from flask_restful import Resource, fields, marshal_with, reqparse
 
-from underbudget.decorators import with_pagination
+from underbudget.common.decorators import with_pagination
+from underbudget.common.types import min_int, not_empty
 from underbudget.models.ledger import LedgerModel
 
 
@@ -22,9 +23,15 @@ paginated_ledgers_fields = {
 }
 
 ledger_parser = reqparse.RequestParser()
-ledger_parser.add_argument("name", type=str, help="Name is required", required=True)
 ledger_parser.add_argument(
-    "currency", type=int, help="Currency is required", required=True
+    "name", type=not_empty, help="Name is required", required=True, nullable=False
+)
+ledger_parser.add_argument(
+    "currency",
+    type=min_int(1),
+    help="Currency is required",
+    required=True,
+    nullable=False,
 )
 
 

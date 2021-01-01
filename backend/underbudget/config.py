@@ -2,9 +2,11 @@
 import os
 
 
-db_name = os.environ.get("POSTGRES_DB", "postgres")
-db_user = os.environ.get("POSTGRES_USER", "postgres")
-db_password = os.environ.get("POSTGRES_PASSWORD", "postgres")
+user = os.environ.get("POSTGRES_USER", "postgres")
+password = os.environ.get("POSTGRES_PASSWORD", "postgres")
+host = os.environ.get("POSTGRES_HOST", "db")
+port = os.environ.get("POSTGRES_PORT", "5432")
+name = os.environ.get("POSTGRES_DB", "postgres")
 
 # pylint: disable=too-few-public-methods
 
@@ -13,7 +15,7 @@ class BaseConfig:
     """ Base/production configuration """
 
     SQLALCHEMY_DATABASE_URI = os.environ.get(
-        "DATABASE_URI", f"postgresql://{db_user}:{db_password}@db:5432/{db_name}"
+        "DATABASE_URI", f"postgresql://{user}:{password}@{host}:{port}/{name}"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 

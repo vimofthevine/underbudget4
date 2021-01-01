@@ -4,7 +4,7 @@ from flask import Flask
 from flask_restful import Api
 from sqlalchemy.exc import SQLAlchemyError
 
-from underbudget import config 
+from underbudget import config
 
 
 def create_app(app_config=config.BaseConfig) -> Flask:
