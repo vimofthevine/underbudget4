@@ -7,6 +7,7 @@ def min_int(min_val):
         if val < min_val:
             raise ValidationError
         return val
+
     return validate
 
 
@@ -16,6 +17,7 @@ def max_int(max_val):
         if val > max_val:
             raise ValidationError
         return val
+
     return validate
 
 

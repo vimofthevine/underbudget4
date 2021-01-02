@@ -23,7 +23,7 @@ class LedgerModel(db.Model):
     @classmethod
     def find_by_id(cls, ledger_id):
         """ Queries for a ledger with the given ID """
-        return cls.get(ledger_id)
+        return cls.query.get(ledger_id)
 
     @classmethod
     def find_all(cls, page, size):

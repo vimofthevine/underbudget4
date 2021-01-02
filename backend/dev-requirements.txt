@@ -6,6 +6,7 @@ pylint>=2.6.0
 pylint-flask>=0.6
 pylint-flask-sqlalchemy>=0.2.0
 
+jsonpath-ng>=1.5.2
 pytest>=6.2.1
 pytest-cov>=2.10.1
 pytest-flask>=1.1.0

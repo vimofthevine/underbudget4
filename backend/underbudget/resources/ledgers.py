@@ -35,8 +35,8 @@ ledger_parser.add_argument(
 )
 
 
-class LedgerResource(Resource):
-    """ Ledger resource """
+class LedgerListResource(Resource):
+    """ Ledger list resource """
 
     @staticmethod
     @with_pagination
@@ -49,12 +49,41 @@ class LedgerResource(Resource):
     def post():
         """ Creates a new ledger """
         data = ledger_parser.parse_args()
+        now = datetime.now()
 
         new_ledger = LedgerModel(
             name=data["name"],
             currency=data["currency"],
-            created=datetime.now(),
-            last_updated=datetime.now(),
+            created=now,
+            last_updated=now,
         )
         new_ledger.save()
         return {"id": int(new_ledger.id)}, 201
+
+
+class LedgerResource(Resource):
+    """ Individual ledger resource """
+
+    @staticmethod
+    @marshal_with(ledger_fields)
+    def get(ledger_id):
+        """ Gets a specific ledger """
+        ledger = LedgerModel.find_by_id(ledger_id)
+        if ledger:
+            return ledger
+        return None, 404
+
+    @staticmethod
+    def put(ledger_id):
+        """ Modifies a specific ledger """
+        data = ledger_parser.parse_args()
+        now = datetime.now()
+
+        ledger = LedgerModel.find_by_id(ledger_id)
+        if ledger:
+            ledger.name = data["name"]
+            ledger.currency = data["currency"]
+            ledger.last_updated = now
+            ledger.save()
+            return None, 200
+        return None, 404

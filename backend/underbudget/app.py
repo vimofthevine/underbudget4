@@ -20,9 +20,10 @@ def create_app(app_config=config.BaseConfig) -> Flask:
 
     db.init_app(app)
 
-    from underbudget.resources.ledgers import LedgerResource
+    from underbudget.resources.ledgers import LedgerListResource, LedgerResource
 
-    api.add_resource(LedgerResource, "/api/ledgers")
+    api.add_resource(LedgerListResource, "/api/ledgers")
+    api.add_resource(LedgerResource, "/api/ledgers/<int:ledger_id>")
 
     # pylint: disable=unused-variable
     @app.route("/")
