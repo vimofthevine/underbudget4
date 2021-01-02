@@ -89,6 +89,8 @@ class LedgersTestCase(BaseTestCase):
         )
         assert resp.status_code == 404
 
+        assert self.client.delete("/api/ledgers/999").status_code == 404
+
     def test_ledger_is_audited(self):
         resp = self.client.post(
             "/api/ledgers", json={"name": "Audited eLdger", "currency": 840}
@@ -132,3 +134,14 @@ class LedgersTestCase(BaseTestCase):
         assert body.get("currency") == 123
         assert body.get("created") == created
         assert body.get("lastUpdated") != "2021-01-02T01:34:34+0000"
+
+    def test_ledger_deletion(self):
+        resp = self.client.post(
+            "/api/ledgers", json={"name": "Ledger", "currency": 840}
+        )
+        assert resp.status_code == 201
+        ledger_id = json.loads(resp.data).get("id")
+
+        assert self.client.get(f"/api/ledgers/{ledger_id}").status_code == 200
+        assert self.client.delete(f"/api/ledgers/{ledger_id}").status_code == 204
+        assert self.client.get(f"/api/ledgers/{ledger_id}").status_code == 404

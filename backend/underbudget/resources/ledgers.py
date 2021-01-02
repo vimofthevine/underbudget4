@@ -87,3 +87,12 @@ class LedgerResource(Resource):
             ledger.save()
             return None, 200
         return None, 404
+
+    @staticmethod
+    def delete(ledger_id):
+        """ Deletes a specific ledger """
+        ledger = LedgerModel.find_by_id(ledger_id)
+        if ledger:
+            ledger.delete()
+            return None, 204
+        return None, 404

@@ -20,6 +20,11 @@ class LedgerModel(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def delete(self):
+        """ Deletes this model from the database """
+        db.session.delete(self)
+        db.session.commit()
+
     @classmethod
     def find_by_id(cls, ledger_id):
         """ Queries for a ledger with the given ID """
