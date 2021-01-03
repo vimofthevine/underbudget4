@@ -1,6 +1,7 @@
 """ Integration tests for ledger APIs """
 import json
 from jsonpath_ng import parse
+from parameterized import parameterized
 
 from underbudget.tests.base import BaseTestCase
 
@@ -8,31 +9,27 @@ from underbudget.tests.base import BaseTestCase
 class LedgersTestCase(BaseTestCase):
     """ Integration tests for ledger APIs """
 
-    def test_ledger_requires_valid_name(self):
+    @parameterized.expand(
+        [
+            ("Name", "Ledger Name"),
+            ("name", ""),
+            ("name", None),
+        ]
+    )
+    def test_ledger_requires_valid_name(self, key, value):
+        resp = self.client.post("/api/ledgers", json={key: value, "currency": 840})
+        assert resp.status_code == 400
+
+    @parameterized.expand(
+        [
+            ("Currency", 840),
+            ("currency", 0),
+            ("currency", None),
+        ]
+    )
+    def test_ledger_requires_valid_currency(self, key, value):
         resp = self.client.post(
-            "/api/ledgers", json={"Name": "Ledger Name", "currency": 840}
-        )
-        assert resp.status_code == 400
-
-        resp = self.client.post("/api/ledgers", json={"name": "", "currency": 840})
-        assert resp.status_code == 400
-
-        resp = self.client.post("/api/ledgers", json={"name": None, "currency": 840})
-        assert resp.status_code == 400
-
-    def test_ledger_requires_valid_currency(self):
-        resp = self.client.post(
-            "/api/ledgers", json={"name": "Ledger Name", "Currency": 840}
-        )
-        assert resp.status_code == 400
-
-        resp = self.client.post(
-            "/api/ledgers", json={"name": "Ledger Name", "currency": 0}
-        )
-        assert resp.status_code == 400
-
-        resp = self.client.post(
-            "/api/ledgers", json={"name": "Ledger Name", "currency": None}
+            "/api/ledgers", json={"name": "Ledger Name", key: value}
         )
         assert resp.status_code == 400
 
@@ -75,25 +72,18 @@ class LedgersTestCase(BaseTestCase):
         assert actual.get("total") == 11
 
     def test_ledger_not_found(self):
-        resp = self.client.post(
-            "/api/ledgers", json={"name": "Ledger", "currency": 840}
+        self._test_crud_methods_against_non_existent_resource(
+            "/api/ledgers", {"name": "Ledger", "currency": 978}
         )
-        assert resp.status_code == 201
-
-        assert self.client.get("/api/ledgers/not-an-id").status_code == 404
-        assert self.client.get("/api/ledgers/-1").status_code == 404
-        assert self.client.get("/api/ledgers/999").status_code == 404
-
-        resp = self.client.put(
-            "/api/ledgers/999", json={"name": "Ledger", "currency": 978}
-        )
-        assert resp.status_code == 404
-
-        assert self.client.delete("/api/ledgers/999").status_code == 404
 
     def test_ledger_is_audited(self):
+        self._test_resource_is_audited(
+            "/api/ledgers", "/api/ledgers", {"name": "Audited Ledger", "currency": 840}
+        )
+
+    def test_ledger_modification(self):
         resp = self.client.post(
-            "/api/ledgers", json={"name": "Audited eLdger", "currency": 840}
+            "/api/ledgers", json={"name": "Original Name", "currency": 840}
         )
         assert resp.status_code == 201
         ledger_id = json.loads(resp.data).get("id")
@@ -101,47 +91,22 @@ class LedgersTestCase(BaseTestCase):
         resp = self.client.get(f"/api/ledgers/{ledger_id}")
         assert resp.status_code == 200
         body = json.loads(resp.data)
-        created = body.get("created", "no-created")
-        assert body.get("name") == "Audited eLdger"
+        assert body.get("name") == body.get("name")
         assert body.get("currency") == 840
-        assert created == body.get("lastUpdated", "no-lastUpdated")
 
         resp = self.client.put(
-            f"/api/ledgers/{ledger_id}",
-            json={"name": "Audited Ledger", "currency": 978},
+            f"/api/ledgers/{ledger_id}", json={"name": "Modified Name", "currency": 978}
         )
         assert resp.status_code == 200
 
-        body = json.loads(self.client.get(f"/api/ledgers/{ledger_id}").data)
-        assert body.get("name") == "Audited Ledger"
+        resp = self.client.get(f"/api/ledgers/{ledger_id}")
+        assert resp.status_code == 200
+        body = json.loads(resp.data)
+        assert body.get("name") == body.get("name")
         assert body.get("currency") == 978
-        assert body.get("created") == created
-        assert body.get("lastUpdated") != created
-
-        resp = self.client.put(
-            f"/api/ledgers/{ledger_id}",
-            json={
-                "name": "Bypass Auditing Ledger",
-                "currency": 123,
-                "created": "2021-01-02T00:34:34+0000",
-                "lastUpdated": "2021-01-02T01:34:34+0000",
-            },
-        )
-        assert resp.status_code == 200
-
-        body = json.loads(self.client.get(f"/api/ledgers/{ledger_id}").data)
-        assert body.get("name") == "Bypass Auditing Ledger"
-        assert body.get("currency") == 123
-        assert body.get("created") == created
-        assert body.get("lastUpdated") != "2021-01-02T01:34:34+0000"
 
     def test_ledger_deletion(self):
-        resp = self.client.post(
-            "/api/ledgers", json={"name": "Ledger", "currency": 840}
-        )
-        assert resp.status_code == 201
-        ledger_id = json.loads(resp.data).get("id")
-
+        ledger_id = self.create_ledger()
         assert self.client.get(f"/api/ledgers/{ledger_id}").status_code == 200
         assert self.client.delete(f"/api/ledgers/{ledger_id}").status_code == 204
         assert self.client.get(f"/api/ledgers/{ledger_id}").status_code == 404
