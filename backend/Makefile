@@ -1,10 +1,13 @@
-.PHONY: black pylint mypy style pip-freeze run
+.PHONY: black pylint pylint-dup mypy style pip-freeze run
 
 black:
 	black --check underbudget/
 
 pylint:
-	pylint underbudget/
+	pylint --disable=duplicate-code underbudget/
+
+pylint-dup:
+	pylint --enable=duplicate-code underbudget/
 
 mypy:
 	mypy --disallow-untyped-defs underbudget/

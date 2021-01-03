@@ -26,10 +26,19 @@ def create_app(app_config=config.BaseConfig) -> Flask:
         AccountListResource,
         AccountResource,
     )
+    from underbudget.resources.envelopes import (
+        EnvelopeCategoryListResource,
+        EnvelopeCategoryResource,
+        EnvelopeListResource,
+        EnvelopeResource,
+    )
     from underbudget.resources.ledgers import LedgerListResource, LedgerResource
 
+    # Ledgers
     api.add_resource(LedgerListResource, "/api/ledgers")
     api.add_resource(LedgerResource, "/api/ledgers/<int:ledger_id>")
+
+    # Accounts
     api.add_resource(
         AccountCategoryListResource, "/api/ledgers/<int:ledger_id>/account-categories"
     )
@@ -40,6 +49,18 @@ def create_app(app_config=config.BaseConfig) -> Flask:
         AccountListResource, "/api/account-categories/<int:category_id>/accounts"
     )
     api.add_resource(AccountResource, "/api/accounts/<int:account_id>")
+
+    # Envelopes
+    api.add_resource(
+        EnvelopeCategoryListResource, "/api/ledgers/<int:ledger_id>/envelope-categories"
+    )
+    api.add_resource(
+        EnvelopeCategoryResource, "/api/envelope-categories/<int:category_id>"
+    )
+    api.add_resource(
+        EnvelopeListResource, "/api/envelope-categories/<int:category_id>/envelopes"
+    )
+    api.add_resource(EnvelopeResource, "/api/envelopes/<int:envelope_id>")
 
     with app.app_context():
         db.create_all()

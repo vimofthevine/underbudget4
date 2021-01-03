@@ -65,6 +65,22 @@ class BaseTestCase(unittest.TestCase):
         assert resp.status_code == 201
         return json.loads(resp.data).get("id")
 
+    def create_envelope_category(self, ledger_id, name="Envelope Category"):
+        """ Creates an envelope category resource """
+        resp = self.client.post(
+            f"/api/ledgers/{ledger_id}/envelope-categories", json={"name": name}
+        )
+        assert resp.status_code == 201
+        return json.loads(resp.data).get("id")
+
+    def create_envelope(self, category_id, name="Envelope"):
+        """ Creates an envelope resource """
+        resp = self.client.post(
+            f"/api/envelope-categories/{category_id}/envelopes", json={"name": name}
+        )
+        assert resp.status_code == 201
+        return json.loads(resp.data).get("id")
+
     def _test_crud_methods_against_non_existent_resource(self, base_url, payload):
         """
         Tests that the GET/PUT/DELETE methods against a resource return 404 against invalid IDs
