@@ -1,4 +1,6 @@
 Flask>=1.1.2
 Flask-RESTful>=0.3.8
 Flask-SQLAlchemy>=2.4.4
+marshmallow>=3.0.0
 psycopg2-binary>=2.8.6
+webargs>=7.0.1
