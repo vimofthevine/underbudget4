@@ -32,14 +32,11 @@ def create_app(app_config=config.BaseConfig) -> Flask:
         EnvelopeListResource,
         EnvelopeResource,
     )
-    from underbudget.resources.ledgers import LedgerListResource, LedgerResource
     from underbudget.resources.transactions import TransactionListResource
     from underbudget.views.ledgers import LedgersView
 
     # Ledgers
-    # api.add_resource(LedgerListResource, "/api/ledgers")
-    app.add_url_rule("/api/ledgers", view_func=LedgersView.as_view("ledgers"))
-    api.add_resource(LedgerResource, "/api/ledgers/<int:ledger_id>")
+    LedgersView.register(app, "/api/ledgers")
 
     # Accounts
     api.add_resource(
