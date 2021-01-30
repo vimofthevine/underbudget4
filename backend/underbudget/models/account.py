@@ -18,12 +18,12 @@ class AccountCategoryModel(db.Model, AuditModel, CrudModel):
     name = db.Column(db.String(128), nullable=False)
 
     @classmethod
-    def find_by_id(cls, model_id: int) -> Optional['AccountCategoryModel']:
+    def find_by_id(cls, model_id: int) -> Optional["AccountCategoryModel"]:
         """ Queries for a model instance with the given ID """
         return cls.query.get(model_id)
 
     @classmethod
-    def find_by_ledger_id(cls, ledger_id: int) -> List['AccountCategoryModel']:
+    def find_by_ledger_id(cls, ledger_id: int) -> List["AccountCategoryModel"]:
         """ Queries for account categories under the given ledger ID """
         return cls.query.filter_by(ledger_id=ledger_id).all()
 
@@ -50,6 +50,6 @@ class AccountModel(db.Model, AuditModel, CrudModel):
     external_id = db.Column(db.String(256), nullable=False)
 
     @classmethod
-    def find_by_id(cls, model_id: int) -> Optional['AccountModel']:
+    def find_by_id(cls, model_id: int) -> Optional["AccountModel"]:
         """ Queries for a model instance with the given ID """
         return cls.query.get(model_id)
