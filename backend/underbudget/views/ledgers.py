@@ -1,6 +1,6 @@
 """ Ledger REST view """
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 from flask import Flask
 from flask.views import MethodView
 
@@ -17,22 +17,25 @@ class LedgersView(MethodView):
     """ Ledger REST resource view """
 
     @classmethod
-    def register(cls, app: Flask, base_url: str):
+    def register(cls, app: Flask):
         """ Registers routes for this view """
         view = cls.as_view("ledgers")
         app.add_url_rule(
-            base_url, defaults={"ledger_id": None}, view_func=view, methods=["GET"]
+            "/api/ledgers",
+            defaults={"ledger_id": None},
+            view_func=view,
+            methods=["GET"],
         )
-        app.add_url_rule(base_url, view_func=view, methods=["POST"])
+        app.add_url_rule("/api/ledgers", view_func=view, methods=["POST"])
         app.add_url_rule(
-            f"{base_url}/<int:ledger_id>",
+            "/api/ledgers/<int:ledger_id>",
             view_func=view,
             methods=["GET", "PUT", "DELETE"],
         )
 
     @staticmethod
     @with_pagination
-    def get(ledger_id: int, page: int, size: int):
+    def get(ledger_id: Optional[int], page: int, size: int):
         """ Gets a specific ledger or a subset of all ledgers, by page """
         if ledger_id:
             ledger = LedgerModel.find_by_id(ledger_id)
