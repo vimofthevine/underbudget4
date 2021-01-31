@@ -32,22 +32,22 @@ class TransactionsTestCase(BaseTestCase):
         resp = self.client.post(
             f"/api/ledgers/{ledger_id}/transactions",
             json={
-                "recordedDate": "2021-01-24T00:00:00",
+                "recordedDate": "2021-01-24",
                 key: value,
             },
         )
         assert resp.status_code == 400
-        assert b"Payee is required" in resp.data
+        assert b"payee" in resp.data
 
     @parameterized.expand(
         [
-            ("RecordedDate", "2021-01-024T00:00:00"),
-            ("recordeddate", "2021-01-024T00:00:00"),
+            ("RecordedDate", "2021-01-024"),
+            ("recordeddate", "2021-01-024"),
             ("recordedDate", ""),
             ("recordedDate", None),
             ("recordedDate", "yesterday"),
             ("recordedDate", "01/24/2021"),
-            ("recordedDate", "2021-01-24"),
+            ("recordedDate", "2021-01-024T00:00:00"),
         ]
     )
     def test_transaction_requires_valid_recorded_date(self, key, value):
@@ -60,18 +60,18 @@ class TransactionsTestCase(BaseTestCase):
             },
         )
         assert resp.status_code == 400
-        assert b"Recorded date is required" in resp.data
+        assert b"recordedDate" in resp.data
 
     @parameterized.expand(
         [
-            ("accountId", None, b"Account ID is required"),
-            ("accountId", 0, b"Account ID is required"),
-            ("accountId", -1, b"Account ID is required"),
-            ("accountId", 999, b"Account ID is required"),
-            ("AccountId", "other", b"Account ID is required"),
+            ("accountId", None, 400),
+            ("accountId", 0, 404),
+            ("accountId", -1, 404),
+            ("accountId", 999, 404),
+            ("AccountId", "other", 400),
         ]
     )
-    def test_transaction_requires_valid_account_id(self, key, value, message):
+    def test_transaction_requires_valid_account_id(self, key, value, code):
         ledger_id = self.create_ledger()
         cat_id = self.create_account_category(ledger_id)
         acct_id = self.create_account(cat_id)
@@ -89,7 +89,7 @@ class TransactionsTestCase(BaseTestCase):
         resp = self.client.post(
             f"/api/ledgers/{ledger_id}/transactions",
             json={
-                "x_recordedDate": "2021-01-24T00:00:00",
+                "recordedDate": "2021-01-24",
                 "payee": "Unit Testers",
                 "accountTransactions": [
                     {
@@ -105,8 +105,7 @@ class TransactionsTestCase(BaseTestCase):
                 ],
             },
         )
-        assert resp.status_code == 400
-        # assert message in resp.data
+        assert resp.status_code == code
 
     # @parameterized.expand(
     #     [

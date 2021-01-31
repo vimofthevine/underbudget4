@@ -1,14 +1,10 @@
 """ Custom decorators """
 import functools
 from flask import request
-from webargs.flaskparser import FlaskParser
+
+from underbudget.common.parser import parser
 
 
-class Parser(FlaskParser):
-    DEFAULT_VALIDATION_STATUS = 400
-
-
-parser = Parser()
 use_args = parser.use_args
 
 

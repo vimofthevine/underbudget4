@@ -9,6 +9,7 @@ from underbudget.models.ledger import LedgerModel
 
 class TransactionType(enum.Enum):
     """ Transaction type enumeration """
+
     income = 1
     refund = 2
     opening_balance = 3
@@ -18,25 +19,32 @@ class TransactionType(enum.Enum):
     reallocation = 7
 
     @classmethod
-    def incomes(cls: Type['TransactionType']) -> List['TransactionType']:
+    def parse(cls: Type["TransactionType"], val: Optional[str]) -> Optional["TransactionType"]:
+        """ Creates a transaction type for the given value, if not none """
+        if val:
+            return cls[val]
+        return None
+
+    @classmethod
+    def incomes(cls: Type["TransactionType"]) -> List["TransactionType"]:
         """ Gets all income transaction types """
         return [cls.income, cls.refund, cls.opening_balance]
 
     @classmethod
-    def expenses(cls: Type['TransactionType']) -> List['TransactionType']:
+    def expenses(cls: Type["TransactionType"]) -> List["TransactionType"]:
         """ Gets all expense transaction types """
         return [cls.expense]
 
     @classmethod
-    def transfers(cls: Type['TransactionType']) -> List['TransactionType']:
+    def transfers(cls: Type["TransactionType"]) -> List["TransactionType"]:
         """ Gets all transfer transaction types """
         return [cls.transfer]
 
     @classmethod
-    def allocations(cls: Type['TransactionType']) -> List['TransactionType']:
+    def allocations(cls: Type["TransactionType"]) -> List["TransactionType"]:
         """ Gets all allocation transaction types """
         return [cls.allocation, cls.reallocation]
-    
+
 
 class TransactionModel(db.Model, AuditModel):
     """ Transaction model """
@@ -74,32 +82,41 @@ class TransactionModel(db.Model, AuditModel):
         if account_sum - envelope_sum != 0:
             return (False, "Transaction entries are unbalanced")
 
-        if account_sum > 0: # is an increase
+        if account_sum > 0:  # is an increase
             if not self.transaction_type:
                 self.transaction_type = TransactionType.income
             elif self.transaction_type not in TransactionType.incomes():
                 return (False, "Invalid type for income transaction")
-        elif account_sum < 0: # is a decrease
+        elif account_sum < 0:  # is a decrease
             if not self.transaction_type:
                 self.transaction_type = TransactionType.expense
             elif self.transaction_type not in TransactionType.expenses():
                 return (False, "Invalid type for expense transaction")
-        elif has_account_trns and not has_envelope_trns: # zero-sum, only account transactions
+        elif (
+            has_account_trns and not has_envelope_trns
+        ):  # zero-sum, only account transactions
             if not self.transaction_type:
                 self.transaction_type = TransactionType.transfer
             elif self.transaction_type not in TransactionType.transfers():
                 return (False, "Invalid type for transfer transaction")
-        elif has_envelope_trns and not has_account_trns: # zero-sum, only envelope transactions
+        elif (
+            has_envelope_trns and not has_account_trns
+        ):  # zero-sum, only envelope transactions
             if not self.transaction_type:
                 self.transaction_type = TransactionType.allocation
             elif self.transaction_type not in TransactionType.allocations():
                 return (False, "Invalid type for allocation transaction")
-        elif has_account_trns and has_envelope_trns: # zero-sum, account and envelope transactions
-            return (False, "Cannot transfer account and envelope balances in same transaction")
-        else: # zero-sum, no transactions at all
+        elif (
+            has_account_trns and has_envelope_trns
+        ):  # zero-sum, account and envelope transactions
+            return (
+                False,
+                "Cannot transfer account and envelope balances in same transaction",
+            )
+        else:  # zero-sum, no transactions at all
             return (False, "Missing account or envelope transactions")
 
-        return (True, None) # All checks OK
+        return (True, None)  # All checks OK
 
 
 LedgerModel.transactions = db.relationship("TransactionModel", cascade="delete")

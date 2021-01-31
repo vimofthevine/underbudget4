@@ -3,6 +3,7 @@ from typing import Tuple, Dict
 from flask import Flask
 from flask_restful import Api
 from sqlalchemy.exc import SQLAlchemyError
+from werkzeug.exceptions import BadRequest
 
 from underbudget import config
 
@@ -20,21 +21,17 @@ def create_app(app_config=config.BaseConfig) -> Flask:
 
     db.init_app(app)
 
-    from underbudget.resources.transactions import TransactionListResource
     from underbudget.views.accounts import AccountCategoriesView, AccountsView
     from underbudget.views.envelopes import EnvelopeCategoriesView, EnvelopesView
     from underbudget.views.ledgers import LedgersView
+    from underbudget.views.transactions import TransactionsView
 
     LedgersView.register(app)
     AccountCategoriesView.register(app)
     AccountsView.register(app)
     EnvelopeCategoriesView.register(app)
     EnvelopesView.register(app)
-
-    # Transactions
-    api.add_resource(
-        TransactionListResource, "/api/ledgers/<int:ledger_id>/transactions"
-    )
+    TransactionsView.register(app)
 
     with app.app_context():
         db.create_all()
@@ -45,5 +42,9 @@ def create_app(app_config=config.BaseConfig) -> Flask:
     def handle_db_error(err: SQLAlchemyError) -> Tuple[Dict[str, str], int]:
         print(err)
         return {"msg": "Internal error"}, 500
+
+    @app.errorhandler(BadRequest)
+    def handle_bad_request(err: BadRequest) -> Tuple[Dict[str, str], int]:
+        return {"msg": err.description}, 400
 
     return app
