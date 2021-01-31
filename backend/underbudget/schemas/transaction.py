@@ -10,6 +10,7 @@ class AccountTransactionSchema(Schema):
     account_id = fields.Integer(data_key="accountId", required=True)
     amount = fields.Integer(required=True)
     memo = fields.String(missing="")
+    cleared = fields.Boolean(missing=False)
 
 
 class EnvelopeTransactionSchema(Schema):

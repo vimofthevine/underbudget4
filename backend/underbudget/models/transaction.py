@@ -3,7 +3,7 @@ import enum
 from typing import List, Optional, Tuple, Type
 
 from underbudget.database import db
-from underbudget.models.base import AuditModel
+from underbudget.models.base import AuditModel, CrudModel
 from underbudget.models.ledger import LedgerModel
 
 
@@ -46,16 +46,16 @@ class TransactionType(enum.Enum):
         return [cls.allocation, cls.reallocation]
 
 
-class TransactionModel(db.Model, AuditModel):
+class TransactionModel(db.Model, AuditModel, CrudModel):
     """ Transaction model """
 
     __tablename__ = "transaction"
 
     id = db.Column(db.Integer, primary_key=True)
     ledger_id = db.Column(db.Integer, db.ForeignKey("ledger.id"), nullable=False)
-    account_transactions = db.relationship("AccountTransactionModel", cascade="delete")
+    account_transactions = db.relationship("AccountTransactionModel", cascade="save-update,delete")
     envelope_transactions = db.relationship(
-        "EnvelopeTransactionModel", cascade="delete"
+        "EnvelopeTransactionModel", cascade="save-update,delete"
     )
 
     transaction_type = db.Column(db.Enum(TransactionType), nullable=False)

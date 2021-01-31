@@ -60,6 +60,7 @@ class TransactionsView(MethodView):
                     account_id=acct_trn_args["account_id"],
                     amount=acct_trn_args["amount"],
                     memo=acct_trn_args["memo"],
+                    cleared=acct_trn_args["cleared"],
                 )
             )
 
