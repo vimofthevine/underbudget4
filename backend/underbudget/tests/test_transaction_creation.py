@@ -1,13 +1,11 @@
-""" Integration tests for transaction APIs """
-import json
-from jsonpath_ng import parse
+""" Integration tests for transaction creation APIs """
 from parameterized import parameterized
 
 from underbudget.tests.base import BaseTestCase
 
 
-class TransactionsTestCase(BaseTestCase):
-    """ Integration tests for transaction APIs """
+class TransactionCreationTestCase(BaseTestCase):
+    """ Integration tests for transaction creation APIs """
 
     @parameterized.expand([("not-an-id",), (999,)])
     def test_transaction_requires_valid_ledger(self, ledger_id=None):
@@ -340,6 +338,8 @@ class TransactionsTestCase(BaseTestCase):
             (400, "transfer", [], [-10, 10]),
             (201, "allocation", [], [-10, 10]),
             (201, "reallocation", [], [-10, 10]),
+            # Invalid (multiple account and envelope transactions)
+            (400, "transfer", [-10, 10], [-10, 10])
         ]
     )
     def test_transaction_requires_valid_types(self, code, trn_type, acct_amounts, env_amounts):

@@ -19,7 +19,9 @@ class TransactionType(enum.Enum):
     reallocation = 7
 
     @classmethod
-    def parse(cls: Type["TransactionType"], val: Optional[str]) -> Optional["TransactionType"]:
+    def parse(
+        cls: Type["TransactionType"], val: Optional[str]
+    ) -> Optional["TransactionType"]:
         """ Creates a transaction type for the given value, if not none """
         if val:
             return cls[val]
@@ -53,9 +55,11 @@ class TransactionModel(db.Model, AuditModel, CrudModel):
 
     id = db.Column(db.Integer, primary_key=True)
     ledger_id = db.Column(db.Integer, db.ForeignKey("ledger.id"), nullable=False)
-    account_transactions = db.relationship("AccountTransactionModel", cascade="save-update,delete")
+    account_transactions = db.relationship(
+        "AccountTransactionModel", cascade="save-update,delete,delete-orphan"
+    )
     envelope_transactions = db.relationship(
-        "EnvelopeTransactionModel", cascade="save-update,delete"
+        "EnvelopeTransactionModel", cascade="save-update,delete,delete-orphan"
     )
 
     transaction_type = db.Column(db.Enum(TransactionType), nullable=False)
