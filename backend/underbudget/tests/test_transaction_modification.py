@@ -321,3 +321,16 @@ class TransactionModificationTestCase(BaseTestCase):
             },
         )
         assert resp.status_code == code
+
+    def test_transaction_deletion(self):
+        ids, _ = self.create_transaction([10], [10])
+        assert self.client.get(f"/api/transactions/{ids['trn_id']}").status_code == 200
+        assert self.client.delete(f"/api/transactions/{ids['trn_id']}").status_code == 204
+        assert self.client.get(f"/api/transactions/{ids['trn_id']}").status_code == 404
+
+    # def test_ledger_deletion_cascades_to_transactions(self):
+    #     ids, _ = self.create_transaction([10], [10])
+
+    #     assert self.client.get(f"/api/transactions/{ids['trn_id']}").status_code == 200
+    #     assert self.client.delete(f"/api/ledgers/{ids['ledger_id']}").status_code == 204
+    #     assert self.client.get(f"/api/transactions/{ids['trn_id']}").status_code == 404

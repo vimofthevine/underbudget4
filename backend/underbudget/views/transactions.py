@@ -38,7 +38,7 @@ class TransactionsView(MethodView):
         app.add_url_rule(
             "/api/transactions/<int:transaction_id>",
             view_func=view,
-            methods=["GET", "PATCH"],
+            methods=["GET", "PATCH", "DELETE"],
         )
 
     @staticmethod
@@ -110,6 +110,13 @@ class TransactionsView(MethodView):
 
         transaction.save()
         return {}, 200
+
+    @staticmethod
+    def delete(transaction_id: int):
+        """ Deletes a specific transaction """
+        transaction = TransactionModel.query.get_or_404(transaction_id)
+        transaction.delete()
+        return {}, 204
 
     @staticmethod
     def add_account_transaction(args: Dict[str, Any], transaction: TransactionModel):
