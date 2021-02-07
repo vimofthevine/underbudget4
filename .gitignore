@@ -21,6 +21,8 @@ target/
 ### Python ###
 *.egg-info
 *.pyc
+.coverage
+htmlcov/
 venv/
 
 ### STS ###
