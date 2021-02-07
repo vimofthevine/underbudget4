@@ -5,6 +5,12 @@ from parameterized import parameterized
 from underbudget.tests.base import BaseTestCase
 
 
+def get(values, index, fallback):
+    if index < len(values):
+        return values[index]
+    return fallback
+
+
 class TransactionModificationTestCase(BaseTestCase):
     """ Integration tests for transaction modification APIs """
 
@@ -175,6 +181,11 @@ class TransactionModificationTestCase(BaseTestCase):
             # Replacing/converting
             (200, [10], [10], [-5], [-5], [], [], [0], [0]),
             (200, [10, -10], [], [], [-5, 5], [], [], [0, 1], []),
+            # Invalid IDs
+            (404, [10], [10], [], [], [8, 2], [], [], []),
+            (404, [10], [10], [], [], [], [8, 2], [], []),
+            (404, [10], [10], [], [], [], [], [1], []),
+            (404, [10], [10], [], [], [], [], [], [1]),
         ]
     )
     def test_transaction_modifications_require_balanced_amounts(
@@ -206,13 +217,15 @@ class TransactionModificationTestCase(BaseTestCase):
                     ],
                     "modify": [
                         {
-                            "id": ids["acct_trn_ids"][index],
+                            "id": get(ids["acct_trn_ids"], index, 999),
                             "accountId": ids["acct_id"],
                             "amount": amount,
                         }
                         for index, amount in enumerate(mod_acct_amounts)
                     ],
-                    "delete": [ids["acct_trn_ids"][index] for index in del_acct_idxs],
+                    "delete": [
+                        get(ids["acct_trn_ids"], index, 999) for index in del_acct_idxs
+                    ],
                 },
                 "envelopeTransactions": {
                     "add": [
@@ -224,13 +237,86 @@ class TransactionModificationTestCase(BaseTestCase):
                     ],
                     "modify": [
                         {
-                            "id": ids["env_trn_ids"][index],
+                            "id": get(ids["env_trn_ids"], index, 999),
                             "envelopeId": ids["env_id"],
                             "amount": amount,
                         }
                         for index, amount in enumerate(mod_env_amounts)
                     ],
-                    "delete": [ids["env_trn_ids"][index] for index in del_env_idxs],
+                    "delete": [
+                        get(ids["env_trn_ids"], index, 999) for index in del_env_idxs
+                    ],
+                },
+            },
+        )
+        assert resp.status_code == code
+
+    @parameterized.expand(
+        [
+            (200, "same", "same"),
+            (400, None, "same"),
+            (400, "same", None),
+            (400, "", "same"),
+            (400, "same", ""),
+            (404, 0, "same"),
+            (404, "same", 0),
+            (404, -1, "same"),
+            (404, "same", -1),
+            (404, 999, "same"),
+            (404, "same", 999),
+            (400, "other", "same"),
+            (400, "same", "other"),
+            (200, "like", "same"),
+            (200, "same", "like"),
+        ]
+    )
+    def test_transaction_modifications_require_accounts_and_envelopes_from_save_ledger(
+        self, code, acct_id, env_id
+    ):
+        ids, _ = self.create_transaction([10], [10])
+
+        if acct_id == "same":
+            acct_id = ids["acct_id"]
+        elif acct_id == "like":
+            cat_id = self.create_account_category(ids["ledger_id"])
+            acct_id = self.create_account(cat_id)
+        elif acct_id == "other":
+            ledger_id = self.create_ledger()
+            cat_id = self.create_account_category(ledger_id)
+            acct_id = self.create_account(cat_id)
+
+        if env_id == "same":
+            env_id = ids["env_id"]
+        elif env_id == "like":
+            cat_id = self.create_envelope_category(ids["ledger_id"])
+            env_id = self.create_envelope(cat_id)
+        elif env_id == "other":
+            ledger_id = self.create_ledger()
+            cat_id = self.create_envelope_category(ledger_id)
+            env_id = self.create_envelope(cat_id)
+
+        resp = self.client.patch(
+            f"/api/transactions/{ids['trn_id']}",
+            json={
+                "recordedDate": "2021-01-24",
+                "payee": "Unit Testers",
+                "accountTransactions": {
+                    "modify": [
+                        {
+                            "id": ids["acct_trn_ids"][0],
+                            "accountId": acct_id,
+                            "amount": 10,
+                        },
+                    ],
+                },
+                "envelopeTransactions": {
+                    "modify": [
+                        {
+                            "id": ids["env_trn_ids"][0],
+                            "envelopeId": env_id,
+                            "amount": 10,
+                        },
+                    ],
                 },
             },
         )
