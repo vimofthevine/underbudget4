@@ -80,5 +80,9 @@ class EnvelopeTransactionPatchSchema(Schema):
 class TransactionPatchSchema(TransactionSchema):
     """ Transaction modification (via patch) schema """
 
-    account_transactions = fields.Nested(AccountTransactionPatchSchema, data_key="accountTransactions", missing={})
-    envelope_transactions = fields.Nested(EnvelopeTransactionPatchSchema, data_key="envelopeTransactions", missing={})
+    account_transactions = fields.Nested(
+        AccountTransactionPatchSchema, data_key="accountTransactions", missing={}
+    )
+    envelope_transactions = fields.Nested(
+        EnvelopeTransactionPatchSchema, data_key="envelopeTransactions", missing={}
+    )

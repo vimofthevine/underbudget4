@@ -44,7 +44,9 @@ class TransactionsView(MethodView):
     @staticmethod
     def get(transaction_id: int):
         """ Gets a specific transaction """
-        return transaction_schema.dump(TransactionModel.query.get_or_404(transaction_id))
+        return transaction_schema.dump(
+            TransactionModel.query.get_or_404(transaction_id)
+        )
 
     @classmethod
     @use_args(transaction_schema)
@@ -82,7 +84,9 @@ class TransactionsView(MethodView):
         transaction = TransactionModel.query.get_or_404(transaction_id)
 
         with db.session.no_autoflush:
-            transaction.transaction_type = TransactionType.parse(args.get("transaction_type"))
+            transaction.transaction_type = TransactionType.parse(
+                args.get("transaction_type")
+            )
             transaction.recorded_date = args["recorded_date"]
             transaction.payee = args["payee"]
 
@@ -147,7 +151,9 @@ class TransactionsView(MethodView):
                     #     raise BadRequest("Cannot modify cleared account transaction")
 
                     account = AccountModel.query.get_or_404(args["account_id"])
-                    category = AccountCategoryModel.query.get_or_404(account.category_id)
+                    category = AccountCategoryModel.query.get_or_404(
+                        account.category_id
+                    )
 
                     if category.ledger_id != transaction.ledger_id:
                         raise BadRequest("Account is from different ledger")
@@ -192,13 +198,17 @@ class TransactionsView(MethodView):
         )
 
     @staticmethod
-    def modify_envelope_transaction(args: Dict[str, Any], transaction: TransactionModel):
+    def modify_envelope_transaction(
+        args: Dict[str, Any], transaction: TransactionModel
+    ):
         """ Modifies an existing envelope transaction under the given transaction """
         for env_trn in transaction.envelope_transactions:
             if env_trn.id == args["id"]:
                 if env_trn.envelope_id != args["envelope_id"]:
                     envelope = EnvelopeModel.query.get_or_404(args["envelope_id"])
-                    category = EnvelopeCategoryModel.query.get_or_404(envelope.category_id)
+                    category = EnvelopeCategoryModel.query.get_or_404(
+                        envelope.category_id
+                    )
 
                     if category.ledger_id != transaction.ledger_id:
                         raise BadRequest("Envelope is from different ledger")

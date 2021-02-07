@@ -80,7 +80,7 @@ class TransactionCreationTestCase(BaseTestCase):
         [
             (400, "AccountId", "auto"),
             (400, "accountId", None),
-            (400, "accountId", ''),
+            (400, "accountId", ""),
             (404, "accountId", 0),
             (404, "accountId", -1),
             (404, "accountId", 999),
@@ -128,7 +128,7 @@ class TransactionCreationTestCase(BaseTestCase):
         [
             (400, "Amount", 10),
             (400, "amount", None),
-            (400, "amount", ''),
+            (400, "amount", ""),
             (400, "amount", 11),
             (201, "amount", 10),
         ]
@@ -165,7 +165,7 @@ class TransactionCreationTestCase(BaseTestCase):
         [
             (400, "EnvelopeId", "auto"),
             (400, "envelopeId", None),
-            (400, "envelopeId", ''),
+            (400, "envelopeId", ""),
             (404, "envelopeId", 0),
             (404, "envelopeId", -1),
             (404, "envelopeId", 999),
@@ -213,7 +213,7 @@ class TransactionCreationTestCase(BaseTestCase):
         [
             (400, "Amount", 10),
             (400, "amount", None),
-            (400, "amount", ''),
+            (400, "amount", ""),
             (400, "amount", 11),
             (201, "amount", 10),
         ]
@@ -253,26 +253,28 @@ class TransactionCreationTestCase(BaseTestCase):
             json={
                 "recordedDate": "2021-01-24",
                 "payee": "Unit Testers",
-            }
+            },
         )
         assert resp.status_code == 400
 
     @parameterized.expand(
         [
-            (400, [10], [11]), # one each, net positive
+            (400, [10], [11]),  # one each, net positive
             (201, [11], [11]),
-            (400, [-11],[-10]), # one each, net negative
-            (201, [-10],[-10]),
-            (400, [-10],[10]), # one each, mismatched signs
-            (400, [10, 10], []), # only accounts, net positive
-            (400, [-10, -10], []), # only accounts, net negative
+            (400, [-11], [-10]),  # one each, net negative
+            (201, [-10], [-10]),
+            (400, [-10], [10]),  # one each, mismatched signs
+            (400, [10, 10], []),  # only accounts, net positive
+            (400, [-10, -10], []),  # only accounts, net negative
             (201, [10, -10], []),
-            (400, [], [10, 10]), # only envelopes, net positive
-            (400, [], [-10, -10]), # only envelopes, net negative
+            (400, [], [10, 10]),  # only envelopes, net positive
+            (400, [], [-10, -10]),  # only envelopes, net negative
             (201, [], [-10, 10]),
         ]
     )
-    def test_transaction_requires_balanced_amounts(self, code, acct_amounts, env_amounts):
+    def test_transaction_requires_balanced_amounts(
+        self, code, acct_amounts, env_amounts
+    ):
         ledger_id = self.create_ledger()
         acct_cat_id = self.create_account_category(ledger_id)
         acct_id = self.create_account(acct_cat_id)
@@ -288,13 +290,15 @@ class TransactionCreationTestCase(BaseTestCase):
                     {
                         "accountId": acct_id,
                         "amount": amount,
-                    } for amount in acct_amounts
+                    }
+                    for amount in acct_amounts
                 ],
                 "envelopeTransactions": [
                     {
                         "envelopeId": env_id,
                         "amount": amount,
-                    } for amount in env_amounts
+                    }
+                    for amount in env_amounts
                 ],
             },
         )
@@ -339,10 +343,12 @@ class TransactionCreationTestCase(BaseTestCase):
             (201, "allocation", [], [-10, 10]),
             (201, "reallocation", [], [-10, 10]),
             # Invalid (multiple account and envelope transactions)
-            (400, "transfer", [-10, 10], [-10, 10])
+            (400, "transfer", [-10, 10], [-10, 10]),
         ]
     )
-    def test_transaction_requires_valid_types(self, code, trn_type, acct_amounts, env_amounts):
+    def test_transaction_requires_valid_types(
+        self, code, trn_type, acct_amounts, env_amounts
+    ):
         ledger_id = self.create_ledger()
         acct_cat_id = self.create_account_category(ledger_id)
         acct_id = self.create_account(acct_cat_id)
@@ -359,13 +365,15 @@ class TransactionCreationTestCase(BaseTestCase):
                     {
                         "accountId": acct_id,
                         "amount": amount,
-                    } for amount in acct_amounts
+                    }
+                    for amount in acct_amounts
                 ],
                 "envelopeTransactions": [
                     {
                         "envelopeId": env_id,
                         "amount": amount,
-                    } for amount in env_amounts
+                    }
+                    for amount in env_amounts
                 ],
             },
         )
