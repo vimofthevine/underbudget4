@@ -119,8 +119,7 @@ class BaseTestCase(unittest.TestCase):
         payload["lastUpdated"] = ("2021-01-02T01:34:34+0000",)
 
         resp = self.client.put(f"{base_url}/{resource_id}", json=payload)
-        # TODO uncomment this when all resources use webargs
-        # assert resp.status_code == 400
+        assert resp.status_code == 400
 
         body = json.loads(self.client.get(f"{base_url}/{resource_id}").data)
         assert body.get("created") == created

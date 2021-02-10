@@ -6,6 +6,10 @@ from underbudget.tests.base import BaseTestCase
 
 
 def get(values, index, fallback):
+    """
+    Gets the specified index value from the list, or the fallback value if
+    index is out of bounds
+    """
     if index < len(values):
         return values[index]
     return fallback
@@ -92,7 +96,8 @@ class TransactionModificationTestCase(BaseTestCase):
         )
         assert resp.status_code == code
 
-    def create_transaction(self, acct_amounts=[], env_amounts=[]):
+    def create_transaction(self, acct_amounts, env_amounts):
+        """ Creates a transaction """
         ledger_id = self.create_ledger()
         acct_cat_id = self.create_account_category(ledger_id)
         acct_id = self.create_account(acct_cat_id)
@@ -188,6 +193,7 @@ class TransactionModificationTestCase(BaseTestCase):
             (404, [10], [10], [], [], [], [], [], [1]),
         ]
     )
+    # pylint: disable=too-many-arguments
     def test_transaction_modifications_require_balanced_amounts(
         self,
         code,

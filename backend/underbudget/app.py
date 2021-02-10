@@ -1,7 +1,6 @@
 """Flask application factory"""
 from typing import Tuple, Dict
 from flask import Flask
-from flask_restful import Api
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.exceptions import BadRequest
 
@@ -13,8 +12,6 @@ def create_app(app_config=config.BaseConfig) -> Flask:
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(app_config)
     app.config.from_pyfile("config.py", silent=True)
-
-    api = Api(app)
 
     # pylint: disable=import-outside-toplevel
     from underbudget.database import db

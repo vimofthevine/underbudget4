@@ -72,6 +72,8 @@ class TransactionModel(db.Model, AuditModel, CrudModel):
         - zero-sum difference between account and envelope transactions
         - transaction type matches account and envelope transactions
         """
+        # pylint: disable=not-an-iterable
+
         account_sum = 0
         for account_trn in self.account_transactions:
             account_sum += account_trn.amount

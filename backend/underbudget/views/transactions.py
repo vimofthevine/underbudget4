@@ -1,6 +1,6 @@
 """ Transactions REST view """
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 from flask import Flask
 from flask.views import MethodView
 from werkzeug.exceptions import BadRequest, NotFound
@@ -146,7 +146,7 @@ class TransactionsView(MethodView):
         for acct_trn in transaction.account_transactions:
             if acct_trn.id == args["id"]:
                 if acct_trn.account_id != args["account_id"]:
-                    # TODO reject mod when reconciled, not cleared
+                    # TODO reject mod when reconciled, not cleared # pylint: disable=fixme
                     # if acct_trn.cleared:
                     #     raise BadRequest("Cannot modify cleared account transaction")
 
@@ -161,7 +161,7 @@ class TransactionsView(MethodView):
                     acct_trn.account_id = args["account_id"]
 
                 if acct_trn.amount != args["amount"]:
-                    # TODO reject mod when reconciled, not cleared
+                    # TODO reject mod when reconciled, not cleared # pylint: disable=fixme
                     # if acct_trn.cleared:
                     #     raise BadRequest("Cannot modify cleared account transaction")
                     acct_trn.amount = args["amount"]
@@ -172,10 +172,10 @@ class TransactionsView(MethodView):
         raise NotFound("Account transaction not found")
 
     @staticmethod
-    def delete_account_transaction(id: int, transaction: TransactionModel):
+    def delete_account_transaction(transaction_id: int, transaction: TransactionModel):
         """ Deletes an existing account transaction from the given transaction """
         for acct_trn in transaction.account_transactions:
-            if acct_trn.id == id:
+            if acct_trn.id == transaction_id:
                 transaction.account_transactions.remove(acct_trn)
                 return
         raise NotFound("Account transaction not found")
@@ -221,11 +221,10 @@ class TransactionsView(MethodView):
         raise NotFound("Envelope transaction not found")
 
     @staticmethod
-    def delete_envelope_transaction(id: int, transaction: TransactionModel):
+    def delete_envelope_transaction(transaction_id: int, transaction: TransactionModel):
         """ Deletes an existing envelope transaction from the given transaction """
-        print(f"deleting env trn id {id}")
         for env_trn in transaction.envelope_transactions:
-            if env_trn.id == id:
+            if env_trn.id == transaction_id:
                 transaction.envelope_transactions.remove(env_trn)
                 return
         raise NotFound("Account transaction not found")
