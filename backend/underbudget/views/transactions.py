@@ -70,10 +70,7 @@ class TransactionsView(MethodView):
         for env_trn_args in args["envelope_transactions"]:
             cls.add_envelope_transaction(env_trn_args, new_transaction)
 
-        (valid, error) = new_transaction.validate()
-        if not valid:
-            return {"message": error}, 400
-
+        new_transaction.validate()
         new_transaction.save()
         return {"id": int(new_transaction.id)}, 201
 
@@ -108,9 +105,7 @@ class TransactionsView(MethodView):
             for deleted in args["envelope_transactions"].get("delete", []):
                 cls.delete_envelope_transaction(deleted, transaction)
 
-            (valid, error) = transaction.validate()
-            if not valid:
-                return {"message": error}, 400
+            transaction.validate()
 
         transaction.save()
         return {}, 200

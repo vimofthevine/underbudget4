@@ -1,10 +1,15 @@
 """ Transaction database models """
 import enum
-from typing import List, Optional, Tuple, Type
+from typing import List, Optional, Type
+from werkzeug.exceptions import BadRequest
 
 from underbudget.database import db
 from underbudget.models.base import AuditModel, CrudModel
 from underbudget.models.ledger import LedgerModel
+
+
+class ValidationError(BadRequest):
+    """ Transaction validation error """
 
 
 class TransactionType(enum.Enum):
@@ -66,7 +71,19 @@ class TransactionModel(db.Model, AuditModel, CrudModel):
     recorded_date = db.Column(db.Date, nullable=False)
     payee = db.Column(db.String(256), nullable=False)
 
-    def validate(self) -> Tuple[bool, Optional[str]]:
+    def _check_type(
+        self, allowed_types: List["TransactionType"], default_type: "TransactionType"
+    ):
+        """
+        Sets the transaction type to the default type if it is undefined, or validates that
+        the type is one of the allowed types.
+        """
+        if not self.transaction_type:
+            self.transaction_type = default_type
+        elif self.transaction_type not in allowed_types:
+            raise ValidationError(f"Invalid type for {default_type.name} transactions")
+
+    def validate(self):
         """
         Verifies that the transaction satisfies all integrity constraints, including:
         - zero-sum difference between account and envelope transactions
@@ -74,55 +91,37 @@ class TransactionModel(db.Model, AuditModel, CrudModel):
         """
         # pylint: disable=not-an-iterable
 
-        account_sum = 0
-        for account_trn in self.account_transactions:
-            account_sum += account_trn.amount
-
-        envelope_sum = 0
-        for envelope_trn in self.envelope_transactions:
-            envelope_sum += envelope_trn.amount
+        account_sum = sum([trn.amount for trn in self.account_transactions], 0)
+        envelope_sum = sum([trn.amount for trn in self.envelope_transactions], 0)
 
         has_account_trns = len(self.account_transactions) != 0
         has_envelope_trns = len(self.envelope_transactions) != 0
 
         if account_sum - envelope_sum != 0:
-            return (False, "Transaction entries are unbalanced")
+            raise ValidationError("Transaction entries are unbalanced")
 
         if account_sum > 0:  # is an increase
-            if not self.transaction_type:
-                self.transaction_type = TransactionType.income
-            elif self.transaction_type not in TransactionType.incomes():
-                return (False, "Invalid type for income transaction")
+            self._check_type(TransactionType.incomes(), TransactionType.income)
         elif account_sum < 0:  # is a decrease
-            if not self.transaction_type:
-                self.transaction_type = TransactionType.expense
-            elif self.transaction_type not in TransactionType.expenses():
-                return (False, "Invalid type for expense transaction")
+            self._check_type(TransactionType.expenses(), TransactionType.expense)
         elif (
             has_account_trns and not has_envelope_trns
         ):  # zero-sum, only account transactions
-            if not self.transaction_type:
-                self.transaction_type = TransactionType.transfer
-            elif self.transaction_type not in TransactionType.transfers():
-                return (False, "Invalid type for transfer transaction")
+            self._check_type(TransactionType.transfers(), TransactionType.transfer)
         elif (
             has_envelope_trns and not has_account_trns
         ):  # zero-sum, only envelope transactions
-            if not self.transaction_type:
-                self.transaction_type = TransactionType.allocation
-            elif self.transaction_type not in TransactionType.allocations():
-                return (False, "Invalid type for allocation transaction")
+            self._check_type(TransactionType.allocations(), TransactionType.allocation)
         elif (
             has_account_trns and has_envelope_trns
         ):  # zero-sum, account and envelope transactions
-            return (
-                False,
+            raise ValidationError(
                 "Cannot transfer account and envelope balances in same transaction",
             )
         else:  # zero-sum, no transactions at all
-            return (False, "Missing account or envelope transactions")
+            raise ValidationError("Missing account or envelope transactions")
 
-        return (True, None)  # All checks OK
+        # All checks OK
 
 
 LedgerModel.transactions = db.relationship("TransactionModel", cascade="delete")
