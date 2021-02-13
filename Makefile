@@ -10,10 +10,10 @@ dev-build:
 	COMPOSE_DOCKER_CLI_BUILD=1 docker-compose -p $(DEV_PROJECT_NAME) -f docker-compose.dev.yml build
 
 dev-down:
-	docker-compose -p $(DEV_PROJECT_NAME) down
+	docker-compose -p $(DEV_PROJECT_NAME) -f docker-compose.dev.yml down
 
 dev-ps:
-	docker-compose -p $(DEV_PROJECT_NAME) ps
+	docker-compose -p $(DEV_PROJECT_NAME) -f docker-compose.dev.yml ps
 
 api-test:
 	docker exec underbudget-dev-api pytest $(TEST_ARGS)
