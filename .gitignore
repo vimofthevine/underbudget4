@@ -22,6 +22,7 @@ target/
 *.egg-info
 *.pyc
 .coverage
+coverage.xml
 .python-version
 htmlcov/
 venv/
