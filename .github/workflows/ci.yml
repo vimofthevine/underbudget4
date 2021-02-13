@@ -22,6 +22,19 @@ jobs:
         pip install -r backend/dev-requirements.txt
     - name: Lint
       run: make -C backend/ style
+    - name: Build dev container
+      run: make dev-build
+    - name: Start dev containers
+      run: |
+        make dev-up
+        make dev-ps
+        sh wait-for localhost:5000
+    - name: Wait for dev containers
+      uses: mydea/action-wait-for-api@v1
+      with:
+        url: "http://localhost:5000/health"
+    - name: Run API tests
+      run: make api-test
 
   build-webapp:
     runs-on: ubuntu-latest
