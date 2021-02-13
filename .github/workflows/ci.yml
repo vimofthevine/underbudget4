@@ -33,7 +33,9 @@ jobs:
       with:
         url: "http://localhost:5000/health"
     - name: Run API tests
-      run: make api-test
+      run: |
+        make dev-db-upgrade
+        make api-test
     - name: Upload API coverage
       uses: codecov/codecov-action@v1
       with:

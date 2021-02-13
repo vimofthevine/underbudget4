@@ -19,7 +19,9 @@ class BaseTestCase(unittest.TestCase):
         super().setUpClass()
         cls.app = app.create_app(app_config=config.TestConfig)
         cls.db = database.db
-        cls.db.init_app(cls.app)
+        with cls.app.app_context():
+            cls.db.create_all()
+            cls.db.session.commit()
 
     @classmethod
     def tearDownClass(cls):

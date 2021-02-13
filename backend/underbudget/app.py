@@ -33,10 +33,6 @@ def create_app(app_config=config.BaseConfig) -> Flask:
     EnvelopesView.register(app)
     TransactionsView.register(app)
 
-    with app.app_context():
-        db.create_all()
-        db.session.commit()
-
     # pylint: disable=unused-variable
     @app.errorhandler(SQLAlchemyError)
     def handle_db_error(err: SQLAlchemyError) -> Tuple[Dict[str, str], int]:

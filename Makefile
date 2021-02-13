@@ -15,5 +15,8 @@ dev-down:
 dev-ps:
 	docker-compose -p $(DEV_PROJECT_NAME) -f docker-compose.dev.yml ps
 
+dev-db-upgrade:
+	docker exec underbudget-dev-api flask db upgrade
+
 api-test:
 	docker exec underbudget-dev-api pytest $(TEST_ARGS)
