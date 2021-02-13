@@ -19,3 +19,6 @@ pip-freeze:
 
 run:
 	FLASK_APP=underbudget.app FLASK_ENV=development flask run
+
+cov-server:
+	cd htmlcov && python -m http.server
