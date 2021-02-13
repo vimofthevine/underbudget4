@@ -14,9 +14,10 @@ def create_app(app_config=config.BaseConfig) -> Flask:
     app.config.from_pyfile("config.py", silent=True)
 
     # pylint: disable=import-outside-toplevel
-    from underbudget.database import db
+    from underbudget.database import db, migrate
 
     db.init_app(app)
+    migrate.init_app(app, db)
 
     from underbudget.views.accounts import AccountCategoriesView, AccountsView
     from underbudget.views.envelopes import EnvelopeCategoriesView, EnvelopesView
