@@ -28,13 +28,18 @@ jobs:
       run: |
         make dev-up
         make dev-ps
-        sh wait-for localhost:5000
     - name: Wait for dev containers
       uses: mydea/action-wait-for-api@v1
       with:
         url: "http://localhost:5000/health"
     - name: Run API tests
       run: make api-test
+    - name: Upload API coverage
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        flags: backend
+        fail_ci_if_error: true
 
   build-webapp:
     runs-on: ubuntu-latest
