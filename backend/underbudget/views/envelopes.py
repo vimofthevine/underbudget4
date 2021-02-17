@@ -48,8 +48,9 @@ class EnvelopeCategoriesView(MethodView):
     def get(ledger_id: Optional[int], category_id: Optional[int]):
         """ Gets a specific category or all categories in the specified ledger """
         if category_id:
-            category = EnvelopeCategoryModel.find_by_id(category_id)
-            return category_schema.dump(category) if category else ({}, 404)
+            return category_schema.dump(
+                EnvelopeCategoryModel.query.get_or_404(category_id)
+            )
         if ledger_id:
             return {
                 "categories": category_schema.dump(
@@ -78,22 +79,18 @@ class EnvelopeCategoriesView(MethodView):
     @use_args(category_schema)
     def put(args: Dict[str, Any], category_id: int):
         """ Modifies a specific category """
-        category = EnvelopeCategoryModel.find_by_id(category_id)
-        if category:
-            category.name = args["name"]
-            category.last_updated = datetime.now()
-            category.save()
-            return {}, 200
-        return {}, 404
+        category = EnvelopeCategoryModel.query.get_or_404(category_id)
+        category.name = args["name"]
+        category.last_updated = datetime.now()
+        category.save()
+        return {}, 200
 
     @staticmethod
     def delete(category_id: int):
         """ Deletes a specific category """
-        category = EnvelopeCategoryModel.find_by_id(category_id)
-        if category:
-            category.delete()
-            return {}, 204
-        return {}, 404
+        category = EnvelopeCategoryModel.query.get_or_404(category_id)
+        category.delete()
+        return {}, 204
 
 
 class EnvelopesView(MethodView):
@@ -117,16 +114,13 @@ class EnvelopesView(MethodView):
     @staticmethod
     def get(envelope_id: int):
         """ Gets a specific envelope """
-        envelope = EnvelopeModel.find_by_id(envelope_id)
-        return envelope_schema.dump(envelope) if envelope else ({}, 404)
+        return envelope_schema.dump(EnvelopeModel.query.get_or_404(envelope_id))
 
     @staticmethod
     @use_args(envelope_schema)
     def post(args: Dict[str, Any], category_id: int):
         """ Creates a new envelope in the specified category """
-        if not EnvelopeCategoryModel.find_by_id(category_id):
-            return {}, 404
-
+        EnvelopeCategoryModel.query.get_or_404(category_id)
         now = datetime.now()
 
         new_envelope = EnvelopeModel(
@@ -144,21 +138,17 @@ class EnvelopesView(MethodView):
     @use_args(envelope_schema)
     def put(args: Dict[str, Any], envelope_id: int):
         """ Modifies a specific envelope """
-        envelope = EnvelopeModel.find_by_id(envelope_id)
-        if envelope:
-            envelope.name = args["name"]
-            envelope.archived = args["archived"]
-            envelope.external_id = args["external_id"]
-            envelope.last_updated = datetime.now()
-            envelope.save()
-            return {}, 200
-        return {}, 404
+        envelope = EnvelopeModel.query.get_or_404(envelope_id)
+        envelope.name = args["name"]
+        envelope.archived = args["archived"]
+        envelope.external_id = args["external_id"]
+        envelope.last_updated = datetime.now()
+        envelope.save()
+        return {}, 200
 
     @staticmethod
     def delete(envelope_id: int):
         """ Deletes a specific envelope """
-        envelope = EnvelopeModel.find_by_id(envelope_id)
-        if envelope:
-            envelope.delete()
-            return {}, 204
-        return {}, 404
+        envelope = EnvelopeModel.query.get_or_404(envelope_id)
+        envelope.delete()
+        return {}, 204

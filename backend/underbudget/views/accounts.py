@@ -48,8 +48,9 @@ class AccountCategoriesView(MethodView):
     def get(ledger_id: Optional[int], category_id: Optional[int]):
         """ Gets a specific category or all categories in the specified ledger """
         if category_id:
-            category = AccountCategoryModel.find_by_id(category_id)
-            return category_schema.dump(category) if category else ({}, 404)
+            return category_schema.dump(
+                AccountCategoryModel.query.get_or_404(category_id)
+            )
         if ledger_id:
             return {
                 "categories": category_schema.dump(
@@ -78,22 +79,18 @@ class AccountCategoriesView(MethodView):
     @use_args(category_schema)
     def put(args: Dict[str, Any], category_id: int):
         """ Modifies a specific category """
-        category = AccountCategoryModel.find_by_id(category_id)
-        if category:
-            category.name = args["name"]
-            category.last_updated = datetime.now()
-            category.save()
-            return {}, 200
-        return {}, 404
+        category = AccountCategoryModel.query.get_or_404(category_id)
+        category.name = args["name"]
+        category.last_updated = datetime.now()
+        category.save()
+        return {}, 200
 
     @staticmethod
     def delete(category_id: int):
         """ Deletes a specific category """
-        category = AccountCategoryModel.find_by_id(category_id)
-        if category:
-            category.delete()
-            return {}, 204
-        return {}, 404
+        category = AccountCategoryModel.query.get_or_404(category_id)
+        category.delete()
+        return {}, 204
 
 
 class AccountsView(MethodView):
@@ -117,16 +114,13 @@ class AccountsView(MethodView):
     @staticmethod
     def get(account_id: int):
         """ Gets a specific account """
-        account = AccountModel.find_by_id(account_id)
-        return account_schema.dump(account) if account else ({}, 404)
+        return account_schema.dump(AccountModel.query.get_or_404(account_id))
 
     @staticmethod
     @use_args(account_schema)
     def post(args: Dict[str, Any], category_id: int):
         """ Creates a new account in the specified category """
-        if not AccountCategoryModel.find_by_id(category_id):
-            return {}, 404
-
+        AccountCategoryModel.query.get_or_404(category_id)
         now = datetime.now()
 
         new_account = AccountModel(
@@ -146,23 +140,19 @@ class AccountsView(MethodView):
     @use_args(account_schema)
     def put(args: Dict[str, Any], account_id: int):
         """ Modifies a specific account """
-        account = AccountModel.find_by_id(account_id)
-        if account:
-            account.name = args["name"]
-            account.institution = args["institution"]
-            account.account_number = args["account_number"]
-            account.archived = args["archived"]
-            account.external_id = args["external_id"]
-            account.last_updated = datetime.now()
-            account.save()
-            return {}, 200
-        return {}, 404
+        account = AccountModel.query.get_or_404(account_id)
+        account.name = args["name"]
+        account.institution = args["institution"]
+        account.account_number = args["account_number"]
+        account.archived = args["archived"]
+        account.external_id = args["external_id"]
+        account.last_updated = datetime.now()
+        account.save()
+        return {}, 200
 
     @staticmethod
     def delete(account_id: int):
         """ Deletes a specific account """
-        account = AccountModel.find_by_id(account_id)
-        if account:
-            account.delete()
-            return {}, 204
-        return {}, 404
+        account = AccountModel.query.get_or_404(account_id)
+        account.delete()
+        return {}, 204
