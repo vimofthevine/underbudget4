@@ -62,9 +62,7 @@ class AccountCategoriesView(MethodView):
     @use_args(category_schema)
     def post(args: Dict[str, Any], ledger_id: int):
         """ Creates a new category """
-        if not LedgerModel.find_by_id(ledger_id):
-            return {}, 404
-
+        LedgerModel.query.get_or_404(ledger_id)
         now = datetime.now()
 
         new_category = AccountCategoryModel(

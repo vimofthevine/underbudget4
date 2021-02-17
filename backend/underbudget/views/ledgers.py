@@ -38,9 +38,8 @@ class LedgersView(MethodView):
     def get(ledger_id: Optional[int], page: int, size: int):
         """ Gets a specific ledger or a subset of all ledgers, by page """
         if ledger_id:
-            ledger = LedgerModel.find_by_id(ledger_id)
-            return ledger_schema.dump(ledger) if ledger else ({}, 404)
-        return pages_schema.dump(LedgerModel.find_all(page, size))
+            return ledger_schema.dump(LedgerModel.query.get_or_404(ledger_id))
+        return pages_schema.dump(LedgerModel.query.paginate(page, size))
 
     @staticmethod
     @use_args(ledger_schema)
@@ -61,20 +60,16 @@ class LedgersView(MethodView):
     @use_args(ledger_schema)
     def put(args: Dict[str, Any], ledger_id: int):
         """ Modifies a specific ledger """
-        ledger = LedgerModel.find_by_id(ledger_id)
-        if ledger:
-            ledger.name = args["name"]
-            ledger.currency = args["currency"]
-            ledger.last_updated = datetime.now()
-            ledger.save()
-            return {}, 200
-        return {}, 404
+        ledger = LedgerModel.query.get_or_404(ledger_id)
+        ledger.name = args["name"]
+        ledger.currency = args["currency"]
+        ledger.last_updated = datetime.now()
+        ledger.save()
+        return {}, 200
 
     @staticmethod
     def delete(ledger_id: int):
         """ Deletes a specific ledger """
-        ledger = LedgerModel.find_by_id(ledger_id)
-        if ledger:
-            ledger.delete()
-            return {}, 204
-        return {}, 404
+        ledger = LedgerModel.query.get_or_404(ledger_id)
+        ledger.delete()
+        return {}, 204
