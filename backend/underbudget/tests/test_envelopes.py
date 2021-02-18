@@ -231,17 +231,16 @@ class EnvelopesTestCase(BaseTestCase):
         assert sub[0].value.get("name") == "Category 3"
         assert len(sub[0].value.get("envelopes")) == 0
 
-    def test_envelope_category_deletion_cascades_envelopes(self):
+    def test_envelope_category_deletion_fails_with_child_envelopes(self):
         ledger_id = self.create_ledger()
         category_id = self.create_envelope_category(ledger_id)
         envelope_id = self.create_envelope(category_id)
 
-        assert self.client.get(f"/api/envelopes/{envelope_id}").status_code == 200
         assert (
             self.client.delete(f"/api/envelope-categories/{category_id}").status_code
-            == 204
+            == 409
         )
-        assert self.client.get(f"/api/envelopes/{envelope_id}").status_code == 404
+        assert self.client.get(f"/api/envelopes/{envelope_id}").status_code == 200
 
     def test_ledger_deletion_cascades_to_envelope_categories(self):
         ledger_id = self.create_ledger()

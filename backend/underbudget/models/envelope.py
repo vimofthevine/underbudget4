@@ -1,5 +1,6 @@
 """ Envelope database models """
-from typing import List, Optional
+from typing import List
+from werkzeug.exceptions import Conflict
 
 from underbudget.database import db
 from underbudget.models.base import AuditModel, CrudModel
@@ -21,6 +22,12 @@ class EnvelopeCategoryModel(db.Model, AuditModel, CrudModel):
     def find_by_ledger_id(cls, ledger_id: int) -> List["EnvelopeCategoryModel"]:
         """ Queries for envelope categories under the given ledger ID """
         return cls.query.filter_by(ledger_id=ledger_id).all()
+
+    def delete(self):
+        """ Deletes the category if it does not contain any child envelopes """
+        if len(self.envelopes) > 0:
+            raise Conflict("Category contains envelopes")
+        super().delete()
 
 
 LedgerModel.envelope_categories = db.relationship(

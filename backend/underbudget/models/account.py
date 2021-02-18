@@ -1,5 +1,6 @@
 """ Account database models """
-from typing import List, Optional
+from typing import List
+from werkzeug.exceptions import Conflict
 
 from underbudget.database import db
 from underbudget.models.base import AuditModel, CrudModel
@@ -21,6 +22,12 @@ class AccountCategoryModel(db.Model, AuditModel, CrudModel):
     def find_by_ledger_id(cls, ledger_id: int) -> List["AccountCategoryModel"]:
         """ Queries for account categories under the given ledger ID """
         return cls.query.filter_by(ledger_id=ledger_id).all()
+
+    def delete(self):
+        """ Deletes the category if it does not contain any child accounts """
+        if len(self.accounts) > 0:
+            raise Conflict("Category contains accounts")
+        super().delete()
 
 
 LedgerModel.account_categories = db.relationship(

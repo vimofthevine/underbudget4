@@ -236,17 +236,16 @@ class AccountsTestCase(BaseTestCase):
         assert sub[0].value.get("name") == "Category 3"
         assert len(sub[0].value.get("accounts")) == 0
 
-    def test_account_category_deletion_cascades_accounts(self):
+    def test_account_category_deletion_fails_with_child_accounts(self):
         ledger_id = self.create_ledger()
         category_id = self.create_account_category(ledger_id)
         account_id = self.create_account(category_id)
 
-        assert self.client.get(f"/api/accounts/{account_id}").status_code == 200
         assert (
             self.client.delete(f"/api/account-categories/{category_id}").status_code
-            == 204
+            == 409
         )
-        assert self.client.get(f"/api/accounts/{account_id}").status_code == 404
+        assert self.client.get(f"/api/accounts/{account_id}").status_code == 200
 
     def test_ledger_deletion_cascades_to_account_categories(self):
         ledger_id = self.create_ledger()
