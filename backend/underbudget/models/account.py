@@ -44,9 +44,16 @@ class AccountModel(db.Model, AuditModel, CrudModel):
     category_id = db.Column(
         db.Integer, db.ForeignKey("account_category.id"), nullable=False
     )
+    transactions = db.relationship("AccountTransactionModel", lazy="select")
 
     name = db.Column(db.String(128), nullable=False)
     institution = db.Column(db.String(256), nullable=False)
     account_number = db.Column(db.String(256), nullable=False)
     archived = db.Column(db.Boolean, nullable=False)
     external_id = db.Column(db.String(256), nullable=False)
+
+    def delete(self):
+        """ Deletes the account if it does not have any associated transactions """
+        if len(self.transactions) > 0:
+            raise Conflict("Account is referenced by transactions")
+        super().delete()

@@ -336,9 +336,17 @@ class TransactionModificationTestCase(BaseTestCase):
         )
         assert self.client.get(f"/api/transactions/{ids['trn_id']}").status_code == 404
 
-    # def test_ledger_deletion_cascades_to_transactions(self):
-    #     ids, _ = self.create_transaction([10], [10])
+    def test_account_deletion_fails_when_transactions_exist(self):
+        ids, _ = self.create_transaction([10], [10])
+        assert self.client.delete(f"/api/accounts/{ids['acct_id']}").status_code == 409
 
-    #     assert self.client.get(f"/api/transactions/{ids['trn_id']}").status_code == 200
-    #     assert self.client.delete(f"/api/ledgers/{ids['ledger_id']}").status_code == 204
-    #     assert self.client.get(f"/api/transactions/{ids['trn_id']}").status_code == 404
+    def test_envelope_deletion_fails_when_transactions_exist(self):
+        ids, _ = self.create_transaction([10], [10])
+        assert self.client.delete(f"/api/envelopes/{ids['env_id']}").status_code == 409
+
+    def test_ledger_deletion_cascades_to_transactions(self):
+        ids, _ = self.create_transaction([10], [10])
+
+        assert self.client.get(f"/api/transactions/{ids['trn_id']}").status_code == 200
+        assert self.client.delete(f"/api/ledgers/{ids['ledger_id']}").status_code == 204
+        assert self.client.get(f"/api/transactions/{ids['trn_id']}").status_code == 404
