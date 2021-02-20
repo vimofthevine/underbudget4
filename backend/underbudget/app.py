@@ -20,6 +20,7 @@ def create_app(app_config=config.BaseConfig) -> Flask:
     migrate.init_app(app, db)
 
     from underbudget.views.accounts import AccountCategoriesView, AccountsView
+    from underbudget.views.demo import DemoView
     from underbudget.views.envelopes import EnvelopeCategoriesView, EnvelopesView
     from underbudget.views.health import HealthView
     from underbudget.views.ledgers import LedgersView
@@ -32,6 +33,7 @@ def create_app(app_config=config.BaseConfig) -> Flask:
     EnvelopeCategoriesView.register(app)
     EnvelopesView.register(app)
     TransactionsView.register(app)
+    DemoView.register(app)
 
     # pylint: disable=unused-variable
     @app.errorhandler(SQLAlchemyError)
