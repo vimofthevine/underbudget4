@@ -197,7 +197,6 @@ class AccountsTestCase(BaseTestCase):
         resp = self.client.get(f"/api/ledgers/{ledger_id}/account-categories")
         assert resp.status_code == 200
         body = json.loads(resp.data)
-        print(body)
 
         assert [cat1_id, cat2_id, cat3_id] == [
             m.value for m in parse("categories[*].id").find(body)
@@ -235,6 +234,41 @@ class AccountsTestCase(BaseTestCase):
         assert sub is not None and len(sub) == 1
         assert sub[0].value.get("name") == "Category 3"
         assert len(sub[0].value.get("accounts")) == 0
+
+    def test_move_account_to_category(self):
+        ledger_id = self.create_ledger()
+        cat1_id = self.create_account_category(ledger_id)
+        cat2_id = self.create_account_category(ledger_id)
+        acct_id = self.create_account(cat1_id)
+
+        resp = self.client.get(f"/api/ledgers/{ledger_id}/account-categories")
+        assert resp.status_code == 200
+
+        sub = parse(f"$.categories[?id={cat1_id}]").find(resp.json)
+        assert sub is not None and len(sub) == 1
+        assert len(sub[0].value.get("accounts")) == 1
+        assert sub[0].value.get("accounts")[0].get("id") == acct_id
+
+        sub = parse(f"$.categories[?id={cat2_id}]").find(resp.json)
+        assert sub is not None and len(sub) == 1
+        assert len(sub[0].value.get("accounts")) == 0
+
+        resp = self.client.put(
+            f"/api/accounts/{acct_id}/category", json={"id": cat2_id}
+        )
+        assert resp.status_code == 200
+
+        resp = self.client.get(f"/api/ledgers/{ledger_id}/account-categories")
+        assert resp.status_code == 200
+
+        sub = parse(f"$.categories[?id={cat1_id}]").find(resp.json)
+        assert sub is not None and len(sub) == 1
+        assert len(sub[0].value.get("accounts")) == 0
+
+        sub = parse(f"$.categories[?id={cat2_id}]").find(resp.json)
+        assert sub is not None and len(sub) == 1
+        assert len(sub[0].value.get("accounts")) == 1
+        assert sub[0].value.get("accounts")[0].get("id") == acct_id
 
     def test_account_category_deletion_fails_with_child_accounts(self):
         ledger_id = self.create_ledger()

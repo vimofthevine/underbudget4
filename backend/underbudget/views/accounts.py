@@ -8,6 +8,7 @@ from underbudget.common.decorators import use_args
 from underbudget.models.account import AccountCategoryModel, AccountModel
 from underbudget.models.ledger import LedgerModel
 import underbudget.schemas.account as schema
+from underbudget.schemas.common import IdSchema
 
 
 account_schema = schema.AccountSchema()
@@ -110,6 +111,11 @@ class AccountsView(MethodView):
             view_func=view,
             methods=["GET", "PUT", "DELETE"],
         )
+        app.add_url_rule(
+            "/api/accounts/<int:account_id>/category",
+            view_func=AccountParentCategoryView.as_view("account-parent"),
+            methods=["PUT"],
+        )
 
     @staticmethod
     def get(account_id: int):
@@ -156,3 +162,17 @@ class AccountsView(MethodView):
         account = AccountModel.query.get_or_404(account_id)
         account.delete()
         return {}, 204
+
+
+class AccountParentCategoryView(MethodView):
+    """ Account parent category REST resource view """
+
+    @staticmethod
+    @use_args(IdSchema)
+    def put(args: Dict[str, Any], account_id: int):
+        """ Moves an account to another category """
+        account = AccountModel.query.get_or_404(account_id)
+        category = AccountCategoryModel.query.get_or_404(args["id"])
+        account.category_id = category.id
+        account.save()
+        return {}, 200
