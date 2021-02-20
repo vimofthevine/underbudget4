@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    container_name: underbudget-dev-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  api:
+    build:
+      context: backend
+      dockerfile: Dockerfile.dev
+    container_name: underbudget-dev-api
+    command: flask run -h 0.0.0.0 -p 5000
+    restart: always
+    depends_on:
+      - db
+    environment:
+      - FLASK_APP=underbudget.app
+      - FLASK_ENV=development
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5000:5000
+    volumes:
+      - ./backend:/app

@@ -1,8 +1,6 @@
-FROM openjdk:8-jre
+FROM tiangolo/uwsgi-nginx-flask:python3.8
 
-ENTRYPOINT ["java", "-jar", "/usr/share/underbudget/underbudget.jar"]
+COPY requirements.txt .
+RUN pip install -r requirements.txt
 
-ARG JAR_FILE
-COPY target/${JAR_FILE} /usr/share/underbudget/underbudget.jar
-
-EXPOSE 9090
+COPY . /app

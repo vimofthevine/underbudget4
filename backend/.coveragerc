@@ -1,0 +1,6 @@
+[run]
+omit = underbudget/tests/*
+source = underbudget
+
+[report]
+fail_under = 95
