@@ -11,7 +11,7 @@ export default (
 ) => {
   // eslint-disable-next-line react/prop-types
   const Wrapper = ({ children }) => (
-    <Router history={history}>
+    <Router action={history.action} location={history.location} navigator={history}>
       <AppProviders>{children}</AppProviders>
     </Router>
   );

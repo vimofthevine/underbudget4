@@ -269,10 +269,7 @@ describe('LedgersListing', () => {
     const row = within(rows[1]);
     fireEvent.click(row.getByRole('cell', { name: 'Ledger 0' }));
     expect(history.location.pathname).toBe('/accounts');
-    expect(localStorage.setItem).toHaveBeenLastCalledWith(
-      'underbudget.selected.ledger',
-      'ledger-id-0',
-    );
+    expect(localStorage.getItem('underbudget.selected.ledger')).toBe('ledger-id-0');
   });
 
   it('should redirect to previous location state when selecting a ledger', async () => {
@@ -297,9 +294,6 @@ describe('LedgersListing', () => {
     const row = within(rows[2]);
     fireEvent.click(row.getByRole('cell', { name: 'EUR' }));
     expect(history.location.pathname).toBe('/last-page');
-    expect(localStorage.setItem).toHaveBeenLastCalledWith(
-      'underbudget.selected.ledger',
-      'ledger-id-1',
-    );
+    expect(localStorage.getItem('underbudget.selected.ledger')).toBe('ledger-id-1');
   });
 });
