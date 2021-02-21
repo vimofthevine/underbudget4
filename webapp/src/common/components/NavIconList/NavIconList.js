@@ -6,21 +6,17 @@ import ListItemText from '@material-ui/core/ListItemText';
 import AccountIcon from '@material-ui/icons/AccountBalance';
 import BookIcon from '@material-ui/icons/Book';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import LogoutIcon from '@material-ui/icons/ExitToApp';
 import ReportIcon from '@material-ui/icons/InsertChart';
 import EnvelopeIcon from '@material-ui/icons/Mail';
 import IncomeIcon from '@material-ui/icons/MonetizationOn';
 import ExpenseIcon from '@material-ui/icons/ShoppingCart';
-import TokenIcon from '@material-ui/icons/VpnKey';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import useMobile from '../../hooks/useMobile';
 import * as routes from '../../utils/routes';
 
 const NavIconList = () => {
   const navigate = useNavigate();
-  const mobile = useMobile();
 
   return (
     <>
@@ -83,27 +79,6 @@ const NavIconList = () => {
           <ListItemText primary='Reports' />
         </ListItem>
       </List>
-
-      {mobile && (
-        <>
-          <Divider />
-
-          <List>
-            <ListItem button onClick={() => navigate(routes.TOKENS)}>
-              <ListItemIcon>
-                <TokenIcon />
-              </ListItemIcon>
-              <ListItemText primary='Access Tokens' />
-            </ListItem>
-            <ListItem button onClick={() => navigate(routes.LOGOUT)}>
-              <ListItemIcon>
-                <LogoutIcon />
-              </ListItemIcon>
-              <ListItemText primary='Logout' />
-            </ListItem>
-          </List>
-        </>
-      )}
     </>
   );
 };
