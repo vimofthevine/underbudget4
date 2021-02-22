@@ -87,7 +87,7 @@ describe('CreateLedgerDialog', () => {
     mockAxios.onPost('/api/ledgers').reply(201);
 
     const { queryCache } = render();
-    const refetchQueries = jest.spyOn(queryCache, 'refetchQueries');
+    const invalidateQueries = jest.spyOn(queryCache, 'invalidateQueries');
 
     fireEvent.click(screen.getByRole('button', { name: /create ledger/i }));
     await waitFor(() =>
@@ -109,7 +109,7 @@ describe('CreateLedgerDialog', () => {
       name: 'my ledger name',
       currency: 980,
     });
-    expect(refetchQueries).toHaveBeenCalledWith('ledgers', {
+    expect(invalidateQueries).toHaveBeenCalledWith('ledgers', {
       page: 0,
       size: 10,
     });

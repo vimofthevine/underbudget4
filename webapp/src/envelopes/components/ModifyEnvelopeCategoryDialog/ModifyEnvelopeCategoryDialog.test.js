@@ -84,7 +84,7 @@ describe('CreateEnvelopeCategoryDialog', () => {
     localStorage.setItem('underbudget.selected.ledger', 'ledger-id');
 
     const { queryCache } = render({ id: 'env-cat-id', name: 'A category' });
-    const refetchQueries = jest.spyOn(queryCache, 'refetchQueries');
+    const invalidateQueries = jest.spyOn(queryCache, 'invalidateQueries');
 
     await openDialog();
 
@@ -98,7 +98,7 @@ describe('CreateEnvelopeCategoryDialog', () => {
     expect(JSON.parse(mockAxios.history.patch[0].data)).toEqual({
       name: 'my category name',
     });
-    expect(refetchQueries).toHaveBeenCalledWith([
+    expect(invalidateQueries).toHaveBeenCalledWith([
       'envelopeCategories',
       {
         ledger: 'ledger-id',

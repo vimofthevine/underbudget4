@@ -11,7 +11,9 @@ import { LedgersContextProvider } from '../LedgersContext';
 import LedgersListing from './LedgersListing';
 
 const queryConfig = {
-  retryDelay: 200,
+  queries: {
+    retryDelay: 200,
+  },
 };
 
 const createMediaQuery = (width) => (query) => ({

@@ -25,7 +25,7 @@ export function useModifyLedger() {
   const [handleModify] = useMutation(modifyLedger, {
     onError: (err) => snackbar(createErrorMessage(err)),
     onSuccess: () => {
-      queryCache.refetchQueries('ledgers', state.pagination);
+      queryCache.invalidateQueries('ledgers', state.pagination);
       handleCloseDialog();
     },
   });

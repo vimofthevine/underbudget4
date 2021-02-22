@@ -6,5 +6,5 @@ export default function useEnvelopesRefetch() {
   const queryCache = useQueryCache();
   const ledger = useSelectedLedger();
 
-  return () => queryCache.refetchQueries(['envelopeCategories', { ledger }]);
+  return () => queryCache.invalidateQueries(['envelopeCategories', { ledger }]);
 }

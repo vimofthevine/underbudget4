@@ -83,7 +83,7 @@ describe('CreateAccountCategoryDialog', () => {
     localStorage.setItem('underbudget.selected.ledger', 'ledger-id');
 
     const { queryCache } = render();
-    const refetchQueries = jest.spyOn(queryCache, 'refetchQueries');
+    const invalidateQueries = jest.spyOn(queryCache, 'invalidateQueries');
 
     userEvent.click(screen.getByRole('button', { name: 'Open' }));
     await waitFor(() =>
@@ -100,7 +100,7 @@ describe('CreateAccountCategoryDialog', () => {
       ledger: '/api/ledgers/ledger-id',
       name: 'my category name',
     });
-    expect(refetchQueries).toHaveBeenCalledWith([
+    expect(invalidateQueries).toHaveBeenCalledWith([
       'accountCategories',
       {
         ledger: 'ledger-id',

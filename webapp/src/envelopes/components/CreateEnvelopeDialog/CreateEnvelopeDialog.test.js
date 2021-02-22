@@ -105,7 +105,7 @@ describe('CreateEnvelopeDialog', () => {
   it('should close and refresh query when successful create', async () => {
     const { mock, queryCache } = render();
     mock.onPost('/api/envelopes').reply(201);
-    const refetchQueries = jest.spyOn(queryCache, 'refetchQueries');
+    const invalidateQueries = jest.spyOn(queryCache, 'invalidateQueries');
 
     userEvent.click(screen.getByRole('button', { name: 'Open' }));
     await waitFor(() =>
@@ -125,7 +125,7 @@ describe('CreateEnvelopeDialog', () => {
       category: '/api/envelope-categories/cat-id-2',
       name: 'my envelope name',
     });
-    expect(refetchQueries).toHaveBeenCalledWith([
+    expect(invalidateQueries).toHaveBeenCalledWith([
       'envelopeCategories',
       {
         ledger: 'ledger-id',

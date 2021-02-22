@@ -6,5 +6,5 @@ export default function useAccountsRefetch() {
   const queryCache = useQueryCache();
   const ledger = useSelectedLedger();
 
-  return () => queryCache.refetchQueries(['accountCategories', { ledger }]);
+  return () => queryCache.invalidateQueries(['accountCategories', { ledger }]);
 }

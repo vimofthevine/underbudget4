@@ -75,7 +75,7 @@ describe('ModifyLedgerDialog', () => {
     mockAxios.onPut('/api/ledgers/ledger-id').reply(200);
 
     const { queryCache } = render({ id: 'ledger-id', name: 'A ledger', currency: 978 });
-    const refetchQueries = jest.spyOn(queryCache, 'refetchQueries');
+    const invalidateQueries = jest.spyOn(queryCache, 'invalidateQueries');
 
     await openDialog();
 
@@ -94,7 +94,7 @@ describe('ModifyLedgerDialog', () => {
       name: 'my ledger',
       currency: 840,
     });
-    expect(refetchQueries).toHaveBeenCalledWith('ledgers', {
+    expect(invalidateQueries).toHaveBeenCalledWith('ledgers', {
       page: 0,
       size: 10,
     });

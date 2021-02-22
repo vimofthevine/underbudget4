@@ -20,7 +20,7 @@ export function useCreateLedger() {
   const [handleCreate] = useMutation(createLedger, {
     onError: (err) => snackbar(createErrorMessage(err)),
     onSuccess: () => {
-      queryCache.refetchQueries('ledgers', state.pagination);
+      queryCache.invalidateQueries('ledgers', state.pagination);
       handleCloseDialog();
     },
   });

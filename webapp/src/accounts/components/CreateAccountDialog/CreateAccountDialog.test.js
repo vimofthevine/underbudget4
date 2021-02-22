@@ -105,7 +105,7 @@ describe('CreateAccountDialog', () => {
   it('should close and refresh query when successful create', async () => {
     const { mock, queryCache } = render();
     mock.onPost('/api/accounts').reply(201);
-    const refetchQueries = jest.spyOn(queryCache, 'refetchQueries');
+    const invalidateQueries = jest.spyOn(queryCache, 'invalidateQueries');
 
     userEvent.click(screen.getByRole('button', { name: 'Open' }));
     await waitFor(() =>
@@ -127,7 +127,7 @@ describe('CreateAccountDialog', () => {
       institution: '',
       accountNumber: '',
     });
-    expect(refetchQueries).toHaveBeenCalledWith([
+    expect(invalidateQueries).toHaveBeenCalledWith([
       'accountCategories',
       {
         ledger: 'ledger-id',

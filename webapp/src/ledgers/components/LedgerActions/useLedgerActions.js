@@ -26,7 +26,7 @@ export function useLedgerActions(ledger) {
   const [mutate] = useMutation(deleteLedger, {
     onError: (err) => snackbar(createErrorMessage(err)),
     onSuccess: () => {
-      queryCache.refetchQueries('ledgers', state.pagination);
+      queryCache.invalidateQueries('ledgers', state.pagination);
     },
   });
 
