@@ -3,7 +3,7 @@
     "airbnb",
     "plugin:prettier/recommended",
     "plugin:react/recommended",
-    "prettier/react"
+    "prettier"
   ],
   "plugins": [
     "react-hooks"

@@ -151,9 +151,7 @@ describe('CreateAccountDialog', () => {
     userEvent.click(screen.getByRole('button', { name: /open/i }));
     userEvent.click(screen.getByRole('option', { name: 'Category 2' }));
 
-    await waitFor(() => 
-      expect(screen.getByRole('button', { name: /create/i })).not.toBeDisabled(),
-    );
+    await waitFor(() => expect(screen.getByRole('button', { name: /create/i })).not.toBeDisabled());
     userEvent.click(screen.getByRole('button', { name: /create/i }));
 
     await waitFor(() =>
