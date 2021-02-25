@@ -4,7 +4,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import { action } from '@storybook/addon-actions';
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
 
 import useSelection from '../../hooks/useSelection';
 import AppProviders from '../AppProviders';
@@ -13,10 +12,7 @@ import FullAppBar from './FullAppBar';
 export default {
   title: 'common/FullAppBar',
   component: FullAppBar,
-  decorators: [
-    (story) => <MemoryRouter>{story()}</MemoryRouter>,
-    (story) => <AppProviders>{story()}</AppProviders>,
-  ],
+  decorators: [(story) => <AppProviders>{story()}</AppProviders>],
 };
 
 const Template = (args) => <FullAppBar {...args} />;

@@ -2,8 +2,6 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import moment from 'moment';
 import React from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { MemoryRouter } from 'react-router-dom';
 
 import AppProviders from '../../../common/components/AppProviders';
 import { LedgersContextProvider } from '../LedgersContext';
@@ -15,16 +13,7 @@ export default {
   decorators: [
     (story) => story({ mock: new MockAdapter(axios, { delayResponse: 1000 }) }),
     (story) => <LedgersContextProvider>{story()}</LedgersContextProvider>,
-    (story) => <MemoryRouter>{story()}</MemoryRouter>,
     (story) => <AppProviders>{story()}</AppProviders>,
-    (story) => {
-      const queryClient = new QueryClient({
-        defaultOptions: {
-          queries: { retry: false },
-        },
-      });
-      return <QueryClientProvider client={queryClient}>{story()}</QueryClientProvider>;
-    },
   ],
 };
 

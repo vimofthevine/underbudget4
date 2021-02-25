@@ -3,7 +3,6 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { Field, Form, Formik } from 'formik';
 import React from 'react';
-import { MemoryRouter } from 'react-router';
 
 import setSelectedLedger from '../../../ledgers/utils/setSelectedLedger';
 import EnvelopeCategorySelectField from './EnvelopeCategorySelectField';
@@ -13,7 +12,6 @@ export default {
   component: EnvelopeCategorySelectField,
   decorators: [
     (story) => story({ mock: new MockAdapter(axios, { delayResponse: 1000 }) }),
-    (story) => <MemoryRouter>{story()}</MemoryRouter>,
     (story) => {
       setSelectedLedger('ledger-id');
       return story();

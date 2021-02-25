@@ -3,7 +3,6 @@ import AddIcon from '@material-ui/icons/Add';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { action } from '@storybook/addon-actions';
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
 
 import useSelection from '../../hooks/useSelection';
 import AppProviders from '../AppProviders';
@@ -13,10 +12,7 @@ import FullAppPage from './FullAppPage';
 export default {
   title: 'common/FullAppPage',
   component: FullAppPage,
-  decorators: [
-    (story) => <MemoryRouter>{story()}</MemoryRouter>,
-    (story) => <AppProviders>{story()}</AppProviders>,
-  ],
+  decorators: [(story) => <AppProviders>{story()}</AppProviders>],
 };
 
 const SelectButtons = () => {

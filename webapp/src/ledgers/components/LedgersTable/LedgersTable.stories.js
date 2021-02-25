@@ -1,7 +1,6 @@
 import { action } from '@storybook/addon-actions';
 import moment from 'moment';
 import React from 'react';
-import { MemoryRouter } from 'react-router';
 
 import AppProviders from '../../../common/components/AppProviders';
 import { LedgersContextProvider } from '../LedgersContext';
@@ -15,7 +14,6 @@ export default {
   decorators: [
     (story) => <LedgersContextProvider>{story()}</LedgersContextProvider>,
     (story) => <AppProviders>{story()}</AppProviders>,
-    (story) => <MemoryRouter>{story()}</MemoryRouter>,
   ],
 };
 

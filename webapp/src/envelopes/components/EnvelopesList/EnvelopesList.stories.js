@@ -1,21 +1,11 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { MemoryRouter } from 'react-router-dom';
 
 import AppProviders from '../../../common/components/AppProviders';
 import setSelectedLedger from '../../../ledgers/utils/setSelectedLedger';
 import { EnvelopeContextProvider } from '../../contexts/envelope';
 import EnvelopesList from './EnvelopesList';
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-    },
-  },
-});
 
 export default {
   title: 'envelopes/EnvelopesList',
@@ -23,9 +13,7 @@ export default {
   decorators: [
     (story) => story({ mock: new MockAdapter(axios, { delayResponse: 1000 }) }),
     (story) => <EnvelopeContextProvider>{story()}</EnvelopeContextProvider>,
-    (story) => <MemoryRouter>{story()}</MemoryRouter>,
     (story) => <AppProviders>{story()}</AppProviders>,
-    (story) => <QueryClientProvider client={queryClient}>{story()}</QueryClientProvider>,
     (story) => {
       setSelectedLedger('ledger-id');
       return story();

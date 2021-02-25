@@ -3,16 +3,32 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { withA11y } from '@storybook/addon-a11y';
 import { addDecorator } from '@storybook/react';
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { useDarkMode } from 'storybook-dark-mode';
 
 import createTheme from '../src/common/utils/createTheme';
 
-addDecorator(story => (
-  <ThemeProvider theme={createTheme(useDarkMode())}>
-    <CssBaseline />
-    {story()}
-  </ThemeProvider>
-));
+addDecorator(story => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+
+  return (
+    <ThemeProvider theme={createTheme(useDarkMode())}>
+      <CssBaseline />
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          {story()}
+        </MemoryRouter>
+      </QueryClientProvider>
+    </ThemeProvider>
+  );
+});
 
 addDecorator(withA11y);
 
