@@ -13,7 +13,7 @@ export default function useDeleteAccountCategory(category) {
 
   const createErrorMessage = useErrorMessage({ request: 'Unable to delete account category' });
 
-  const [mutate] = useMutation(deleteAccountCategory, {
+  const { mutate } = useMutation(deleteAccountCategory, {
     onError: (err) => snackbar(createErrorMessage(err)),
     onSuccess: refetch,
   });

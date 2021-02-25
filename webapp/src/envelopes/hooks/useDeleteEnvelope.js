@@ -13,7 +13,7 @@ export default function useDeleteEnvelope(envelope) {
 
   const createErrorMessage = useErrorMessage({ request: 'Unable to delete envelope' });
 
-  const [mutate] = useMutation(deleteEnvelope, {
+  const { mutate } = useMutation(deleteEnvelope, {
     onError: (err) => snackbar(createErrorMessage(err)),
     onSuccess: refetch,
   });

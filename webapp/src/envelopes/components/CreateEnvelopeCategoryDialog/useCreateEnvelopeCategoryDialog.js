@@ -19,7 +19,7 @@ export default function useCreateEnvelopeCategoryDialog() {
 
   const createErrorMessage = useErrorMessage({ request: 'Unable to create envelope category' });
 
-  const [mutate] = useMutation(createEnvelopeCategory, {
+  const { mutate } = useMutation(createEnvelopeCategory, {
     onError: (err) => snackbar(createErrorMessage(err)),
     onSuccess: () => {
       refetch();

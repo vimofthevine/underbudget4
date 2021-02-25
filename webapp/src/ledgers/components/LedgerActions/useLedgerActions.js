@@ -1,4 +1,4 @@
-import { queryCache, useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 
 import useConfirmation from '../../../common/hooks/useConfirmation';
 import useErrorMessage from '../../../common/hooks/useErrorMessage';
@@ -9,6 +9,7 @@ import { useLedgersDispatch, useLedgersState } from '../LedgersContext';
 
 // eslint-disable-next-line import/prefer-default-export
 export function useLedgerActions(ledger) {
+  const queryClient = useQueryClient();
   const mobile = useMobile();
   const confirm = useConfirmation();
   const snackbar = useSnackbar();
@@ -23,10 +24,10 @@ export function useLedgerActions(ledger) {
 
   const createErrorMessage = useErrorMessage({ request: 'Unable to delete ledger' });
 
-  const [mutate] = useMutation(deleteLedger, {
+  const { mutate } = useMutation(deleteLedger, {
     onError: (err) => snackbar(createErrorMessage(err)),
     onSuccess: () => {
-      queryCache.invalidateQueries('ledgers', state.pagination);
+      queryClient.invalidateQueries('ledgers', state.pagination);
     },
   });
 

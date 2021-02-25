@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
-import { ReactQueryCacheProvider, makeQueryCache, setConsole } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 import renderWithRouter from '../../../tests/renderWithRouter';
 import { EnvelopeContextProvider } from '../../contexts/envelope';
@@ -17,19 +17,19 @@ const OpenDialogButton = ({ category }) => (
 );
 
 const render = (category) => {
-  const queryCache = makeQueryCache();
+  const queryClient = new QueryClient();
   return {
     ...renderWithRouter(
-      <ReactQueryCacheProvider queryCache={queryCache}>
+      <QueryClientProvider client={queryClient}>
         <EnvelopeContextProvider>
           <>
             <OpenDialogButton category={category} />
             <ModifyEnvelopeCategoryDialog />
           </>
         </EnvelopeContextProvider>
-      </ReactQueryCacheProvider>,
+      </QueryClientProvider>,
     ),
-    queryCache,
+    queryClient,
   };
 };
 
@@ -41,14 +41,6 @@ const openDialog = async () => {
 };
 
 describe('CreateEnvelopeCategoryDialog', () => {
-  beforeEach(() => {
-    setConsole({
-      log: () => 0,
-      warn: () => 0,
-      error: () => 0,
-    });
-  });
-
   it('should prevent submission when required fields are missing', async () => {
     render({ id: 'env-cat-id', name: 'A category' });
     await openDialog();
@@ -83,8 +75,8 @@ describe('CreateEnvelopeCategoryDialog', () => {
 
     localStorage.setItem('underbudget.selected.ledger', 'ledger-id');
 
-    const { queryCache } = render({ id: 'env-cat-id', name: 'A category' });
-    const invalidateQueries = jest.spyOn(queryCache, 'invalidateQueries');
+    const { queryClient } = render({ id: 'env-cat-id', name: 'A category' });
+    const invalidateQueries = jest.spyOn(queryClient, 'invalidateQueries');
 
     await openDialog();
 

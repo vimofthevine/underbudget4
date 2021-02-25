@@ -3,21 +3,12 @@ import userEvent from '@testing-library/user-event';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
-import {
-  ReactQueryCacheProvider,
-  ReactQueryConfigProvider,
-  makeQueryCache,
-  setConsole,
-} from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 import renderWithRouter from '../../../tests/renderWithRouter';
 import { AccountContextProvider } from '../../contexts/account';
 import useCreateAccount from '../../hooks/useCreateAccount';
 import CreateAccountDialog from './CreateAccountDialog';
-
-const queryConfig = {
-  staleTime: Infinity,
-};
 
 const OpenDialogButton = () => (
   <button onClick={useCreateAccount()} type='button'>
@@ -27,6 +18,14 @@ const OpenDialogButton = () => (
 
 const render = () => {
   localStorage.setItem('underbudget.selected.ledger', 'ledger-id');
+
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: Infinity,
+      },
+    },
+  });
 
   const mock = new MockAdapter(axios);
   mock
@@ -40,34 +39,23 @@ const render = () => {
       },
     });
 
-  const queryCache = makeQueryCache();
   return {
     ...renderWithRouter(
-      <ReactQueryConfigProvider config={queryConfig}>
-        <ReactQueryCacheProvider queryCache={queryCache}>
-          <AccountContextProvider>
-            <>
-              <OpenDialogButton />
-              <CreateAccountDialog />
-            </>
-          </AccountContextProvider>
-        </ReactQueryCacheProvider>
-      </ReactQueryConfigProvider>,
+      <QueryClientProvider client={queryClient}>
+        <AccountContextProvider>
+          <>
+            <OpenDialogButton />
+            <CreateAccountDialog />
+          </>
+        </AccountContextProvider>
+      </QueryClientProvider>,
     ),
     mock,
-    queryCache,
+    queryClient,
   };
 };
 
 describe('CreateAccountDialog', () => {
-  beforeEach(() => {
-    setConsole({
-      log: () => 0,
-      warn: () => 0,
-      error: () => 0,
-    });
-  });
-
   it('should prevent submission when required fields are missing', async () => {
     const { mock } = render();
 
@@ -103,9 +91,9 @@ describe('CreateAccountDialog', () => {
   });
 
   it('should close and refresh query when successful create', async () => {
-    const { mock, queryCache } = render();
+    const { mock, queryClient } = render();
     mock.onPost('/api/accounts').reply(201);
-    const invalidateQueries = jest.spyOn(queryCache, 'invalidateQueries');
+    const invalidateQueries = jest.spyOn(queryClient, 'invalidateQueries');
 
     userEvent.click(screen.getByRole('button', { name: 'Open' }));
     await waitFor(() =>

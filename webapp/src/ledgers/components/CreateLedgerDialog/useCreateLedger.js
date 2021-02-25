@@ -1,4 +1,4 @@
-import { useMutation, useQueryCache } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 
 import useErrorMessage from '../../../common/hooks/useErrorMessage';
 import useSnackbar from '../../../common/hooks/useSnackbar';
@@ -7,7 +7,7 @@ import { useLedgersDispatch, useLedgersState } from '../LedgersContext';
 
 // eslint-disable-next-line import/prefer-default-export
 export function useCreateLedger() {
-  const queryCache = useQueryCache();
+  const queryClient = useQueryClient();
   const snackbar = useSnackbar();
   const dispatch = useLedgersDispatch();
   const state = useLedgersState();
@@ -17,10 +17,10 @@ export function useCreateLedger() {
 
   const createErrorMessage = useErrorMessage({ request: 'Unable to create ledger' });
 
-  const [handleCreate] = useMutation(createLedger, {
+  const { mutate } = useMutation(createLedger, {
     onError: (err) => snackbar(createErrorMessage(err)),
     onSuccess: () => {
-      queryCache.invalidateQueries('ledgers', state.pagination);
+      queryClient.invalidateQueries('ledgers', state.pagination);
       handleCloseDialog();
     },
   });
@@ -28,6 +28,6 @@ export function useCreateLedger() {
   return {
     dialogOpen,
     handleCloseDialog,
-    handleCreate,
+    handleCreate: mutate,
   };
 }

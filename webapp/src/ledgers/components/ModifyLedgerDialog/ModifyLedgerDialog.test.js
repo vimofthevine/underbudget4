@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
-import { ReactQueryCacheProvider, makeQueryCache, setConsole } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 import renderWithRouter from '../../../tests/renderWithRouter';
 import LedgerActions from '../LedgerActions';
@@ -10,10 +10,10 @@ import { LedgersContextProvider } from '../LedgersContext';
 import ModifyLedgerDialog from './ModifyLedgerDialog';
 
 const render = (ledger) => {
-  const queryCache = makeQueryCache();
+  const queryClient = new QueryClient();
   return {
     ...renderWithRouter(
-      <ReactQueryCacheProvider queryCache={queryCache}>
+      <QueryClientProvider client={queryClient}>
         <LedgersContextProvider>
           <>
             <LedgerActions ledger={ledger} />
@@ -21,9 +21,9 @@ const render = (ledger) => {
           </>
         </LedgersContextProvider>
         ,
-      </ReactQueryCacheProvider>,
+      </QueryClientProvider>,
     ),
-    queryCache,
+    queryClient,
   };
 };
 
@@ -33,14 +33,6 @@ const openDialog = async () => {
 };
 
 describe('ModifyLedgerDialog', () => {
-  beforeEach(() => {
-    setConsole({
-      log: () => 0,
-      warn: () => 0,
-      error: () => 0,
-    });
-  });
-
   it('should prevent submission when required fields are missing', async () => {
     render({ id: 'ledger-id', name: 'A ledger', currency: 980 });
     await openDialog();
@@ -74,8 +66,8 @@ describe('ModifyLedgerDialog', () => {
     const mockAxios = new MockAdapter(axios);
     mockAxios.onPut('/api/ledgers/ledger-id').reply(200);
 
-    const { queryCache } = render({ id: 'ledger-id', name: 'A ledger', currency: 978 });
-    const invalidateQueries = jest.spyOn(queryCache, 'invalidateQueries');
+    const { queryClient } = render({ id: 'ledger-id', name: 'A ledger', currency: 978 });
+    const invalidateQueries = jest.spyOn(queryClient, 'invalidateQueries');
 
     await openDialog();
 

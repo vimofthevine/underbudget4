@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
-import { ReactQueryCacheProvider, makeQueryCache, setConsole } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 import renderWithRouter from '../../../tests/renderWithRouter';
 import { AccountContextProvider } from '../../contexts/account';
@@ -17,31 +17,23 @@ const OpenDialogButton = () => (
 );
 
 const render = () => {
-  const queryCache = makeQueryCache();
+  const queryClient = new QueryClient();
   return {
     ...renderWithRouter(
-      <ReactQueryCacheProvider queryCache={queryCache}>
+      <QueryClientProvider client={queryClient}>
         <AccountContextProvider>
           <>
             <OpenDialogButton />
             <CreateAccountCategoryDialog />
           </>
         </AccountContextProvider>
-      </ReactQueryCacheProvider>,
+      </QueryClientProvider>,
     ),
-    queryCache,
+    queryClient,
   };
 };
 
 describe('CreateAccountCategoryDialog', () => {
-  beforeEach(() => {
-    setConsole({
-      log: () => 0,
-      warn: () => 0,
-      error: () => 0,
-    });
-  });
-
   it('should prevent submission when required fields are missing', async () => {
     render();
 
@@ -82,8 +74,8 @@ describe('CreateAccountCategoryDialog', () => {
 
     localStorage.setItem('underbudget.selected.ledger', 'ledger-id');
 
-    const { queryCache } = render();
-    const invalidateQueries = jest.spyOn(queryCache, 'invalidateQueries');
+    const { queryClient } = render();
+    const invalidateQueries = jest.spyOn(queryClient, 'invalidateQueries');
 
     userEvent.click(screen.getByRole('button', { name: 'Open' }));
     await waitFor(() =>

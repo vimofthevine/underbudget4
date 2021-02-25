@@ -21,7 +21,7 @@ export default function useCreateAccountCategory() {
 
   const createErrorMessage = useErrorMessage({ request: 'Unable to modify account category' });
 
-  const [mutate] = useMutation(modifyAccountCategory, {
+  const { mutate } = useMutation(modifyAccountCategory, {
     onError: (err) => snackbar(createErrorMessage(err)),
     onSuccess: () => {
       refetch();

@@ -17,7 +17,7 @@ export default function useCreateEnvelopeDialog() {
 
   const createErrorMessage = useErrorMessage({ request: 'Unable to create envelope' });
 
-  const [mutate] = useMutation(createEnvelope, {
+  const { mutate } = useMutation(createEnvelope, {
     onError: (err) => snackbar(createErrorMessage(err)),
     onSuccess: () => {
       refetch();

@@ -4,17 +4,11 @@ import MockAdapter from 'axios-mock-adapter';
 import mediaQuery from 'css-mediaquery';
 import moment from 'moment';
 import React from 'react';
-import { ReactQueryConfigProvider, queryCache, setConsole } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 import renderWithRouter from '../../../tests/renderWithRouter';
 import { LedgersContextProvider } from '../LedgersContext';
 import LedgersListing from './LedgersListing';
-
-const queryConfig = {
-  queries: {
-    retryDelay: 200,
-  },
-};
 
 const createMediaQuery = (width) => (query) => ({
   matches: mediaQuery.match(query, { width }),
@@ -24,12 +18,20 @@ const createMediaQuery = (width) => (query) => ({
 
 const render = ({ route = '/ledgers', width = '800px' } = {}) => {
   window.matchMedia = createMediaQuery(width);
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retryDelay: 200,
+      },
+    },
+  });
+
   return renderWithRouter(
-    <ReactQueryConfigProvider config={queryConfig}>
+    <QueryClientProvider client={queryClient}>
       <LedgersContextProvider>
         <LedgersListing />
       </LedgersContextProvider>
-    </ReactQueryConfigProvider>,
+    </QueryClientProvider>,
     { route },
   );
 };
@@ -56,12 +58,6 @@ describe('LedgersListing', () => {
   beforeEach(() => {
     configure({ defaultHidden: true });
     window.HTMLElement.prototype.scrollTo = () => 0;
-    queryCache.clear();
-    setConsole({
-      log: () => 0,
-      warn: () => 0,
-      error: () => 0,
-    });
   });
 
   it('should show error message when not logged in', async () => {

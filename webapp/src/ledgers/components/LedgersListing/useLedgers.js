@@ -1,5 +1,5 @@
 import React from 'react';
-import { usePaginatedQuery } from 'react-query';
+import { useQuery } from 'react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import useErrorMessage from '../../../common/hooks/useErrorMessage';
@@ -19,12 +19,13 @@ export function useLedgers() {
 
   const createErrorMessage = useErrorMessage({ request: 'Unable to retrieve ledgers' });
 
-  const { error, isFetching, resolvedData, status } = usePaginatedQuery(
+  const { error, isFetching, data, status } = useQuery(
     ['ledgers', state.pagination],
-    fetchLedgers,
+    () => fetchLedgers(state.pagination),
+    { keepPreviousData: true },
   );
-  const ledgers = resolvedData ? resolvedData._embedded.ledgers : [];
-  const count = resolvedData ? resolvedData.page.totalElements : 0;
+  const ledgers = data ? data._embedded.ledgers : [];
+  const count = data ? data.page.totalElements : 0;
 
   React.useEffect(() => {
     if (!isFetching) {

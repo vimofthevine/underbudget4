@@ -17,7 +17,7 @@ export default function useCreateAccountDialog() {
 
   const createErrorMessage = useErrorMessage({ request: 'Unable to create account' });
 
-  const [mutate] = useMutation(createAccount, {
+  const { mutate } = useMutation(createAccount, {
     onError: (err) => snackbar(createErrorMessage(err)),
     onSuccess: () => {
       refetch();

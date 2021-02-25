@@ -19,7 +19,7 @@ export default function useCreateAccountCategoryDialog() {
 
   const createErrorMessage = useErrorMessage({ request: 'Unable to create account category' });
 
-  const [mutate] = useMutation(createAccountCategory, {
+  const { mutate } = useMutation(createAccountCategory, {
     onError: (err) => snackbar(createErrorMessage(err)),
     onSuccess: () => {
       refetch();

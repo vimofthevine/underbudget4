@@ -12,8 +12,9 @@ export default function useEnvelopes() {
   const createErrorMessage = useErrorMessage({ request: 'Unable to retrieve envelopes' });
 
   const { data, error, status } = useQuery(
-    ledger && ['envelopeCategories', { ledger }],
-    fetchEnvelopeCategories,
+    ['envelopeCategories', { ledger }],
+    () => fetchEnvelopeCategories(ledger),
+    { enabled: !!ledger },
   );
   const unsorted = data ? data._embedded.envelopeCategories : [];
 

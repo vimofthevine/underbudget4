@@ -21,7 +21,7 @@ export default function useCreateEnvelopeCategory() {
 
   const createErrorMessage = useErrorMessage({ request: 'Unable to modify envelope category' });
 
-  const [mutate] = useMutation(modifyEnvelopeCategory, {
+  const { mutate } = useMutation(modifyEnvelopeCategory, {
     onError: (err) => snackbar(createErrorMessage(err)),
     onSuccess: () => {
       refetch();

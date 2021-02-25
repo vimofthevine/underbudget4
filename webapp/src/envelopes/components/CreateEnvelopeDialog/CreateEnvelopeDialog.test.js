@@ -3,21 +3,12 @@ import userEvent from '@testing-library/user-event';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
-import {
-  ReactQueryCacheProvider,
-  ReactQueryConfigProvider,
-  makeQueryCache,
-  setConsole,
-} from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 import renderWithRouter from '../../../tests/renderWithRouter';
 import { EnvelopeContextProvider } from '../../contexts/envelope';
 import useCreateEnvelope from '../../hooks/useCreateEnvelope';
 import CreateEnvelopeDialog from './CreateEnvelopeDialog';
-
-const queryConfig = {
-  staleTime: Infinity,
-};
 
 const OpenDialogButton = () => (
   <button onClick={useCreateEnvelope()} type='button'>
@@ -40,34 +31,31 @@ const render = () => {
       },
     });
 
-  const queryCache = makeQueryCache();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: Infinity,
+      },
+    },
+  });
+
   return {
     ...renderWithRouter(
-      <ReactQueryConfigProvider config={queryConfig}>
-        <ReactQueryCacheProvider queryCache={queryCache}>
-          <EnvelopeContextProvider>
-            <>
-              <OpenDialogButton />
-              <CreateEnvelopeDialog />
-            </>
-          </EnvelopeContextProvider>
-        </ReactQueryCacheProvider>
-      </ReactQueryConfigProvider>,
+      <QueryClientProvider client={queryClient}>
+        <EnvelopeContextProvider>
+          <>
+            <OpenDialogButton />
+            <CreateEnvelopeDialog />
+          </>
+        </EnvelopeContextProvider>
+      </QueryClientProvider>,
     ),
     mock,
-    queryCache,
+    queryClient,
   };
 };
 
 describe('CreateEnvelopeDialog', () => {
-  beforeEach(() => {
-    setConsole({
-      log: () => 0,
-      warn: () => 0,
-      error: () => 0,
-    });
-  });
-
   it('should prevent submission when required fields are missing', async () => {
     const { mock } = render();
 
@@ -103,9 +91,9 @@ describe('CreateEnvelopeDialog', () => {
   });
 
   it('should close and refresh query when successful create', async () => {
-    const { mock, queryCache } = render();
+    const { mock, queryClient } = render();
     mock.onPost('/api/envelopes').reply(201);
-    const invalidateQueries = jest.spyOn(queryCache, 'invalidateQueries');
+    const invalidateQueries = jest.spyOn(queryClient, 'invalidateQueries');
 
     userEvent.click(screen.getByRole('button', { name: 'Open' }));
     await waitFor(() =>

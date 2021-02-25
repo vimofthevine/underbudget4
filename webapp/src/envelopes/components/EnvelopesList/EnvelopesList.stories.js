@@ -1,7 +1,7 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
-import { ReactQueryCacheProvider, ReactQueryConfigProvider, makeQueryCache } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { MemoryRouter } from 'react-router-dom';
 
 import AppProviders from '../../../common/components/AppProviders';
@@ -9,8 +9,13 @@ import setSelectedLedger from '../../../ledgers/utils/setSelectedLedger';
 import { EnvelopeContextProvider } from '../../contexts/envelope';
 import EnvelopesList from './EnvelopesList';
 
-const queryCache = makeQueryCache();
-const queryConfig = { retry: false };
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
 
 export default {
   title: 'envelopes/EnvelopesList',
@@ -20,8 +25,7 @@ export default {
     (story) => <EnvelopeContextProvider>{story()}</EnvelopeContextProvider>,
     (story) => <MemoryRouter>{story()}</MemoryRouter>,
     (story) => <AppProviders>{story()}</AppProviders>,
-    (story) => <ReactQueryCacheProvider queryCache={queryCache}>{story()}</ReactQueryCacheProvider>,
-    (story) => <ReactQueryConfigProvider config={queryConfig}>{story()}</ReactQueryConfigProvider>,
+    (story) => <QueryClientProvider client={queryClient}>{story()}</QueryClientProvider>,
     (story) => {
       setSelectedLedger('ledger-id');
       return story();

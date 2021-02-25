@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import getAuthHeaders from '../../common/utils/getAuthHeaders';
 
-export default async (key, { ledger }) => {
+export default async (ledger) => {
   const { data } = await axios.get(
     `/api/ledgers/${ledger}/accountCategories?projection=categoryWithAccounts`,
     {

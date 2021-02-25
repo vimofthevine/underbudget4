@@ -12,8 +12,9 @@ export default function useAccounts() {
   const createErrorMessage = useErrorMessage({ request: 'Unable to retrieve accounts' });
 
   const { data, error, status } = useQuery(
-    ledger && ['accountCategories', { ledger }],
-    fetchAccountCategories,
+    ['accountCategories', { ledger }],
+    () => fetchAccountCategories(ledger),
+    { enabled: !!ledger },
   );
   const unsorted = data ? data._embedded.accountCategories : [];
 

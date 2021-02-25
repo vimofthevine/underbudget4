@@ -2,7 +2,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import React, { useMemo } from 'react';
-import { ReactQueryConfigProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import AccountPages from './accounts/components/AccountPages';
@@ -13,6 +13,8 @@ import * as routes from './common/utils/routes';
 import EnvelopePages from './envelopes/components/EnvelopePages';
 import LedgerPages from './ledgers/components/LedgerPages';
 
+const queryClient = new QueryClient({ defaultOptions: queryConfig });
+
 function App() {
   const darkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
@@ -21,7 +23,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <ReactQueryConfigProvider config={queryConfig}>
+      <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <AppProviders>
             <Routes>
@@ -32,7 +34,7 @@ function App() {
             </Routes>
           </AppProviders>
         </BrowserRouter>
-      </ReactQueryConfigProvider>
+      </QueryClientProvider>
     </ThemeProvider>
   );
 }

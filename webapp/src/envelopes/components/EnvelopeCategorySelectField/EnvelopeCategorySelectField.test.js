@@ -4,16 +4,12 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { Field, Form, Formik } from 'formik';
 import React from 'react';
-import { ReactQueryCacheProvider, ReactQueryConfigProvider, makeQueryCache } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { MemoryRouter } from 'react-router-dom';
 
 import EnvelopeCategorySelectField from './EnvelopeCategorySelectField';
 
 const URL = '/api/ledgers/ledger-id/envelopeCategories?projection=categoryWithEnvelopes';
-
-const queryConfig = {
-  staleTime: Infinity,
-};
 
 const defaultConfigureMock = (mock) => {
   mock.onGet(URL).reply(200, {
@@ -41,22 +37,26 @@ const render = (
   configureMock(mock);
 
   const handleSubmit = jest.fn();
-  const queryCache = makeQueryCache();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: Infinity,
+      },
+    },
+  });
 
   // eslint-disable-next-line react/prop-types
   const Wrapper = ({ children }) => (
-    <ReactQueryConfigProvider config={queryConfig}>
-      <ReactQueryCacheProvider queryCache={queryCache}>
-        <MemoryRouter>
-          <Formik initialValues={initialValues} onSubmit={handleSubmit} validate={validate}>
-            <Form>
-              {children}
-              <button type='submit'>Submit</button>
-            </Form>
-          </Formik>
-        </MemoryRouter>
-      </ReactQueryCacheProvider>
-    </ReactQueryConfigProvider>
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter>
+        <Formik initialValues={initialValues} onSubmit={handleSubmit} validate={validate}>
+          <Form>
+            {children}
+            <button type='submit'>Submit</button>
+          </Form>
+        </Formik>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
   return {
     ...baseRender(ui, { wrapper: Wrapper }),

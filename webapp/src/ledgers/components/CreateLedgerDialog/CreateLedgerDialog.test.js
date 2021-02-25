@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
-import { ReactQueryCacheProvider, makeQueryCache, setConsole } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 import renderWithRouter from '../../../tests/renderWithRouter';
 import { LedgersContextProvider, useLedgersDispatch } from '../LedgersContext';
@@ -18,10 +18,10 @@ const CreateLedgerButton = () => {
 };
 
 const render = () => {
-  const queryCache = makeQueryCache();
+  const queryClient = new QueryClient();
   return {
     ...renderWithRouter(
-      <ReactQueryCacheProvider queryCache={queryCache}>
+      <QueryClientProvider client={queryClient}>
         <LedgersContextProvider>
           <>
             <CreateLedgerButton />
@@ -29,21 +29,13 @@ const render = () => {
           </>
         </LedgersContextProvider>
         ,
-      </ReactQueryCacheProvider>,
+      </QueryClientProvider>,
     ),
-    queryCache,
+    queryClient,
   };
 };
 
 describe('CreateLedgerDialog', () => {
-  beforeEach(() => {
-    setConsole({
-      log: () => 0,
-      warn: () => 0,
-      error: () => 0,
-    });
-  });
-
   it('should prevent submission when required fields are missing', async () => {
     render();
 
@@ -86,8 +78,8 @@ describe('CreateLedgerDialog', () => {
     const mockAxios = new MockAdapter(axios);
     mockAxios.onPost('/api/ledgers').reply(201);
 
-    const { queryCache } = render();
-    const invalidateQueries = jest.spyOn(queryCache, 'invalidateQueries');
+    const { queryClient } = render();
+    const invalidateQueries = jest.spyOn(queryClient, 'invalidateQueries');
 
     fireEvent.click(screen.getByRole('button', { name: /create ledger/i }));
     await waitFor(() =>

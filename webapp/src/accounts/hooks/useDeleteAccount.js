@@ -13,7 +13,7 @@ export default function useDeleteAccount(account) {
 
   const createErrorMessage = useErrorMessage({ request: 'Unable to delete account' });
 
-  const [mutate] = useMutation(deleteAccount, {
+  const { mutate } = useMutation(deleteAccount, {
     onError: (err) => snackbar(createErrorMessage(err)),
     onSuccess: refetch,
   });
