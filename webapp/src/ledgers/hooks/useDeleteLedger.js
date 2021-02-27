@@ -1,5 +1,13 @@
 import axios from 'axios';
-import useMutationWithRefetch from '../../common/hooks/useMutationWithRefetch';
+import useErrorMessage from '../../common/hooks/useErrorMessage';
+import useMutation from '../../common/hooks/useMutation';
 
 export default (opts) =>
-  useMutationWithRefetch((id) => axios.delete(`/api/ledgers/${id}`), 'ledgers', opts);
+  useMutation(
+    (id) => axios.delete(`/api/ledgers/${id}`),
+    {
+      createErrorMessage: useErrorMessage({ request: 'Unable to delete ledger' }),
+      refetchQueries: 'ledgers',
+      ...opts,
+    }
+  );

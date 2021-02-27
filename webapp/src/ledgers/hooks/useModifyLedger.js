@@ -1,9 +1,10 @@
 import axios from 'axios';
-import useMutationWithRefetch from '../../common/hooks/useMutationWithRefetch';
+import useErrorMessage from '../../common/hooks/useErrorMessage';
+import useMutation from '../../common/hooks/useMutation';
 
 export default (opts) =>
-  useMutationWithRefetch(
-    ({ id, ...data }) => axios.put(`/api/ledgers/${id}`, data),
-    (_, { id }) => ['ledgers', ['ledger', id]],
-    opts,
-  );
+  useMutation(({ id, ...data }) => axios.put(`/api/ledgers/${id}`, data), {
+    createErrorMessage: useErrorMessage({ request: 'Unable to modify ledger' }),
+    refetchQueries: (_, { id }) => ['ledgers', ['ledger', id]],
+    ...opts,
+  });

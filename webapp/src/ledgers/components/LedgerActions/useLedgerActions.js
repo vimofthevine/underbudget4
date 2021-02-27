@@ -1,7 +1,5 @@
 import useConfirmation from '../../../common/hooks/useConfirmation';
-import useErrorMessage from '../../../common/hooks/useErrorMessage';
 import useMobile from '../../../common/hooks/useMobile';
-import useSnackbar from '../../../common/hooks/useSnackbar';
 import useDeleteLedger from '../../hooks/useDeleteLedger';
 import { useLedgersDispatch } from '../LedgersContext';
 
@@ -9,7 +7,6 @@ import { useLedgersDispatch } from '../LedgersContext';
 export function useLedgerActions(ledger) {
   const mobile = useMobile();
   const confirm = useConfirmation();
-  const snackbar = useSnackbar();
   const dispatch = useLedgersDispatch();
 
   const handleModify = () =>
@@ -18,11 +15,7 @@ export function useLedgerActions(ledger) {
       payload: ledger,
     });
 
-  const createErrorMessage = useErrorMessage({ request: 'Unable to delete ledger' });
-
-  const { mutate } = useDeleteLedger({
-    onError: (err) => snackbar(createErrorMessage(err)),
-  });
+  const { mutate } = useDeleteLedger();
 
   const handleDelete = () =>
     confirm({

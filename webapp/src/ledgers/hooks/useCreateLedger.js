@@ -1,5 +1,10 @@
 import axios from 'axios';
-import useMutationWithRefetch from '../../common/hooks/useMutationWithRefetch';
+import useErrorMessage from '../../common/hooks/useErrorMessage';
+import useMutation from '../../common/hooks/useMutation';
 
 export default (opts) =>
-  useMutationWithRefetch((data) => axios.post('/api/ledgers', data), 'ledgers', opts);
+  useMutation((data) => axios.post('/api/ledgers', data), {
+    createErrorMessage: useErrorMessage({ request: 'Unable to create ledger' }),
+    refetchQueries: 'ledgers',
+    ...opts,
+  });
