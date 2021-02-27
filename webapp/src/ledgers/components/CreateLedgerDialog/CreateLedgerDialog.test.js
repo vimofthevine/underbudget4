@@ -101,9 +101,6 @@ describe('CreateLedgerDialog', () => {
       name: 'my ledger name',
       currency: 980,
     });
-    expect(invalidateQueries).toHaveBeenCalledWith('ledgers', {
-      page: 0,
-      size: 10,
-    });
+    expect(invalidateQueries).toHaveBeenCalledWith('ledgers');
   });
 });
