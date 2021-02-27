@@ -23,6 +23,7 @@ export const ModifyLedger = () => (
 export const WithErrors = () => (
   <Formik
     initialErrors={{ name: 'Bad name', currency: 'Bad currency' }}
+    initialTouched={{ name: true, currency: true }}
     initialValues={{ name: '', currency: 1234 }}
   >
     <LedgerForm />
