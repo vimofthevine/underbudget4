@@ -26,14 +26,17 @@ const render = ({ route = '/ledgers', width = '800px' } = {}) => {
     },
   });
 
-  return renderWithRouter(
-    <QueryClientProvider client={queryClient}>
-      <LedgersContextProvider>
-        <LedgersListing />
-      </LedgersContextProvider>
-    </QueryClientProvider>,
-    { route },
-  );
+  return {
+    ...renderWithRouter(
+      <QueryClientProvider client={queryClient}>
+        <LedgersContextProvider>
+          <LedgersListing />
+        </LedgersContextProvider>
+      </QueryClientProvider>,
+      { route },
+    ),
+    queryClient,
+  };
 };
 
 const currencies = [840, 978, 980];
@@ -293,5 +296,65 @@ describe('LedgersListing', () => {
     fireEvent.click(row.getByRole('cell', { name: 'EUR' }));
     expect(history.location.pathname).toBe('/last-page');
     expect(localStorage.getItem('underbudget.selected.ledger')).toBe('ledger-id-1');
+  });
+
+  it('should prompt to confirm deletion of a ledger', async () => {
+    const mockAxios = new MockAdapter(axios);
+    mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
+      ledgers: createLedgers(0, 2),
+      total: 2,
+    });
+
+    render();
+
+    await waitFor(() => expect(screen.queryByRole('progressbar')).toBeInTheDocument());
+    await waitFor(() => expect(screen.queryAllByRole('row')).toHaveLength(3));
+
+    const rows = screen.queryAllByRole('row');
+
+    const row1 = within(rows[1]);
+    fireEvent.click(row1.getByRole('button', { name: /delete ledger/i }));
+
+    await waitFor(() =>
+      expect(screen.getByRole('heading', { name: /confirm/i })).toBeInTheDocument(),
+    );
+    fireEvent.click(screen.getByRole('button', { name: /cancel/i }));
+
+    await waitFor(() =>
+      expect(screen.queryByRole('heading', { name: /confirm/i })).not.toBeInTheDocument(),
+    );
+    expect(mockAxios.history.delete).toHaveLength(0);
+  });
+
+  it('should delete ledger when confirmed', async () => {
+    const mockAxios = new MockAdapter(axios);
+    mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
+      ledgers: createLedgers(0, 2),
+      total: 2,
+    });
+    mockAxios.onDelete('/api/ledgers/ledger-id-0').reply(204);
+
+    const { queryClient } = render();
+    const invalidateQueries = jest.spyOn(queryClient, 'invalidateQueries');
+
+    await waitFor(() => expect(screen.queryByRole('progressbar')).toBeInTheDocument());
+    await waitFor(() => expect(screen.queryAllByRole('row')).toHaveLength(3));
+
+    const rows = screen.queryAllByRole('row');
+
+    const row1 = within(rows[1]);
+    fireEvent.click(row1.getByRole('button', { name: /delete ledger/i }));
+
+    await waitFor(() =>
+      expect(screen.getByRole('heading', { name: /confirm/i })).toBeInTheDocument(),
+    );
+    fireEvent.click(screen.getByRole('button', { name: /ok/i }));
+
+    await waitFor(() =>
+      expect(screen.queryByRole('heading', { name: /confirm/i })).not.toBeInTheDocument(),
+    );
+    await waitFor(() => expect(mockAxios.history.delete).toHaveLength(1));
+    expect(mockAxios.history.delete[0].url).toBe('/api/ledgers/ledger-id-0');
+    expect(invalidateQueries).toHaveBeenCalledWith('ledgers');
   });
 });
