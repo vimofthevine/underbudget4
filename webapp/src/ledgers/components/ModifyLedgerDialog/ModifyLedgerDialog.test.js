@@ -86,9 +86,6 @@ describe('ModifyLedgerDialog', () => {
       name: 'my ledger',
       currency: 840,
     });
-    expect(invalidateQueries).toHaveBeenCalledWith('ledgers', {
-      page: 0,
-      size: 10,
-    });
+    expect(invalidateQueries).toHaveBeenCalledWith(['ledgers', ['ledger', 'ledger-id']]);
   });
 });

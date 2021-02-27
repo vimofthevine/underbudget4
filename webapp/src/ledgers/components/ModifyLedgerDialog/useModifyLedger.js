@@ -1,8 +1,6 @@
-import { useMutation, useQueryClient } from 'react-query';
-
 import useErrorMessage from '../../../common/hooks/useErrorMessage';
 import useSnackbar from '../../../common/hooks/useSnackbar';
-import modifyLedger from '../../api/modifyLedger';
+import useModifyLedgerHook from '../../hooks/useModifyLedger';
 import { useLedgersDispatch, useLedgersState } from '../LedgersContext';
 
 const noLedger = {
@@ -12,7 +10,6 @@ const noLedger = {
 
 // eslint-disable-next-line import/prefer-default-export
 export function useModifyLedger() {
-  const queryClient = useQueryClient();
   const snackbar = useSnackbar();
   const dispatch = useLedgersDispatch();
   const state = useLedgersState();
@@ -22,12 +19,9 @@ export function useModifyLedger() {
 
   const createErrorMessage = useErrorMessage({ request: 'Unable to modify ledger' });
 
-  const { mutate } = useMutation(modifyLedger, {
+  const { mutate } = useModifyLedgerHook({
     onError: (err) => snackbar(createErrorMessage(err)),
-    onSuccess: () => {
-      queryClient.invalidateQueries('ledgers', state.pagination);
-      handleCloseDialog();
-    },
+    onSuccess: handleCloseDialog,
   });
 
   const ledger = state.ledgerToModify || noLedger;
