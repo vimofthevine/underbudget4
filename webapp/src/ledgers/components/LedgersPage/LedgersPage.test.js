@@ -65,8 +65,8 @@ describe('LedgersPage', () => {
 
     const mockAxios = new MockAdapter(axios);
     mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
-      _embedded: { ledgers: [ledger1, ledger2] },
-      page: { totalElements: 2 },
+      ledgers: [ledger1, ledger2],
+      total: 2,
     });
 
     render();
@@ -89,8 +89,8 @@ describe('LedgersPage', () => {
 
     const mockAxios = new MockAdapter(axios);
     mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
-      _embedded: { ledgers: [ledger1, ledger2] },
-      page: { totalElements: 2 },
+      ledgers: [ledger1, ledger2],
+      total: 2,
     });
     mockAxios.onDelete('/api/ledgers/ledger-id-2').reply(400);
 
@@ -114,12 +114,12 @@ describe('LedgersPage', () => {
 
     const mockAxios = new MockAdapter(axios);
     mockAxios.onGet('/api/ledgers?page=0&size=10').replyOnce(200, {
-      _embedded: { ledgers: [ledger1, ledger2] },
-      page: { totalElements: 2 },
+       ledgers: [ledger1, ledger2],
+       total: 2,
     });
     mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
-      _embedded: { ledgers: [ledger2] },
-      page: { totalElements: 1 },
+      ledgers: [ledger2],
+      total: 1,
     });
     mockAxios.onDelete('/api/ledgers/ledger-id-1').reply(200);
 
@@ -142,8 +142,8 @@ describe('LedgersPage', () => {
 
     const mockAxios = new MockAdapter(axios);
     mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
-      _embedded: { ledgers: [ledger1, ledger2] },
-      page: { totalElements: 2 },
+      ledgers: [ledger1, ledger2],
+      total: 2,
     });
 
     render();
@@ -163,8 +163,8 @@ describe('LedgersPage', () => {
 
     const mockAxios = new MockAdapter(axios);
     mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
-      _embedded: { ledgers: [ledger1, ledger2] },
-      page: { totalElements: 2 },
+      ledgers: [ledger1, ledger2],
+      total: 2,
     });
 
     render();

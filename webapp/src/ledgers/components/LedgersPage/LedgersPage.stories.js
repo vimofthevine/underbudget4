@@ -38,8 +38,8 @@ const createLedgers = (from, to) => {
 
 export const FewLedgers = (_, { mock }) => {
   mock.onGet(/\/api\/ledgers.*/).reply(200, {
-    _embedded: { ledgers: createLedgers(0, 5) },
-    page: { totalElements: 5 },
+    ledgers: createLedgers(0, 5),
+    total: 5,
   });
   return <LedgersPage />;
 };
@@ -52,8 +52,8 @@ export const ManyLedgers = (_, { mock }) => {
     return [
       200,
       {
-        _embedded: { ledgers: createLedgers(page * size, Math.min((page + 1) * size, 42)) },
-        page: { totalElements: 42 },
+        ledgers: createLedgers(page * size, Math.min((page + 1) * size, 42)),
+        total: 42,
       },
     ];
   });

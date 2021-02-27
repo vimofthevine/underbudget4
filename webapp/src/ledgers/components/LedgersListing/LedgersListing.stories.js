@@ -38,16 +38,16 @@ const createLedgers = (num) => {
 
 export const FewLedgers = (_, { mock }) => {
   mock.onGet(/\/api\/ledgers.*/).reply(200, {
-    _embedded: { ledgers: createLedgers(5) },
-    page: { totalElements: 5 },
+    ledgers: createLedgers(5),
+    total: 5,
   });
   return <LedgersListing />;
 };
 
 export const ManyLedgers = (_, { mock }) => {
   mock.onGet(/\/api\/ledgers.*/).reply(200, {
-    _embedded: { ledgers: createLedgers(10) },
-    page: { totalElements: 42 },
+    ledgers: createLedgers(10),
+    total: 42,
   });
   return <LedgersListing />;
 };

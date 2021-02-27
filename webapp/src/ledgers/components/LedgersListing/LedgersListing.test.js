@@ -93,8 +93,8 @@ describe('LedgersListing', () => {
   it('should show one page of ledgers on desktop', async () => {
     const mockAxios = new MockAdapter(axios);
     mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
-      _embedded: { ledgers: createLedgers(0, 2) },
-      page: { totalElements: 2 },
+      ledgers: createLedgers(0, 2),
+      total: 2,
     });
 
     render();
@@ -138,8 +138,8 @@ describe('LedgersListing', () => {
   it('should show one page of ledgers on mobile', async () => {
     const mockAxios = new MockAdapter(axios);
     mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
-      _embedded: { ledgers: createLedgers(0, 2) },
-      page: { totalElements: 2 },
+      ledgers: createLedgers(0, 2),
+      total: 2,
     });
 
     render({ width: '400px' });
@@ -176,16 +176,16 @@ describe('LedgersListing', () => {
   it('should show multiple pages of ledgers', async () => {
     const mockAxios = new MockAdapter(axios, { delayResponse: 0 });
     mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
-      _embedded: { ledgers: createLedgers(0, 10) },
-      page: { totalElements: 24 },
+      ledgers: createLedgers(0, 10),
+      total: 24,
     });
     mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
-      _embedded: { ledgers: createLedgers(10, 20) },
-      page: { totalElements: 24 },
+      ledgers: createLedgers(10, 20),
+      total: 24,
     });
     mockAxios.onGet('/api/ledgers?page=2&size=10').reply(200, {
-      _embedded: { ledgers: createLedgers(20, 24) },
-      page: { totalElements: 24 },
+      ledgers: createLedgers(20, 24),
+      total: 24,
     });
 
     render();
@@ -253,8 +253,8 @@ describe('LedgersListing', () => {
   it('should redirect to accounts page when selecting a ledger', async () => {
     const mockAxios = new MockAdapter(axios);
     mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
-      _embedded: { ledgers: createLedgers(0, 2) },
-      page: { totalElements: 2 },
+      ledgers: createLedgers(0, 2),
+      total: 2,
     });
 
     const { history } = render();
@@ -273,8 +273,8 @@ describe('LedgersListing', () => {
   it('should redirect to previous location state when selecting a ledger', async () => {
     const mockAxios = new MockAdapter(axios);
     mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
-      _embedded: { ledgers: createLedgers(0, 2) },
-      page: { totalElements: 2 },
+      ledgers: createLedgers(0, 2),
+      total: 2,
     });
 
     const { history } = render({
