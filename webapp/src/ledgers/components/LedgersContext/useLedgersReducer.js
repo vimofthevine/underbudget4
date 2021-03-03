@@ -2,6 +2,7 @@ import React from 'react';
 
 const initialState = {
   showCreateLedger: false,
+  showCreateDemoLedger: false,
   ledgerToModify: null,
   pagination: {
     page: 0,
@@ -21,6 +22,18 @@ const reducer = (state, action) => {
       return {
         ...state,
         showCreateLedger: false,
+      };
+    }
+    case 'showCreateDemoLedger': {
+      return {
+        ...state,
+        showCreateDemoLedger: true,
+      };
+    }
+    case 'hideCreateDemoLedger': {
+      return {
+        ...state,
+        showCreateDemoLedger: false,
       };
     }
     case 'showModifyLedger': {
@@ -47,4 +60,5 @@ const reducer = (state, action) => {
 };
 
 // eslint-disable-next-line import/prefer-default-export
-export const useLedgersReducer = () => React.useReducer(reducer, initialState);
+export const useLedgersReducer = (overrideState) =>
+  React.useReducer(reducer, { ...initialState, ...overrideState });

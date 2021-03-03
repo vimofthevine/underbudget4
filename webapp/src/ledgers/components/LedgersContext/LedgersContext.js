@@ -6,8 +6,8 @@ import { useLedgersReducer } from './useLedgersReducer';
 const DispatchContext = React.createContext();
 const StateContext = React.createContext();
 
-const LedgersContextProvider = ({ children }) => {
-  const [state, dispatch] = useLedgersReducer();
+const LedgersContextProvider = ({ children, initialState }) => {
+  const [state, dispatch] = useLedgersReducer(initialState);
   return (
     <StateContext.Provider value={state}>
       <DispatchContext.Provider value={dispatch}>{children}</DispatchContext.Provider>
@@ -17,6 +17,11 @@ const LedgersContextProvider = ({ children }) => {
 
 LedgersContextProvider.propTypes = {
   children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]).isRequired,
+  initialState: PropTypes.shape({}),
+};
+
+LedgersContextProvider.defaultProps = {
+  initialState: null,
 };
 
 const useLedgersState = () => {

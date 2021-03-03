@@ -12,7 +12,7 @@ const NumberInput = ({ inputRef, onChange, ...props }) => (
       onChange({
         target: {
           name: props.name,
-          value: values.value,
+          value: values.floatValue,
         },
       });
     }}
