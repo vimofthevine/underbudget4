@@ -2,6 +2,7 @@ import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import SelectAllIcon from '@material-ui/icons/SelectAll';
 import { action } from '@storybook/addon-actions';
 import React from 'react';
 
@@ -17,56 +18,90 @@ export default {
 
 const Template = (args) => <FullAppBar {...args} />;
 
-export const Default = Template.bind({});
-
-export const WithActions = Template.bind({});
-WithActions.args = {
-  primaryActions: [
-    {
-      'aria-label': 'create',
-      icon: <AddIcon />,
-      onClick: action('create'),
-      text: 'Create item',
-    },
-    {
-      'aria-label': 'edit',
-      icon: <EditIcon />,
-      onClick: action('edit'),
-      text: 'Edit item',
-    },
-    {
-      'aria-label': 'delete',
-      icon: <DeleteIcon />,
-      onClick: action('delete'),
-      text: 'Delete item',
-    },
-  ],
+const createAction = {
+  'aria-label': 'create',
+  icon: <AddIcon />,
+  onClick: action('create'),
+  text: 'Create item',
 };
 
-export const MobileWithOverflowActions = Template.bind({});
-MobileWithOverflowActions.args = WithActions.args;
-MobileWithOverflowActions.parameters = {
+const editAction = {
+  'aria-label': 'edit',
+  icon: <EditIcon />,
+  onClick: action('edit'),
+  text: 'Edit item',
+};
+
+const deleteAction = {
+  'aria-label': 'delete',
+  icon: <DeleteIcon />,
+  onClick: action('delete'),
+  text: 'Delete item',
+};
+
+const selectAction = {
+  'aria-label': 'select',
+  icon: <SelectAllIcon />,
+  onClick: action('select'),
+  text: 'Select all',
+};
+
+const mobileParameters = {
   viewport: { defaultViewport: 'mobile1' },
 };
 
-export const MobileWithTwoActions = Template.bind({});
-MobileWithTwoActions.args = {
-  primaryActions: [
-    {
-      'aria-label': 'create',
-      icon: <AddIcon />,
-      onClick: action('create'),
-      text: 'Create item',
-    },
-    {
-      'aria-label': 'delete',
-      icon: <DeleteIcon />,
-      onClick: action('delete'),
-      text: 'Delete item',
-    },
-  ],
+export const Default = Template.bind({});
+
+export const OnePrimaryAction = Template.bind({});
+OnePrimaryAction.args = { primaryActions: [createAction] };
+
+export const OnePrimaryActionMobile = Template.bind({});
+OnePrimaryActionMobile.args = OnePrimaryAction.args;
+OnePrimaryActionMobile.parameters = mobileParameters;
+
+export const TwoPrimaryActions = Template.bind({});
+TwoPrimaryActions.args = { primaryActions: [createAction, editAction] };
+
+export const TwoPrimaryActionsMobile = Template.bind({});
+TwoPrimaryActionsMobile.args = TwoPrimaryActions.args;
+TwoPrimaryActionsMobile.parameters = mobileParameters;
+
+export const ThreePrimaryActions = Template.bind({});
+ThreePrimaryActions.args = { primaryActions: [createAction, editAction, deleteAction] };
+
+export const ThreePrimaryActionsMobile = Template.bind({});
+ThreePrimaryActionsMobile.args = ThreePrimaryActions.args;
+ThreePrimaryActionsMobile.parameters = mobileParameters;
+
+export const OnePrimaryAndSecondaryActions = Template.bind({});
+OnePrimaryAndSecondaryActions.args = {
+  primaryActions: [createAction],
+  secondaryActions: [selectAction],
 };
-MobileWithTwoActions.parameters = MobileWithOverflowActions.parameters;
+
+export const OnePrimaryAndSecondaryActionsMobile = Template.bind({});
+OnePrimaryAndSecondaryActionsMobile.args = OnePrimaryAndSecondaryActions.args;
+OnePrimaryAndSecondaryActionsMobile.parameters = mobileParameters;
+
+export const TwoPrimaryAndSecondaryActions = Template.bind({});
+TwoPrimaryAndSecondaryActions.args = {
+  primaryActions: [createAction, editAction],
+  secondaryActions: [selectAction],
+};
+
+export const TwoPrimaryAndSecondaryActionsMobile = Template.bind({});
+TwoPrimaryAndSecondaryActionsMobile.args = TwoPrimaryAndSecondaryActions.args;
+TwoPrimaryAndSecondaryActionsMobile.parameters = mobileParameters;
+
+export const ThreePrimaryAndSecondaryActions = Template.bind({});
+ThreePrimaryAndSecondaryActions.args = {
+  primaryActions: [createAction, editAction, deleteAction],
+  secondaryActions: [selectAction],
+};
+
+export const ThreePrimaryAndSecondaryActionsMobile = Template.bind({});
+ThreePrimaryAndSecondaryActionsMobile.args = ThreePrimaryAndSecondaryActions.args;
+ThreePrimaryAndSecondaryActionsMobile.parameters = mobileParameters;
 
 const SelectButtons = () => {
   const [item, setItem] = React.useState(0);
@@ -90,21 +125,15 @@ const SelectButtons = () => {
   );
 };
 
-export const WithSelection = (args) => (
+export const TwoSelectionActions = (args) => (
   <>
     <FullAppBar {...args} />
     <SelectButtons />
   </>
 );
-WithSelection.args = {
-  primaryActions: [
-    {
-      'aria-label': 'Create item',
-      icon: <AddIcon />,
-      onClick: action('add item'),
-      text: 'Add item',
-    },
-  ],
+TwoSelectionActions.args = {
+  primaryActions: [createAction],
+  secondaryActions: [editAction],
   selectionActions: [
     {
       'aria-label': 'Edit selected',
@@ -117,6 +146,32 @@ WithSelection.args = {
       icon: <DeleteIcon />,
       onClick: action('delete selected'),
       text: 'Delete selected',
+    },
+  ],
+};
+
+export const ThreeSelectionActions = TwoSelectionActions.bind({});
+ThreeSelectionActions.args = {
+  primaryActions: [createAction],
+  secondaryActions: [editAction],
+  selectionActions: [
+    {
+      'aria-label': 'Edit selected',
+      icon: <EditIcon />,
+      onClick: action('edit selected'),
+      text: 'Edit selected',
+    },
+    {
+      'aria-label': 'Delete selected',
+      icon: <DeleteIcon />,
+      onClick: action('delete selected'),
+      text: 'Delete selected',
+    },
+    {
+      'aria-label': 'Select selected',
+      icon: <SelectAllIcon />,
+      onClick: action('select selected'),
+      text: 'Select selected',
     },
   ],
 };

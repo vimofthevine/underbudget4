@@ -6,7 +6,7 @@ import React from 'react';
 
 import useSelection from '../../hooks/useSelection';
 import AppProviders from '../AppProviders';
-import { WithSelection } from '../FullAppBar/FullAppBar.stories';
+import { TwoSelectionActions } from '../FullAppBar/FullAppBar.stories';
 import FullAppPage from './FullAppPage';
 
 export default {
@@ -45,7 +45,7 @@ const Template = (args) => (
 
 export const Desktop = Template.bind({});
 Desktop.args = {
-  ...WithSelection.args,
+  ...TwoSelectionActions.args,
   primaryActions: [
     {
       'aria-label': 'Create item',

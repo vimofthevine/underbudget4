@@ -9,7 +9,14 @@ import FullAppBar from '../FullAppBar';
 import PureAppPage from '../PureAppPage';
 import PureFab from '../PureFab';
 
-const FullAppPage = ({ children, primaryActions, selectionActions, title, useFab }) => {
+const FullAppPage = ({
+  children,
+  primaryActions,
+  secondaryActions,
+  selectionActions,
+  title,
+  useFab,
+}) => {
   const mobile = useMobile();
   const { selected } = useSelection();
   const hasSelection = selected && selected.length > 0;
@@ -22,6 +29,7 @@ const FullAppPage = ({ children, primaryActions, selectionActions, title, useFab
   const appBar = (
     <FullAppBar
       primaryActions={primaryActionProps}
+      secondaryActions={secondaryActions}
       selectionActions={selectionActions}
       title={title}
     />
