@@ -15,12 +15,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PureFab = ({ action, ...props }) => {
+const PureFab = ({ action: { fabIcon, icon, ...action }, ...props }) => {
   const classes = useStyles();
   return (
     <Zoom in>
       <MuiFab className={classes.fab} color='primary' {...action} {...props}>
-        {action.icon}
+        {fabIcon || icon}
       </MuiFab>
     </Zoom>
   );
