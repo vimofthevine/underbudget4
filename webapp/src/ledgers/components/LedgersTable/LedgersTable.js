@@ -32,7 +32,7 @@ const LedgersTable = ({ ledgers, mobile, onSelect }) => (
             {ledger.name}
           </TableCell>
           <TableCell>{currency.number(ledger.currency).code}</TableCell>
-          {!mobile && <TableCell>{moment(ledger.lastUpdated).fromNow()}</TableCell>}
+          {!mobile && <TableCell>{moment.utc(ledger.lastUpdated).fromNow()}</TableCell>}
           <TableCell onClick={(e) => e.stopPropagation()}>
             <LedgerActions ledger={ledger} />
           </TableCell>
