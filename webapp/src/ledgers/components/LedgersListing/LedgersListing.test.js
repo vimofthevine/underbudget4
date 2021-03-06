@@ -95,7 +95,7 @@ describe('LedgersListing', () => {
 
   it('should show one page of ledgers on desktop', async () => {
     const mockAxios = new MockAdapter(axios);
-    mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
+    mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
       ledgers: createLedgers(0, 2),
       total: 2,
     });
@@ -140,7 +140,7 @@ describe('LedgersListing', () => {
 
   it('should show one page of ledgers on mobile', async () => {
     const mockAxios = new MockAdapter(axios);
-    mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
+    mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
       ledgers: createLedgers(0, 2),
       total: 2,
     });
@@ -178,15 +178,15 @@ describe('LedgersListing', () => {
 
   it('should show multiple pages of ledgers', async () => {
     const mockAxios = new MockAdapter(axios, { delayResponse: 0 });
-    mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
+    mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
       ledgers: createLedgers(0, 10),
       total: 24,
     });
-    mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
+    mockAxios.onGet('/api/ledgers?page=2&size=10').reply(200, {
       ledgers: createLedgers(10, 20),
       total: 24,
     });
-    mockAxios.onGet('/api/ledgers?page=2&size=10').reply(200, {
+    mockAxios.onGet('/api/ledgers?page=3&size=10').reply(200, {
       ledgers: createLedgers(20, 24),
       total: 24,
     });
@@ -255,7 +255,7 @@ describe('LedgersListing', () => {
 
   it('should redirect to accounts page when selecting a ledger', async () => {
     const mockAxios = new MockAdapter(axios);
-    mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
+    mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
       ledgers: createLedgers(0, 2),
       total: 2,
     });
@@ -275,7 +275,7 @@ describe('LedgersListing', () => {
 
   it('should redirect to previous location state when selecting a ledger', async () => {
     const mockAxios = new MockAdapter(axios);
-    mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
+    mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
       ledgers: createLedgers(0, 2),
       total: 2,
     });
@@ -300,7 +300,7 @@ describe('LedgersListing', () => {
 
   it('should prompt to confirm deletion of a ledger', async () => {
     const mockAxios = new MockAdapter(axios);
-    mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
+    mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
       ledgers: createLedgers(0, 2),
       total: 2,
     });
@@ -328,7 +328,7 @@ describe('LedgersListing', () => {
 
   it('should delete ledger when confirmed', async () => {
     const mockAxios = new MockAdapter(axios);
-    mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
+    mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
       ledgers: createLedgers(0, 2),
       total: 2,
     });

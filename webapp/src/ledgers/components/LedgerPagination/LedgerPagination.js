@@ -15,7 +15,7 @@ const LedgerPagination = ({ count }) => {
       type: 'setPagination',
       payload: {
         ...state.pagination,
-        page,
+        page: page + 1, // TablePagination is 0-based
       },
     });
 
@@ -23,7 +23,7 @@ const LedgerPagination = ({ count }) => {
     dispatch({
       type: 'setPagination',
       payload: {
-        page: 0,
+        page: 1,
         size: parseInt(e.target.value, 10),
       },
     });
@@ -35,7 +35,7 @@ const LedgerPagination = ({ count }) => {
       labelRowsPerPage={mobile ? null : 'Ledgers per page'}
       onChangePage={handleChangePage}
       onChangeRowsPerPage={handleChangeRowsPerPage}
-      page={state.pagination.page}
+      page={state.pagination.page - 1} // zero-based
       rowsPerPage={state.pagination.size}
     />
   );

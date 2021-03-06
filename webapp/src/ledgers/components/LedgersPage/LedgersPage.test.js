@@ -64,7 +64,7 @@ describe('LedgersPage', () => {
     window.matchMedia = createMediaQuery('800px');
 
     const mockAxios = new MockAdapter(axios);
-    mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
+    mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
       ledgers: [ledger1, ledger2],
       total: 2,
     });
@@ -88,7 +88,7 @@ describe('LedgersPage', () => {
     window.matchMedia = createMediaQuery('400px');
 
     const mockAxios = new MockAdapter(axios);
-    mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
+    mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
       ledgers: [ledger1, ledger2],
       total: 2,
     });
@@ -113,11 +113,11 @@ describe('LedgersPage', () => {
     window.matchMedia = createMediaQuery('800px');
 
     const mockAxios = new MockAdapter(axios);
-    mockAxios.onGet('/api/ledgers?page=0&size=10').replyOnce(200, {
+    mockAxios.onGet('/api/ledgers?page=1&size=10').replyOnce(200, {
        ledgers: [ledger1, ledger2],
        total: 2,
     });
-    mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
+    mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
       ledgers: [ledger2],
       total: 1,
     });
@@ -141,7 +141,7 @@ describe('LedgersPage', () => {
     window.matchMedia = createMediaQuery('800px');
 
     const mockAxios = new MockAdapter(axios);
-    mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
+    mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
       ledgers: [ledger1, ledger2],
       total: 2,
     });
@@ -162,7 +162,7 @@ describe('LedgersPage', () => {
     window.matchMedia = createMediaQuery('400px');
 
     const mockAxios = new MockAdapter(axios);
-    mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
+    mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
       ledgers: [ledger1, ledger2],
       total: 2,
     });

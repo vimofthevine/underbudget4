@@ -5,7 +5,7 @@ const initialState = {
   showCreateDemoLedger: false,
   ledgerToModify: null,
   pagination: {
-    page: 0,
+    page: 1,
     size: 10,
   },
 };
