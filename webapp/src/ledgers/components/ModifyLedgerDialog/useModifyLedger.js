@@ -18,7 +18,7 @@ export function useModifyLedger() {
     onSuccess: handleCloseDialog,
   });
 
-  const handleModify = (values, { setSubmitting }) =>
+  const handleModify = ({ created, lastUpdated, ...values }, { setSubmitting }) =>
     mutate(values, { onSettled: () => setSubmitting(false) });
 
   const ledger = state.ledgerToModify || noLedger;
