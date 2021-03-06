@@ -8,6 +8,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import ledgerPropTypes from '../../utils/ledger-prop-types';
 import LedgerActions from '../LedgerActions';
 
 const LedgersTable = ({ ledgers, mobile, onSelect }) => (
@@ -43,14 +44,7 @@ const LedgersTable = ({ ledgers, mobile, onSelect }) => (
 );
 
 LedgersTable.propTypes = {
-  ledgers: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      currency: PropTypes.number.isRequired,
-      lastUpdated: PropTypes.string.isRequired,
-    }),
-  ).isRequired,
+  ledgers: PropTypes.arrayOf(ledgerPropTypes).isRequired,
   mobile: PropTypes.bool,
   onSelect: PropTypes.func.isRequired,
 };

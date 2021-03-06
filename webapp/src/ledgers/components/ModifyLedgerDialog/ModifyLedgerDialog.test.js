@@ -34,7 +34,7 @@ const openDialog = async () => {
 
 describe('ModifyLedgerDialog', () => {
   it('should prevent submission when required fields are missing', async () => {
-    render({ id: 'ledger-id', name: 'A ledger', currency: 980 });
+    render({ id: 'ledger-id', name: 'A ledger', currency: 980, lastUpdated: '' });
     await openDialog();
 
     expect(screen.getByLabelText(/name/i)).toHaveValue('A ledger');
@@ -55,7 +55,7 @@ describe('ModifyLedgerDialog', () => {
     const mockAxios = new MockAdapter(axios);
     mockAxios.onPut('/api/ledgers/ledger-id').reply(400);
 
-    render({ id: 'ledger-id', name: 'A ledger', currency: 978 });
+    render({ id: 'ledger-id', name: 'A ledger', currency: 978, lastUpdated: '' });
     await openDialog();
 
     fireEvent.click(screen.getByRole('button', { name: /save/i }));
@@ -66,7 +66,12 @@ describe('ModifyLedgerDialog', () => {
     const mockAxios = new MockAdapter(axios);
     mockAxios.onPut('/api/ledgers/ledger-id').reply(200);
 
-    const { queryClient } = render({ id: 'ledger-id', name: 'A ledger', currency: 978 });
+    const { queryClient } = render({
+      id: 'ledger-id',
+      name: 'A ledger',
+      currency: 978,
+      lastUpdated: '',
+    });
     const invalidateQueries = jest.spyOn(queryClient, 'invalidateQueries');
 
     await openDialog();

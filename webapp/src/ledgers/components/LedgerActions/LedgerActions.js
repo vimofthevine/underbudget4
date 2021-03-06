@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 
+import ledgerPropTypes from '../../utils/ledger-prop-types';
 import LedgerActionsButtons from '../LedgerActionsButtons';
 import LedgerActionsMenu from '../LedgerActionsMenu';
 import { useLedgerActions } from './useLedgerActions';
@@ -15,10 +15,7 @@ const LedgerActions = ({ ledger }) => {
 };
 
 LedgerActions.propTypes = {
-  ledger: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-  }).isRequired,
+  ledger: ledgerPropTypes.isRequired,
 };
 
 export default LedgerActions;
