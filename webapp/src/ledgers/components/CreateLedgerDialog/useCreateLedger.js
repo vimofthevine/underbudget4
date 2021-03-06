@@ -13,9 +13,12 @@ export function useCreateLedger() {
     onSuccess: handleCloseDialog,
   });
 
+  const handleCreate = (values, { setSubmitting }) =>
+    mutate(values, { onSettled: () => setSubmitting(false) });
+
   return {
     dialogOpen,
     handleCloseDialog,
-    handleCreate: mutate,
+    handleCreate,
   };
 }

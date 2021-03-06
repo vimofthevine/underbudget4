@@ -18,12 +18,15 @@ export function useModifyLedger() {
     onSuccess: handleCloseDialog,
   });
 
+  const handleModify = (values, { setSubmitting }) =>
+    mutate(values, { onSettled: () => setSubmitting(false) });
+
   const ledger = state.ledgerToModify || noLedger;
 
   return {
     dialogOpen,
     handleCloseDialog,
-    handleModify: mutate,
+    handleModify,
     ledger,
   };
 }
