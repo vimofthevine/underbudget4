@@ -3,7 +3,9 @@ import React from 'react';
 import * as yup from 'yup';
 
 import ResponsiveDialogForm from '../../../common/components/ResponsiveDialogForm';
+import useConfirmation from '../../../common/hooks/useConfirmation';
 import useCreateDemoLedger from '../../hooks/useCreateDemoLedger';
+import useLedgers from '../../hooks/useLedgers';
 import DemoLedgerForm from '../DemoLedgerForm';
 import { useLedgersDispatch, useLedgersState } from '../LedgersContext';
 
@@ -28,8 +30,10 @@ const validationSchema = yup.object().shape({
 });
 
 const CreateDemoLedgerDialog = () => {
+  const confirm = useConfirmation();
   const dispatch = useLedgersDispatch();
   const state = useLedgersState();
+  const { data } = useLedgers(state.pagination);
 
   const open = state.showCreateDemoLedger;
   const handleClose = () => dispatch({ type: 'hideCreateDemoLedger' });
@@ -40,6 +44,20 @@ const CreateDemoLedgerDialog = () => {
 
   const handleSubmit = (values, { setSubmitting }) =>
     mutate(values, { onSettled: () => setSubmitting(false) });
+
+  const [hasAsked, setHasAsked] = React.useState(false);
+  React.useEffect(() => {
+    if (!open && !hasAsked) {
+      if (data && data.total === 0) {
+        setHasAsked(true);
+        confirm({
+          message: 'You have no ledgers. Would you like to create a demo ledger?',
+        }).then(() => {
+          dispatch({ type: 'showCreateDemoLedger' });
+        });
+      }
+    }
+  }, [data, dispatch, hasAsked, open, setHasAsked]);
 
   return (
     <ResponsiveDialogForm

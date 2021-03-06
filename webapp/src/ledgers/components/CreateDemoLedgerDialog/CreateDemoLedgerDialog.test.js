@@ -9,12 +9,12 @@ import renderWithRouter from '../../../tests/renderWithRouter';
 import { LedgersContextProvider } from '../LedgersContext';
 import CreateDemoLedgerDialog from './CreateDemoLedgerDialog';
 
-const render = () => {
+const render = (show = true) => {
   const queryClient = new QueryClient();
   return {
     ...renderWithRouter(
       <QueryClientProvider client={queryClient}>
-        <LedgersContextProvider initialState={{ showCreateDemoLedger: true }}>
+        <LedgersContextProvider initialState={{ showCreateDemoLedger: show }}>
           <CreateDemoLedgerDialog />
         </LedgersContextProvider>
       </QueryClientProvider>,
@@ -31,7 +31,7 @@ test('error message is shown when request results in an error', async () => {
 
   userEvent.type(screen.getByLabelText(/name/i), 'my demo name');
   userEvent.click(screen.getByRole('button', { name: /create/i }));
-  
+
   await waitFor(() => expect(screen.getByText(/unable to create demo/i)).toBeInTheDocument());
 });
 
@@ -74,5 +74,52 @@ test('dialog is closed and query is refreshed when request is successful', async
   // Should refresh ledger query after submission
   await waitFor(() => expect(invalidateQueries).toHaveBeenCalledWith('ledgers'));
   // Should close the dialog after submission
-  await waitFor(() => expect(screen.queryByRole('heading', { name: /create demo/i })).not.toBeInTheDocument());
+  await waitFor(() =>
+    expect(screen.queryByRole('heading', { name: /create demo/i })).not.toBeInTheDocument(),
+  );
+});
+
+test('user is prompted to create demo when no ledgers exist', async () => {
+  const mockAxios = new MockAdapter(axios);
+  mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
+    total: 0,
+  });
+
+  render(false);
+  expect(screen.queryByRole('heading', { name: /create demo/i })).not.toBeInTheDocument();
+
+  await waitFor(() =>
+    expect(screen.getByRole('heading', { name: /confirm/i })).toBeInTheDocument(),
+  );
+  userEvent.click(screen.getByRole('button', { name: /cancel/i }));
+
+  await waitFor(() =>
+    expect(screen.queryByRole('heading', { name: /confirm/i })).not.toBeInTheDocument(),
+  );
+  expect(screen.queryByRole('heading', { name: /create demo/i })).not.toBeInTheDocument();
+});
+
+test('dialog is opened if user confirms to create demo when no ledgers exist', async () => {
+  const mockAxios = new MockAdapter(axios);
+  mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
+    total: 0,
+  });
+
+  render(false);
+  expect(screen.queryByRole('heading', { name: /create demo/i })).not.toBeInTheDocument();
+
+  await waitFor(() =>
+    expect(screen.getByRole('heading', { name: /confirm/i })).toBeInTheDocument(),
+  );
+  userEvent.click(screen.getByRole('button', { name: /ok/i }));
+
+  await waitFor(() =>
+    expect(screen.getByRole('heading', { name: /create demo/i })).toBeInTheDocument(),
+  );
+  userEvent.click(screen.getByRole('button', { name: /cancel/i }));
+
+  await waitFor(() =>
+    expect(screen.queryByRole('heading', { name: /confirm/i })).not.toBeInTheDocument(),
+  );
+  expect(screen.queryByRole('heading', { name: /confirm/i })).not.toBeInTheDocument();
 });
