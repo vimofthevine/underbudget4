@@ -9,16 +9,14 @@ import { MemoryRouter } from 'react-router-dom';
 
 import AccountCategorySelectField from './AccountCategorySelectField';
 
-const URL = '/api/ledgers/ledger-id/accountCategories?projection=categoryWithAccounts';
+const URL = '/api/ledgers/ledger-id/account-categories';
 
 const defaultConfigureMock = (mock) => {
   mock.onGet(URL).reply(200, {
-    _embedded: {
-      accountCategories: [
-        { id: 'category-id-1', name: 'Category 1' },
-        { id: 'category-id-2', name: 'Category 2' },
-      ],
-    },
+    categories: [
+      { id: 'category-id-1', name: 'Category 1' },
+      { id: 'category-id-2', name: 'Category 2' },
+    ],
   });
 };
 

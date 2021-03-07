@@ -29,14 +29,12 @@ const render = () => {
 
   const mock = new MockAdapter(axios);
   mock
-    .onGet('/api/ledgers/ledger-id/accountCategories?projection=categoryWithAccounts')
+    .onGet('/api/ledgers/ledger-id/account-categories')
     .reply(200, {
-      _embedded: {
-        accountCategories: [
-          { id: 'cat-id-1', name: 'Category 1' },
-          { id: 'cat-id-2', name: 'Category 2' },
-        ],
-      },
+      categories: [
+        { id: 'cat-id-1', name: 'Category 1' },
+        { id: 'cat-id-2', name: 'Category 2' },
+      ],
     });
 
   return {

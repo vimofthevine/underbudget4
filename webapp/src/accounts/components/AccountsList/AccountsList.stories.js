@@ -22,46 +22,40 @@ export default {
 };
 
 export const FetchError = (_, { mock }) => {
-  mock.onGet('/api/ledgers/ledger-id/accountCategories?projection=categoryWithAccounts').reply(500);
+  mock.onGet('/api/ledgers/ledger-id/account-categories').reply(500);
   return <AccountsList />;
 };
 
 export const NoAccounts = (_, { mock }) => {
-  mock
-    .onGet('/api/ledgers/ledger-id/accountCategories?projection=categoryWithAccounts')
-    .reply(200, {
-      _embedded: { accountCategories: [] },
-    });
+  mock.onGet('/api/ledgers/ledger-id/account-categories').reply(200, {
+    categories: [],
+  });
   return <AccountsList />;
 };
 
 export const FewCategories = (_, { mock }) => {
-  mock
-    .onGet('/api/ledgers/ledger-id/accountCategories?projection=categoryWithAccounts')
-    .reply(200, {
-      _embedded: {
-        accountCategories: [
-          {
-            id: 'cat-id-2',
-            name: 'Category 2',
-            accounts: [{ id: 'acct-id-3', name: 'Account 2.1' }],
-          },
-          {
-            id: 'cat-id-3',
-            name: 'Category 3',
-            accounts: [{ id: 'acct-id-4', name: 'Account 3.1' }],
-          },
-          {
-            id: 'cat-id-1',
-            name: 'Category 1',
-            accounts: [
-              { id: 'acct-id-2', name: 'Account 1.2' },
-              { id: 'acct-id-1', name: 'Account 1.1' },
-            ],
-          },
+  mock.onGet('/api/ledgers/ledger-id/account-categories').reply(200, {
+    categories: [
+      {
+        id: 'cat-id-2',
+        name: 'Category 2',
+        accounts: [{ id: 'acct-id-3', name: 'Account 2.1' }],
+      },
+      {
+        id: 'cat-id-3',
+        name: 'Category 3',
+        accounts: [{ id: 'acct-id-4', name: 'Account 3.1' }],
+      },
+      {
+        id: 'cat-id-1',
+        name: 'Category 1',
+        accounts: [
+          { id: 'acct-id-2', name: 'Account 1.2' },
+          { id: 'acct-id-1', name: 'Account 1.1' },
         ],
       },
-    });
+    ],
+  });
   return <AccountsList />;
 };
 
@@ -77,17 +71,13 @@ const createCategory = (catId, numAccts) => ({
 });
 
 export const ManyAccounts = (_, { mock }) => {
-  mock
-    .onGet('/api/ledgers/ledger-id/accountCategories?projection=categoryWithAccounts')
-    .reply(200, {
-      _embedded: {
-        accountCategories: [
-          createCategory(1, 3),
-          createCategory(2, 8),
-          createCategory(3, 5),
-          createCategory(4, 16),
-        ],
-      },
-    });
+  mock.onGet('/api/ledgers/ledger-id/account-categories').reply(200, {
+    categories: [
+      createCategory(1, 3),
+      createCategory(2, 8),
+      createCategory(3, 5),
+      createCategory(4, 16),
+    ],
+  });
   return <AccountsList />;
 };

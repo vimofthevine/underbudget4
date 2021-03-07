@@ -19,32 +19,28 @@ export default {
     },
     (story) => {
       const mock = new MockAdapter(axios, { delayResponse: 1000 });
-      mock
-        .onGet('/api/ledgers/ledger-id/accountCategories?projection=categoryWithAccounts')
-        .reply(200, {
-          _embedded: {
-            accountCategories: [
-              {
-                id: 'cat-id-2',
-                name: 'Category 2',
-                accounts: [{ id: 'acct-id-3', name: 'Account 2.1' }],
-              },
-              {
-                id: 'cat-id-3',
-                name: 'Category 3',
-                accounts: [{ id: 'acct-id-4', name: 'Account 3.1' }],
-              },
-              {
-                id: 'cat-id-1',
-                name: 'Category 1',
-                accounts: [
-                  { id: 'acct-id-2', name: 'Account 1.2' },
-                  { id: 'acct-id-1', name: 'Account 1.1' },
-                ],
-              },
+      mock.onGet('/api/ledgers/ledger-id/account-categories').reply(200, {
+        categories: [
+          {
+            id: 'cat-id-2',
+            name: 'Category 2',
+            accounts: [{ id: 'acct-id-3', name: 'Account 2.1' }],
+          },
+          {
+            id: 'cat-id-3',
+            name: 'Category 3',
+            accounts: [{ id: 'acct-id-4', name: 'Account 3.1' }],
+          },
+          {
+            id: 'cat-id-1',
+            name: 'Category 1',
+            accounts: [
+              { id: 'acct-id-2', name: 'Account 1.2' },
+              { id: 'acct-id-1', name: 'Account 1.1' },
             ],
           },
-        });
+        ],
+      });
       return story();
     },
   ],

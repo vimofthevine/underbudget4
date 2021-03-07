@@ -1,10 +1,10 @@
+import axios from 'axios';
 import sortBy from 'lodash/sortBy';
 import React from 'react';
 import { useQuery } from 'react-query';
 
 import useErrorMessage from '../../common/hooks/useErrorMessage';
 import useSelectedLedger from '../../ledgers/hooks/useSelectedLedger';
-import fetchAccountCategories from '../api/fetchAccountCategories';
 
 export default function useAccounts() {
   const ledger = useSelectedLedger();
@@ -12,19 +12,23 @@ export default function useAccounts() {
   const createErrorMessage = useErrorMessage({ request: 'Unable to retrieve accounts' });
 
   const { data, error, status } = useQuery(
-    ['accountCategories', { ledger }],
-    () => fetchAccountCategories(ledger),
+    ['account-categories', { ledger }],
+    async () => {
+      const { data } = await axios.get(`/api/ledgers/${ledger}/account-categories`);
+      return data;
+    },
     { enabled: !!ledger },
   );
-  const unsorted = data ? data._embedded.accountCategories : [];
 
   const categories = React.useMemo(
     () =>
-      sortBy(unsorted, ['name']).map((c) => ({
-        ...c,
-        accounts: sortBy(c.accounts, ['name']),
-      })),
-    [unsorted],
+      !data
+        ? []
+        : sortBy(data.categories, ['name']).map((c) => ({
+            ...c,
+            accounts: sortBy(c.accounts, ['name']),
+          })),
+    [data],
   );
 
   return {
