@@ -6,8 +6,8 @@ import useAccountReducer from './useAccountReducer';
 const DispatchContext = React.createContext();
 const StateContext = React.createContext();
 
-const AccountContextProvider = ({ children }) => {
-  const [state, dispatch] = useAccountReducer();
+const AccountContextProvider = ({ children, initialState }) => {
+  const [state, dispatch] = useAccountReducer(initialState);
   return (
     <StateContext.Provider value={state}>
       <DispatchContext.Provider value={dispatch}>{children}</DispatchContext.Provider>
@@ -17,6 +17,11 @@ const AccountContextProvider = ({ children }) => {
 
 AccountContextProvider.propTypes = {
   children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]).isRequired,
+  initialState: PropTypes.shape({}),
+};
+
+AccountContextProvider.defaultProps = {
+  initialState: null,
 };
 
 const useAccountState = () => {

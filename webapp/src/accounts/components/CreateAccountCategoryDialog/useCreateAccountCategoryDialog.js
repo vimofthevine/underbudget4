@@ -1,37 +1,23 @@
-import { useMutation } from 'react-query';
-
-import useErrorMessage from '../../../common/hooks/useErrorMessage';
-import useSnackbar from '../../../common/hooks/useSnackbar';
-import useSelectedLedger from '../../../ledgers/hooks/useSelectedLedger';
-import createAccountCategory from '../../api/createAccountCategory';
-import { useAccountDispatch, useAccountState } from '../../contexts/account';
-import useAccountsRefetch from '../../hooks/useAccountsRefetch';
+import useAccountState from '../../hooks/useAccountState';
+import useCreateAccountCategory from '../../hooks/useCreateAccountCategory';
+import useAccountActions from '../../hooks/useAccountActions';
 
 export default function useCreateAccountCategoryDialog() {
-  const snackbar = useSnackbar();
-  const dispatch = useAccountDispatch();
-  const state = useAccountState();
-  const ledger = useSelectedLedger();
-  const refetch = useAccountsRefetch();
+  const { hideCreateAccountCategory } = useAccountActions();
+  const { showCreateAccountCategory } = useAccountState();
 
-  const dialogOpen = state.showCreateAccountCategory;
-  const handleCloseDialog = () => dispatch({ type: 'hideCreateAccountCategory' });
-
-  const createErrorMessage = useErrorMessage({ request: 'Unable to create account category' });
-
-  const { mutate } = useMutation(createAccountCategory, {
-    onError: (err) => snackbar(createErrorMessage(err)),
+  const { mutate } = useCreateAccountCategory({
     onSuccess: () => {
-      refetch();
-      handleCloseDialog();
+      hideCreateAccountCategory();
     },
   });
 
-  const handleCreate = (values) => mutate({ ...values, ledger: `/api/ledgers/${ledger}` });
+  const handleCreate = (values, { setSubmitting }) =>
+    mutate(values, { onSettled: () => setSubmitting(false) });
 
   return {
-    dialogOpen,
-    handleCloseDialog,
+    dialogOpen: showCreateAccountCategory,
+    handleCloseDialog: hideCreateAccountCategory,
     handleCreate,
   };
 }

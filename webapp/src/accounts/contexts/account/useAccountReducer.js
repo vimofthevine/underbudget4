@@ -67,4 +67,4 @@ const reducer = (state, action) => {
   }
 };
 
-export default () => React.useReducer(reducer, initialState);
+export default (overrideState) => React.useReducer(reducer, { ...initialState, ...overrideState });
