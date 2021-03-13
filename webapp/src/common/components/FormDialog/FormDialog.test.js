@@ -7,6 +7,7 @@ import React from 'react';
 import { Router } from 'react-router-dom';
 import * as yup from 'yup';
 
+import { ConfirmationContextProvider } from '../../contexts/confirmation';
 import FormDialog from './FormDialog';
 
 const Form = () => <Field name='fieldName' />;
@@ -21,7 +22,9 @@ const render = (ui, { route = '/', width = '800px' } = {}) => {
   const history = createMemoryHistory({ initialEntries: [route] });
   const Wrapper = ({ children }) => (
     <Router action={history.action} location={history.location} navigator={history}>
-      {children}
+      <ConfirmationContextProvider>
+        {children}
+      </ConfirmationContextProvider>
     </Router>
   );
 
@@ -52,6 +55,39 @@ test('FormDialog should navigate to route when closed on mobile', async () => {
   expect(screen.queryByRole('heading', { name: 'Dialog Title' })).not.toBeInTheDocument();
 });
 
+test('FormDialog should prompt to close when dirty and mobile', async () => {
+  const { history } = render(
+    <FormDialog
+      actionText='Apply'
+      cancelConfirmText=''
+      FormComponent={Form}
+      initialValues={{ fieldName: '' }}
+      onExitNavigateTo='/resources'
+      onSubmit={() => 0}
+      title='Dialog Title'
+    />,
+    { route: '/resources/create', width: '400px' },
+  );
+
+  expect(screen.getByRole('heading', { name: 'Dialog Title' })).toBeInTheDocument();
+  userEvent.type(screen.getByRole('textbox'), 'entered value');
+  userEvent.click(screen.getByRole('button', { name: /close/i }));
+  await waitFor(() => expect(screen.getByRole('heading', { name: /cancel?/i })).toBeInTheDocument());
+
+  userEvent.click(screen.getByRole('button', { name: /no/i }));
+  await waitFor(() => expect(screen.queryByRole('heading', { name: /cancel?/i })).not.toBeInTheDocument());
+  expect(screen.getByRole('heading', { name: 'Dialog Title' })).toBeInTheDocument();
+  expect(history.location.pathname).toBe('/resources/create');
+
+  userEvent.click(screen.getByRole('button', { name: /close/i }));
+  await waitFor(() => expect(screen.getByRole('heading', { name: /cancel?/i })).toBeInTheDocument());
+
+  userEvent.click(screen.getByRole('button', { name: /yes/i }));
+  await waitFor(() => expect(history.location.pathname).toBe('/resources'));
+  expect(screen.queryByRole('heading', { name: /cancel?/i })).not.toBeInTheDocument();
+  expect(screen.queryByRole('heading', { name: 'Dialog Title' })).not.toBeInTheDocument();
+});
+
 test('FormDialog should navigate to route when cancelled on desktop', async () => {
   const { history } = render(
     <FormDialog
@@ -65,6 +101,35 @@ test('FormDialog should navigate to route when cancelled on desktop', async () =
   );
   expect(screen.getByRole('heading', { name: 'Dialog Title' })).toBeInTheDocument();
   expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument();
+
+  userEvent.click(screen.getByRole('button', { name: /cancel/i }));
+  await waitFor(() => expect(history.location.pathname).toBe('/resources'));
+  expect(screen.queryByRole('heading', { name: 'Dialog Title' })).not.toBeInTheDocument();
+});
+
+test('FormDialog should prompt to close when dirty and desktop', async () => {
+  window.confirm = jest.fn();
+  window.confirm.mockReturnValueOnce(false).mockReturnValueOnce(true);
+
+  const { history } = render(
+    <FormDialog
+      actionText='Apply'
+      cancelConfirmText=''
+      FormComponent={Form}
+      initialValues={{ fieldName: '' }}
+      onExitNavigateTo='/resources'
+      onSubmit={() => 0}
+      title='Dialog Title'
+    />,
+    { route: '/resources/create', width: '800px' },
+  );
+
+  expect(screen.getByRole('heading', { name: 'Dialog Title' })).toBeInTheDocument();
+  userEvent.type(screen.getByRole('textbox'), 'entered value');
+
+  userEvent.click(screen.getByRole('button', { name: /cancel/i }));
+  expect(screen.getByRole('heading', { name: 'Dialog Title' })).toBeInTheDocument();
+  expect(history.location.pathname).toBe('/resources/create');
 
   userEvent.click(screen.getByRole('button', { name: /cancel/i }));
   await waitFor(() => expect(history.location.pathname).toBe('/resources'));
