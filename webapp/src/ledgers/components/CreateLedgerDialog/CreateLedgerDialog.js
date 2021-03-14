@@ -1,7 +1,8 @@
 import React from 'react';
 
-import LedgerDialogForm from '../LedgerDialogForm';
-import { useCreateLedger } from './useCreateLedger';
+import FormDialog from '../../../common/components/FormDialog';
+import useCreateLedger from '../../hooks/useCreateLedger';
+import LedgerForm from '../LedgerForm';
 
 const initialValues = {
   name: '',
@@ -9,15 +10,15 @@ const initialValues = {
 };
 
 const CreateLedgerDialog = () => {
-  const { dialogOpen, handleCloseDialog, handleCreate } = useCreateLedger();
+  const { mutate } = useCreateLedger();
   return (
-    <LedgerDialogForm
+    <FormDialog
       actionText='Create'
+      FormComponent={LedgerForm}
       initialValues={initialValues}
-      onClose={handleCloseDialog}
-      onSubmit={handleCreate}
-      open={dialogOpen}
+      onSubmit={mutate}
       title='Create Ledger'
+      validationSchema={LedgerForm.validationSchema}
     />
   );
 };

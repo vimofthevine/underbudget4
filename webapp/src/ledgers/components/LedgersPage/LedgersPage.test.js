@@ -180,12 +180,12 @@ describe('LedgersPage', () => {
     expect(screen.getByLabelText(/name/i)).toHaveValue('Demo Ledger');
   });
 
-  it('should open create ledger dialog', async () => {
+  it('should navigate to create-ledger route', async () => {
     window.matchMedia = createMediaQuery('800px');
 
-    render();
+    const { history } = render();
 
     fireEvent.click(screen.getByRole('button', { name: /create ledger/i }));
-    await waitFor(() => expect(screen.getByRole('heading', { name: /create ledger/i })));
+    await waitFor(() => expect(history.location.pathname).toBe('/create'));
   });
 });
