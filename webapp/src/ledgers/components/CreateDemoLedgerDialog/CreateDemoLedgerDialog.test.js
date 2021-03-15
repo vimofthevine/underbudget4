@@ -6,7 +6,6 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import renderWithRouter from '../../../tests/renderWithRouter';
-import { LedgersContextProvider } from '../LedgersContext';
 import CreateDemoLedgerDialog from './CreateDemoLedgerDialog';
 
 const render = (show = true) => {
@@ -14,9 +13,7 @@ const render = (show = true) => {
   return {
     ...renderWithRouter(
       <QueryClientProvider client={queryClient}>
-        <LedgersContextProvider initialState={{ showCreateDemoLedger: show }}>
-          <CreateDemoLedgerDialog />
-        </LedgersContextProvider>
+        <CreateDemoLedgerDialog />
       </QueryClientProvider>,
     ),
     queryClient,
@@ -77,49 +74,4 @@ test('dialog is closed and query is refreshed when request is successful', async
   await waitFor(() =>
     expect(screen.queryByRole('heading', { name: /create demo/i })).not.toBeInTheDocument(),
   );
-});
-
-test('user is prompted to create demo when no ledgers exist', async () => {
-  const mockAxios = new MockAdapter(axios);
-  mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
-    total: 0,
-  });
-
-  render(false);
-  expect(screen.queryByRole('heading', { name: /create demo/i })).not.toBeInTheDocument();
-
-  await waitFor(() =>
-    expect(screen.getByRole('heading', { name: /confirm/i })).toBeInTheDocument(),
-  );
-  userEvent.click(screen.getByRole('button', { name: /cancel/i }));
-
-  await waitFor(() =>
-    expect(screen.queryByRole('heading', { name: /confirm/i })).not.toBeInTheDocument(),
-  );
-  expect(screen.queryByRole('heading', { name: /create demo/i })).not.toBeInTheDocument();
-});
-
-test('dialog is opened if user confirms to create demo when no ledgers exist', async () => {
-  const mockAxios = new MockAdapter(axios);
-  mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
-    total: 0,
-  });
-
-  render(false);
-  expect(screen.queryByRole('heading', { name: /create demo/i })).not.toBeInTheDocument();
-
-  await waitFor(() =>
-    expect(screen.getByRole('heading', { name: /confirm/i })).toBeInTheDocument(),
-  );
-  userEvent.click(screen.getByRole('button', { name: /ok/i }));
-
-  await waitFor(() =>
-    expect(screen.getByRole('heading', { name: /create demo/i })).toBeInTheDocument(),
-  );
-  userEvent.click(screen.getByRole('button', { name: /cancel/i }));
-
-  await waitFor(() =>
-    expect(screen.queryByRole('heading', { name: /confirm/i })).not.toBeInTheDocument(),
-  );
-  expect(screen.queryByRole('heading', { name: /confirm/i })).not.toBeInTheDocument();
 });
