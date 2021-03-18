@@ -9,7 +9,7 @@ import { useDarkMode } from 'storybook-dark-mode';
 
 import createTheme from '../src/common/utils/createTheme';
 
-addDecorator(story => {
+addDecorator((story, { parameters }) => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -18,11 +18,13 @@ addDecorator(story => {
     },
   });
 
+  const { initialRoute = '/' } = parameters;
+
   return (
     <ThemeProvider theme={createTheme(useDarkMode())}>
       <CssBaseline />
       <QueryClientProvider client={queryClient}>
-        <MemoryRouter>
+        <MemoryRouter initialEntries={[initialRoute]}>
           {story()}
         </MemoryRouter>
       </QueryClientProvider>
