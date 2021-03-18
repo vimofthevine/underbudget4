@@ -14,16 +14,19 @@ setLogger({
 });
 
 const origGetElementError = getConfig().getElementError;
-configure({
-  getElementError: (message, container) => {
-    // Even though this should only ever be the document.body or a specific container,
-    // when we use the Material-UI Autocomplete component this gets reset to the top-level
-    // document, which results in a huge prettyDOM printout that includes all the injected
-    // MUI JSS in the document head that is not useful for test debugging. So we set it
-    // back to document.body if that occurs.
-    if (container === document) {
-      container = document.body;
-    }
-    return origGetElementError(message, container);
-  },
-});
+function getElementError(message, container) {
+  // Even though this should only ever be the document.body or a specific container,
+  // when we use the Material-UI Autocomplete component this gets reset to the top-level
+  // document, which results in a huge prettyDOM printout that includes all the injected
+  // MUI JSS in the document head that is not useful for test debugging. So we set it
+  // back to document.body if that occurs.
+  if (container === document) {
+    container = document.body;
+  }
+  const error = origGetElementError(message, container);
+  // This resets the stack trace to omit this function, otherwise jest reports the error as
+  // occuring here
+  Error.captureStackTrace(error, getElementError);
+  return error;
+}
+configure({ getElementError });
