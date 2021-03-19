@@ -33,6 +33,7 @@ const CurrencyInputField = ({
   return (
     <Autocomplete
       {...autoCompleteProps}
+      autoSelect
       disabled={disabled || isSubmitting}
       options={currency.codes()}
       renderInput={(params) => (
@@ -45,9 +46,10 @@ const CurrencyInputField = ({
           {...props}
         />
       )}
+      selectOnFocus
       onChange={handleChange}
       onInputChange={(e) => e && handleChange(e, e.target.value)}
-      value={currencyType ? currencyType.code : ''}
+      value={currencyType ? currencyType.code : null}
     />
   );
 };
