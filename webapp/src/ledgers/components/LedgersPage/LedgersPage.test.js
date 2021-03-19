@@ -139,7 +139,7 @@ test('should open modify ledger dialog on desktop', async () => {
     total: 2,
   });
 
-  render();
+  const { history } = render();
 
   await waitFor(() => expect(screen.queryAllByRole('row')).toHaveLength(3));
 
@@ -147,8 +147,7 @@ test('should open modify ledger dialog on desktop', async () => {
   const row1 = within(rows[1]);
   userEvent.click(row1.getByRole('button', { name: /modify ledger/i }));
 
-  await waitFor(() => expect(screen.getByRole('heading', { name: /modify ledger/i })));
-  expect(screen.getByLabelText(/name/i)).toHaveValue('My Ledger');
+  await waitFor(() => expect(history.location.pathname).toBe('/modify/ledger-id-1'));
 });
 
 test('should open modify ledger dialog on mobile', async () => {
@@ -160,7 +159,7 @@ test('should open modify ledger dialog on mobile', async () => {
     total: 2,
   });
 
-  render();
+  const { history } = render();
 
   await waitFor(() => expect(screen.queryAllByRole('row')).toHaveLength(3));
 
@@ -169,8 +168,7 @@ test('should open modify ledger dialog on mobile', async () => {
   userEvent.click(row2.getByRole('button', { name: /open ledger actions menu/i }));
   userEvent.click(screen.getByRole('menuitem', { name: /modify ledger/i }));
 
-  await waitFor(() => expect(screen.getByRole('heading', { name: /modify ledger/i })));
-  expect(screen.getByLabelText(/name/i)).toHaveValue('Demo Ledger');
+  await waitFor(() => expect(history.location.pathname).toBe('/modify/ledger-id-2'));
 });
 
 test('should navigate to create-ledger route', async () => {

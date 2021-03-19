@@ -59,12 +59,12 @@ const LedgersPage = () => {
       <Routes>
         <Route path='create' element={<CreateLedgerDialog />} />
         <Route path='create-demo' element={<CreateDemoLedgerDialog />} />
+        <Route path='modify/:id' element={<ModifyLedgerDialog />} />
         <Route
           path='/'
           element={<AskToCreateDemo hasAsked={hasAsked} setHasAsked={setHasAsked} />}
         />
       </Routes>
-      <ModifyLedgerDialog />
     </FullAppPage>
   );
 };

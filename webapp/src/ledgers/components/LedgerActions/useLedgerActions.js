@@ -1,22 +1,18 @@
+import { useNavigate } from 'react-router-dom';
+
 import useConfirmation from '../../../common/hooks/useConfirmation';
 import useMobile from '../../../common/hooks/useMobile';
 import useDeleteLedger from '../../hooks/useDeleteLedger';
-import { useLedgersDispatch } from '../LedgersContext';
 
 // eslint-disable-next-line import/prefer-default-export
 export function useLedgerActions(ledger) {
+  const navigate = useNavigate();
   const mobile = useMobile();
   const confirm = useConfirmation();
-  const dispatch = useLedgersDispatch();
 
-  const handleModify = () =>
-    dispatch({
-      type: 'showModifyLedger',
-      payload: ledger,
-    });
+  const handleModify = () => navigate(`modify/${ledger.id}`);
 
   const { mutate } = useDeleteLedger();
-
   const handleDelete = () =>
     confirm({
       message: [
