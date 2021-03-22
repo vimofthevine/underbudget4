@@ -5,6 +5,7 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { configure, getConfig } from '@testing-library/react';
+import MockDate from 'mockdate';
 import { setLogger } from 'react-query';
 
 setLogger({
@@ -30,3 +31,5 @@ function getElementError(message, container) {
   return error;
 }
 configure({ getElementError });
+
+MockDate.set("2021-06-24");
