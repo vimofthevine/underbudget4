@@ -7,7 +7,6 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import renderWithRouter from '../../../tests/renderWithRouter';
-import { LedgersContextProvider } from '../LedgersContext';
 import LedgersListing from './LedgersListing';
 
 const createMediaQuery = (width) => (query) => ({
@@ -29,9 +28,7 @@ const render = ({ route = '/ledgers', width = '800px' } = {}) => {
   return {
     ...renderWithRouter(
       <QueryClientProvider client={queryClient}>
-        <LedgersContextProvider>
-          <LedgersListing />
-        </LedgersContextProvider>
+        <LedgersListing />
       </QueryClientProvider>,
       { route },
     ),

@@ -5,9 +5,10 @@ import { action } from '@storybook/addon-actions';
 import { addDecorator } from '@storybook/react';
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { createMemoryHistory } from 'history';
 import { useDarkMode } from 'storybook-dark-mode';
 
-import useMemoryRouter from '../src/common/hooks/useMemoryRouter';
+import MemoryRouter from '../src/common/components/MemoryRouter';
 import createTheme from '../src/common/utils/createTheme';
 
 addDecorator((story, { parameters }) => {
@@ -20,14 +21,14 @@ addDecorator((story, { parameters }) => {
   });
 
   const { initialRoute = '/' } = parameters;
-  const { history, routerProps, Router } = useMemoryRouter({ initialEntries: [initialRoute] });
+  const history = createMemoryHistory({ initialEntries: [initialRoute] });
   React.useEffect(() => history.listen((location) => action('navigate')(location)), [history]);
 
   return (
     <ThemeProvider theme={createTheme(useDarkMode())}>
       <CssBaseline />
       <QueryClientProvider client={queryClient}>
-        <Router {...routerProps}>{story()}</Router>
+        <MemoryRouter history={history}>{story()}</MemoryRouter>
       </QueryClientProvider>
     </ThemeProvider>
   );

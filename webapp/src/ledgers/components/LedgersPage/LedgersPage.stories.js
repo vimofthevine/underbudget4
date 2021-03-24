@@ -4,7 +4,6 @@ import moment from 'moment';
 import React from 'react';
 
 import AppProviders from '../../../common/components/AppProviders';
-import { LedgersContextProvider } from '../LedgersContext';
 import LedgersPage from './LedgersPage';
 
 export default {
@@ -12,7 +11,6 @@ export default {
   component: LedgersPage,
   decorators: [
     (story) => story({ mock: new MockAdapter(axios, { delayResponse: 1000 }) }),
-    (story) => <LedgersContextProvider>{story()}</LedgersContextProvider>,
     (story) => <AppProviders>{story()}</AppProviders>,
   ],
 };
@@ -36,6 +34,14 @@ const createLedgers = (from, to) => {
   return ledgers;
 };
 
+export const NoLedgers = (_, { mock }) => {
+  mock.onGet(/\/api\/ledgers/).reply(200, {
+    ledgers: [],
+    total: 0,
+  });
+  return <LedgersPage />;
+};
+
 export const FewLedgers = (_, { mock }) => {
   mock.onGet(/\/api\/ledgers.*/).reply(200, {
     ledgers: createLedgers(0, 5),
@@ -52,7 +58,7 @@ export const ManyLedgers = (_, { mock }) => {
     return [
       200,
       {
-        ledgers: createLedgers(page * size, Math.min((page + 1) * size, 42)),
+        ledgers: createLedgers((page - 1) * size, Math.min(page * size, 42)),
         total: 42,
       },
     ];

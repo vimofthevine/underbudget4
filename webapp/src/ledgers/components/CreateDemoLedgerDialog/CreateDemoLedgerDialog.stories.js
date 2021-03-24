@@ -4,7 +4,6 @@ import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 
 import AppProviders from '../../../common/components/AppProviders';
-import { LedgersContextProvider } from '../LedgersContext';
 import CreateDemoLedgerDialog from './CreateDemoLedgerDialog';
 
 export default {
@@ -12,11 +11,6 @@ export default {
   component: CreateDemoLedgerDialog,
   decorators: [
     (story) => story({ mock: new MockAdapter(axios) }),
-    (story) => (
-      <LedgersContextProvider initialState={{ showCreateDemoLedger: true }}>
-        {story()}
-      </LedgersContextProvider>
-    ),
     (story) => <AppProviders>{story()}</AppProviders>,
   ],
 };

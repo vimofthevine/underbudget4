@@ -7,9 +7,8 @@ import useErrorMessage from '../../../common/hooks/useErrorMessage';
 import useMobile from '../../../common/hooks/useMobile';
 import { ACCOUNTS } from '../../../common/utils/routes';
 import scrollToTop from '../../../common/utils/scrollToTop';
-import useLedgers from '../../hooks/useLedgers';
+import useFetchLedgers from '../../hooks/useFetchLedgers';
 import setSelectedLedger from '../../utils/setSelectedLedger';
-import { useLedgersState } from '../LedgersContext';
 import LedgerPagination from '../LedgerPagination';
 import LedgersTable from '../LedgersTable';
 
@@ -17,11 +16,10 @@ const LedgersListing = () => {
   const mobile = useMobile();
   const location = useLocation();
   const navigate = useNavigate();
-  const state = useLedgersState();
 
   const createErrorMessage = useErrorMessage({ request: 'Unable to retrieve ledgers' });
 
-  const { data, error, isError, isFetching, isLoading } = useLedgers(state.pagination);
+  const { data, error, isError, isFetching, isLoading, pagination } = useFetchLedgers();
   const errorMessage = createErrorMessage(error);
   const count = data ? data.total : 0;
   const ledgers = data ? data.ledgers : [];
@@ -46,7 +44,7 @@ const LedgersListing = () => {
       <LedgersTable mobile={mobile} ledgers={ledgers} onSelect={handleSelect} />
       {(isLoading || isFetching) && <LinearProgress />}
       {isError && <Alert severity='error'>{errorMessage}</Alert>}
-      {count > state.pagination.size && <LedgerPagination count={count} />}
+      {count > pagination.size && <LedgerPagination count={count} />}
     </>
   );
 };

@@ -5,18 +5,16 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 
 import FullAppPage from '../../../common/components/FullAppPage';
 import useConfirmation from '../../../common/hooks/useConfirmation';
-import useLedgers from '../../hooks/useLedgers';
+import useFetchLedgers from '../../hooks/useFetchLedgers';
 import CreateDemoLedgerDialog from '../CreateDemoLedgerDialog';
 import CreateLedgerDialog from '../CreateLedgerDialog';
-import { useLedgersState } from '../LedgersContext';
 import LedgersListing from '../LedgersListing';
 import ModifyLedgerDialog from '../ModifyLedgerDialog';
 
 const AskToCreateDemo = ({ hasAsked, setHasAsked }) => {
   const navigate = useNavigate();
   const confirm = useConfirmation();
-  const state = useLedgersState();
-  const { data } = useLedgers(state.pagination);
+  const { data } = useFetchLedgers();
 
   React.useEffect(() => {
     if (!hasAsked) {

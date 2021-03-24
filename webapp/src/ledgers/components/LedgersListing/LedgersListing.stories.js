@@ -4,14 +4,12 @@ import moment from 'moment';
 import React from 'react';
 
 import AppProviders from '../../../common/components/AppProviders';
-import { LedgersContextProvider } from '../LedgersContext';
 import LedgersListing from './LedgersListing';
 
 export default {
   title: 'ledgers/LedgersListing',
   component: LedgersListing,
   decorators: [
-    (story) => <LedgersContextProvider>{story()}</LedgersContextProvider>,
     (story) => story({ mock: new MockAdapter(axios, { delayResponse: 1000 }) }),
     (story) => <AppProviders>{story()}</AppProviders>,
   ],
