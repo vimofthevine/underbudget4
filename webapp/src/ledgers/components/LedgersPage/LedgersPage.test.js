@@ -8,7 +8,6 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import renderWithRouter from '../../../tests/renderWithRouter';
-import { LedgersContextProvider } from '../LedgersContext';
 import LedgersPage from './LedgersPage';
 
 const render = () => {
@@ -25,9 +24,7 @@ const render = () => {
 
   return renderWithRouter(
     <QueryClientProvider client={queryClient}>
-      <LedgersContextProvider>
-        <LedgersPage />
-      </LedgersContextProvider>
+      <LedgersPage />
     </QueryClientProvider>,
   );
 };
