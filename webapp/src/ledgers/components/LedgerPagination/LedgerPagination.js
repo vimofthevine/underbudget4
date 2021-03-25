@@ -9,8 +9,8 @@ const LedgerPagination = ({ count }) => {
   const [searchParams, setSearchParams] = useSearchParams({ page: 1, size: 10 });
   const mobile = useMobile();
 
-  const page = searchParams.get('page');
-  const size = searchParams.get('size');
+  const page = parseInt(searchParams.get('page'), 10);
+  const size = parseInt(searchParams.get('size'), 10);
 
   const handleChangePage = (e, newPage) =>
     setSearchParams({

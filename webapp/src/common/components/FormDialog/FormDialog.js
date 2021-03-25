@@ -7,9 +7,9 @@ import Slide from '@material-ui/core/Slide';
 import { Form, Formik, useFormikContext } from 'formik';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import useConfirm from '../../hooks/useConfirmation';
+import useNavigateKeepingSearch from '../../hooks/useNavigateKeepingSearch';
 import useMobile from '../../hooks/useMobile';
 import FullScreenDialogTitle from '../FullScreenDialogTitle';
 import SubmitButton from '../SubmitButton';
@@ -42,7 +42,7 @@ const FormDialog = ({
 }) => {
   const confirm = useConfirm();
   const mobile = useMobile() && !disableFullScreen;
-  const navigate = useNavigate();
+  const navigate = useNavigateKeepingSearch();
 
   const [isOpen, setIsOpen] = React.useState(true);
   const dirtyRef = React.useRef(false);

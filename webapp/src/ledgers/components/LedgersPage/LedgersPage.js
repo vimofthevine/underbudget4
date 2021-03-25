@@ -1,10 +1,11 @@
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import AddIcon from '@material-ui/icons/Add';
 import React from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 import FullAppPage from '../../../common/components/FullAppPage';
 import useConfirmation from '../../../common/hooks/useConfirmation';
+import useNavigateKeepingSearch from '../../../common/hooks/useNavigateKeepingSearch';
 import useFetchLedgers from '../../hooks/useFetchLedgers';
 import CreateDemoLedgerDialog from '../CreateDemoLedgerDialog';
 import CreateLedgerDialog from '../CreateLedgerDialog';
@@ -12,7 +13,7 @@ import LedgersListing from '../LedgersListing';
 import ModifyLedgerDialog from '../ModifyLedgerDialog';
 
 const AskToCreateDemo = ({ hasAsked, setHasAsked }) => {
-  const navigate = useNavigate();
+  const navigate = useNavigateKeepingSearch();
   const confirm = useConfirmation();
   const { data } = useFetchLedgers();
 
@@ -33,7 +34,7 @@ const AskToCreateDemo = ({ hasAsked, setHasAsked }) => {
 };
 
 const LedgersPage = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigateKeepingSearch();
   const [hasAsked, setHasAsked] = React.useState(false);
 
   const createLedger = {

@@ -1,12 +1,11 @@
-import { useNavigate } from 'react-router-dom';
-
 import useConfirmation from '../../../common/hooks/useConfirmation';
+import useNavigateKeepingSearch from '../../../common/hooks/useNavigateKeepingSearch';
 import useMobile from '../../../common/hooks/useMobile';
 import useDeleteLedger from '../../hooks/useDeleteLedger';
 
 // eslint-disable-next-line import/prefer-default-export
 export function useLedgerActions(ledger) {
-  const navigate = useNavigate();
+  const navigate = useNavigateKeepingSearch();
   const mobile = useMobile();
   const confirm = useConfirmation();
 

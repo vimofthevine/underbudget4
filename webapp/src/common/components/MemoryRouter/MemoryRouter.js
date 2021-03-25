@@ -23,7 +23,7 @@ const MemoryRouter = ({ children, history }) => {
 MemoryRouter.propTypes = {
   children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]).isRequired,
   history: PropTypes.shape({
-    action: PropTypes.func.isRequired,
+    action: PropTypes.string.isRequired,
     listen: PropTypes.func.isRequired,
     location: PropTypes.shape({}).isRequired,
   }).isRequired,

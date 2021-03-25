@@ -1,7 +1,8 @@
 import React from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import FormDialog from '../../../common/components/FormDialog';
+import useNavigateKeepingSearch from '../../../common/hooks/useNavigateKeepingSearch';
 import useFetchLedger from '../../hooks/useFetchLedger';
 import useModifyLedger from '../../hooks/useModifyLedger';
 import LedgerForm from '../LedgerForm';
@@ -12,12 +13,12 @@ const noLedger = {
 };
 
 const ModifyLedgerDialog = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigateKeepingSearch();
   const { id } = useParams();
   const { data } = useFetchLedger(
     { id },
     {
-      onError: () => navigate('../'),
+      onError: () => navigate('../../'),
     },
   );
   const ledger = data || noLedger;
@@ -29,6 +30,7 @@ const ModifyLedgerDialog = () => {
       enableReinitialize
       FormComponent={LedgerForm}
       initialValues={ledger}
+      onExitNavigateTo='../../'
       onSubmit={mutate}
       title='Modify Ledger'
       validationSchema={LedgerForm.validationSchema}
