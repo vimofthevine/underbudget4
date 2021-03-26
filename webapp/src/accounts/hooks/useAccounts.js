@@ -14,8 +14,8 @@ export default function useAccounts() {
   const { data, error, status } = useQuery(
     ['account-categories', { ledger }],
     async () => {
-      const { data } = await axios.get(`/api/ledgers/${ledger}/account-categories`);
-      return data;
+      const { data: resp } = await axios.get(`/api/ledgers/${ledger}/account-categories`);
+      return resp;
     },
     { enabled: !!ledger },
   );

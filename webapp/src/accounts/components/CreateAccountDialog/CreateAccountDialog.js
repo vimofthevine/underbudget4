@@ -1,25 +1,26 @@
 import React from 'react';
 
-import AccountDialogForm from '../AccountDialogForm';
-import useCreateAccountDialog from './useCreateAccountDialog';
+import FormDialog from '../../../common/components/FormDialog';
+import useCreateAccount from '../../hooks/useCreateAccount';
+import AccountForm from '../AccountForm';
 
 const initialValues = {
   name: '',
-  category: '',
+  category: 0,
   institution: '',
   accountNumber: '',
 };
 
 const CreateAccountDialog = () => {
-  const { dialogOpen, handleCloseDialog, handleCreate } = useCreateAccountDialog();
+  const { mutate } = useCreateAccount();
   return (
-    <AccountDialogForm
+    <FormDialog
       actionText='Create'
+      FormComponent={AccountForm}
       initialValues={initialValues}
-      onClose={handleCloseDialog}
-      onSubmit={handleCreate}
-      open={dialogOpen}
+      onSubmit={mutate}
       title='Create Account'
+      validationSchema={AccountForm.validationSchema}
     />
   );
 };
