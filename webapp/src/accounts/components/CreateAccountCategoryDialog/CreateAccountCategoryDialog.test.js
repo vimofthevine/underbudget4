@@ -6,7 +6,6 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import renderWithRouter from '../../../tests/renderWithRouter';
-import { AccountContextProvider } from '../../contexts/account';
 import CreateAccountCategoryDialog from './CreateAccountCategoryDialog';
 
 const render = () => {
@@ -16,9 +15,7 @@ const render = () => {
   return {
     ...renderWithRouter(
       <QueryClientProvider client={queryClient}>
-        <AccountContextProvider initialState={{ showCreateAccountCategory: true }}>
-          <CreateAccountCategoryDialog />
-        </AccountContextProvider>
+        <CreateAccountCategoryDialog />
       </QueryClientProvider>,
     ),
     queryClient,
@@ -28,8 +25,10 @@ const render = () => {
 describe('CreateAccountCategoryDialog', () => {
   it('should prevent submission when required fields are missing', async () => {
     render();
+    expect(screen.getByRole('heading', { name: /create category/i })).toBeInTheDocument();
 
     const createButton = screen.getByRole('button', { name: /create/i });
+
     userEvent.click(createButton);
     await waitFor(() => expect(screen.getByText(/required/i)).toBeInTheDocument());
 
@@ -41,6 +40,7 @@ describe('CreateAccountCategoryDialog', () => {
     mockAxios.onPost('/api/ledgers/ledger-id/account-categories').reply(400);
 
     render();
+    expect(screen.getByRole('heading', { name: /create category/i })).toBeInTheDocument();
 
     userEvent.type(screen.getByLabelText(/name/i), 'my category name');
     userEvent.click(screen.getByRole('button', { name: /create/i }));
@@ -57,11 +57,9 @@ describe('CreateAccountCategoryDialog', () => {
     const { queryClient } = render();
     const invalidateQueries = jest.spyOn(queryClient, 'invalidateQueries');
 
-    await waitFor(() =>
-      expect(screen.getByRole('heading', { name: /create category/i })).toBeInTheDocument(),
-    );
+    expect(screen.getByRole('heading', { name: /create category/i })).toBeInTheDocument(),
 
-    await userEvent.type(screen.getByLabelText(/name/i), 'my category name');
+    userEvent.type(screen.getByLabelText(/name/i), 'my category name');
     userEvent.click(screen.getByRole('button', { name: /create/i }));
 
     await waitFor(() =>

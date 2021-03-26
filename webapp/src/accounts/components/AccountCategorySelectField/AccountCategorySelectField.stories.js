@@ -29,11 +29,9 @@ export const FetchError = (_, { mock }) => {
 };
 
 export const NoCategories = (_, { mock }) => {
-  mock
-    .onGet('/api/ledgers/ledger-id/account-categories')
-    .reply(200, {
-      categories: [],
-    });
+  mock.onGet('/api/ledgers/ledger-id/account-categories').reply(200, {
+    categories: [],
+  });
   return (
     <Formik initialValues={{ category: '' }}>
       <Field
@@ -47,15 +45,13 @@ export const NoCategories = (_, { mock }) => {
 };
 
 export const InitiallyEmpty = (_, { mock }) => {
-  mock
-    .onGet('/api/ledgers/ledger-id/account-categories')
-    .reply(200, {
-      categories: [
-        { id: 'cat-id-1', name: 'Category 1' },
-        { id: 'cat-id-2', name: 'Category 2' },
-        { id: 'cat-id-3', name: 'Category 3' },
-      ],
-    });
+  mock.onGet('/api/ledgers/ledger-id/account-categories').reply(200, {
+    categories: [
+      { id: 'cat-id-1', name: 'Category 1' },
+      { id: 'cat-id-2', name: 'Category 2' },
+      { id: 'cat-id-3', name: 'Category 3' },
+    ],
+  });
   return (
     <Formik initialValues={{ category: '' }} onSubmit={action('submit')}>
       <Form>
@@ -67,15 +63,13 @@ export const InitiallyEmpty = (_, { mock }) => {
 };
 
 export const InitiallyPopulated = (_, { mock }) => {
-  mock
-    .onGet('/api/ledgers/ledger-id/account-categories')
-    .reply(200, {
-      categories: [
-        { id: 'cat-id-1', name: 'Category 1' },
-        { id: 'cat-id-2', name: 'Category 2' },
-        { id: 'cat-id-3', name: 'Category 3' },
-      ],
-    });
+  mock.onGet('/api/ledgers/ledger-id/account-categories').reply(200, {
+    categories: [
+      { id: 'cat-id-1', name: 'Category 1' },
+      { id: 'cat-id-2', name: 'Category 2' },
+      { id: 'cat-id-3', name: 'Category 3' },
+    ],
+  });
   return (
     <Formik initialValues={{ category: 'cat-id-2' }} onSubmit={action('submit')}>
       <Form>
