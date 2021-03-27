@@ -1,27 +1,29 @@
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import CreateNewFolderIcon from '@material-ui/icons/CreateNewFolder';
 import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 
 import FullAppPage from '../../../common/components/FullAppPage';
-import useCreateAccount from '../../hooks/useCreateAccount';
-import useCreateAccountCategory from '../../hooks/useCreateAccountCategory';
+import useNavigateKeepingSearch from '../../../common/hooks/useNavigateKeepingSearch';
 import AccountsList from '../AccountsList';
 import CreateAccountCategoryDialog from '../CreateAccountCategoryDialog';
 import CreateAccountDialog from '../CreateAccountDialog';
 import ModifyAccountCategoryDialog from '../ModifyAccountCategoryDialog';
 
 const AccountsListPage = () => {
+  const navigate = useNavigateKeepingSearch();
+
   const actions = [
     {
       'aria-label': 'Create account',
       icon: <AddCircleIcon />,
-      onClick: useCreateAccount(),
+      onClick: () => navigate('create'),
       text: 'Create category',
     },
     {
       'aria-label': 'Create account category',
       icon: <CreateNewFolderIcon />,
-      onClick: useCreateAccountCategory(),
+      onClick: () => navigate('create-category'),
       text: 'Create category',
     },
   ];
@@ -29,9 +31,11 @@ const AccountsListPage = () => {
   return (
     <FullAppPage primaryActions={actions} title='Accounts'>
       <AccountsList />
-      <CreateAccountCategoryDialog />
-      <ModifyAccountCategoryDialog />
-      <CreateAccountDialog />
+      <Routes>
+        <Route path='create-category' element={<CreateAccountCategoryDialog />} />
+        <Route path='modify-category/:id' element={<ModifyAccountCategoryDialog />} />
+        <Route path='create' element={<CreateAccountDialog />} />
+      </Routes>
     </FullAppPage>
   );
 };
