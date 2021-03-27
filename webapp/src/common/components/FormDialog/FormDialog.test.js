@@ -22,9 +22,7 @@ const render = (ui, { route = '/', width = '800px' } = {}) => {
   const history = createMemoryHistory({ initialEntries: [route] });
   const Wrapper = ({ children }) => (
     <Router action={history.action} location={history.location} navigator={history}>
-      <ConfirmationContextProvider>
-        {children}
-      </ConfirmationContextProvider>
+      <ConfirmationContextProvider>{children}</ConfirmationContextProvider>
     </Router>
   );
 
@@ -72,15 +70,21 @@ test('FormDialog should prompt to close when dirty and mobile', async () => {
   expect(screen.getByRole('heading', { name: 'Dialog Title' })).toBeInTheDocument();
   userEvent.type(screen.getByRole('textbox'), 'entered value');
   userEvent.click(screen.getByRole('button', { name: /close/i }));
-  await waitFor(() => expect(screen.getByRole('heading', { name: /cancel?/i })).toBeInTheDocument());
+  await waitFor(() =>
+    expect(screen.getByRole('heading', { name: /cancel?/i })).toBeInTheDocument(),
+  );
 
   userEvent.click(screen.getByRole('button', { name: /no/i }));
-  await waitFor(() => expect(screen.queryByRole('heading', { name: /cancel?/i })).not.toBeInTheDocument());
+  await waitFor(() =>
+    expect(screen.queryByRole('heading', { name: /cancel?/i })).not.toBeInTheDocument(),
+  );
   expect(screen.getByRole('heading', { name: 'Dialog Title' })).toBeInTheDocument();
   expect(history.location.pathname).toBe('/resources/create');
 
   userEvent.click(screen.getByRole('button', { name: /close/i }));
-  await waitFor(() => expect(screen.getByRole('heading', { name: /cancel?/i })).toBeInTheDocument());
+  await waitFor(() =>
+    expect(screen.getByRole('heading', { name: /cancel?/i })).toBeInTheDocument(),
+  );
 
   userEvent.click(screen.getByRole('button', { name: /yes/i }));
   await waitFor(() => expect(history.location.pathname).toBe('/resources'));

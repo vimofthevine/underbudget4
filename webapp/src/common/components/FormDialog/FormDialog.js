@@ -59,6 +59,7 @@ const FormDialog = ({
           rejectText: 'No',
           title: 'Cancel?',
         }).then(() => setIsOpen(false));
+        // eslint-disable-next-line no-alert
       } else if (window.confirm(cancelConfirmText)) {
         setIsOpen(false);
       }

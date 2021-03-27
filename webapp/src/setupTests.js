@@ -22,6 +22,7 @@ function getElementError(message, container) {
   // MUI JSS in the document head that is not useful for test debugging. So we set it
   // back to document.body if that occurs.
   if (container === document) {
+    // eslint-disable-next-line no-param-reassign
     container = document.body;
   }
   const error = origGetElementError(message, container);
@@ -32,4 +33,4 @@ function getElementError(message, container) {
 }
 configure({ getElementError });
 
-MockDate.set("2021-06-24");
+MockDate.set('2021-06-24');

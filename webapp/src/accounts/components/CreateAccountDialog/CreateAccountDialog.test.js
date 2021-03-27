@@ -20,14 +20,12 @@ const render = () => {
   });
 
   const mock = new MockAdapter(axios);
-  mock
-    .onGet('/api/ledgers/ledger-id/account-categories')
-    .reply(200, {
-      categories: [
-        { id: 1, name: 'Category 1' },
-        { id: 2, name: 'Category 2' },
-      ],
-    });
+  mock.onGet('/api/ledgers/ledger-id/account-categories').reply(200, {
+    categories: [
+      { id: 1, name: 'Category 1' },
+      { id: 2, name: 'Category 2' },
+    ],
+  });
 
   return {
     ...renderWithRouter(
@@ -44,7 +42,7 @@ describe('CreateAccountDialog', () => {
   it('should prevent submission when required fields are missing', async () => {
     const { mock } = render();
 
-    expect(screen.getByRole('heading', { name: /create account/i })).toBeInTheDocument(),
+    expect(screen.getByRole('heading', { name: /create account/i })).toBeInTheDocument();
     await waitFor(() => expect(mock.history.get.length).toBe(1));
 
     const createButton = screen.getByRole('button', { name: /create/i });

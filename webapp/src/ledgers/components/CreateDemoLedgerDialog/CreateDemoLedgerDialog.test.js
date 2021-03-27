@@ -8,7 +8,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import renderWithRouter from '../../../tests/renderWithRouter';
 import CreateDemoLedgerDialog from './CreateDemoLedgerDialog';
 
-const render = (show = true) => {
+const render = () => {
   const queryClient = new QueryClient();
   return {
     ...renderWithRouter(

@@ -57,8 +57,7 @@ describe('CreateAccountCategoryDialog', () => {
     const { queryClient } = render();
     const invalidateQueries = jest.spyOn(queryClient, 'invalidateQueries');
 
-    expect(screen.getByRole('heading', { name: /create category/i })).toBeInTheDocument(),
-
+    expect(screen.getByRole('heading', { name: /create category/i })).toBeInTheDocument();
     userEvent.type(screen.getByLabelText(/name/i), 'my category name');
     userEvent.click(screen.getByRole('button', { name: /create/i }));
 
