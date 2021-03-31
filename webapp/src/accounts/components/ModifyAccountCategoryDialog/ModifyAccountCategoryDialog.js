@@ -14,7 +14,10 @@ const noCategory = {
 const ModifyAccountCategoryDialog = () => {
   const navigate = useNavigateKeepingSearch();
   const { id } = useParams();
-  const { data } = useFetchAccountCategory({ id }, { onError: () => navigate('../../') });
+  const { data, isLoading } = useFetchAccountCategory(
+    { id },
+    { onError: () => navigate('../../') },
+  );
   const category = data || noCategory;
   const { mutate } = useModifyAccountCategory();
 
@@ -24,6 +27,7 @@ const ModifyAccountCategoryDialog = () => {
       enableReinitialize
       FormComponent={AccountCategoryForm}
       initialValues={category}
+      isLoading={isLoading}
       onExitNavigateTo='../../'
       onSubmit={mutate}
       title='Modify Category'

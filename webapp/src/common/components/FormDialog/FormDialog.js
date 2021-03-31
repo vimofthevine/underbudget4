@@ -1,4 +1,5 @@
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -35,6 +36,7 @@ const FormDialog = ({
   cancelText,
   disableFullScreen,
   FormComponent,
+  isLoading,
   onExitNavigateTo,
   onSubmit,
   title,
@@ -100,10 +102,15 @@ const FormDialog = ({
           )}
 
           <DialogContent>
-            <FormComponent />
+            {isLoading && (
+              <div style={{ display: 'flex' }}>
+                <CircularProgress style={{ margin: 'auto' }} />
+              </div>
+            )}
+            {!isLoading && <FormComponent />}
           </DialogContent>
 
-          {!mobile && (
+          {!mobile && !isLoading && (
             <DialogActions>
               <Button color='primary' onClick={handleClose}>
                 {cancelText}
@@ -123,6 +130,7 @@ FormDialog.propTypes = {
   cancelText: PropTypes.string,
   disableFullScreen: PropTypes.bool,
   FormComponent: PropTypes.elementType.isRequired,
+  isLoading: PropTypes.bool,
   onExitNavigateTo: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
@@ -132,6 +140,7 @@ FormDialog.defaultProps = {
   cancelConfirmText: 'You have unsaved changes. Are you sure you wish to cancel?',
   cancelText: 'Cancel',
   disableFullScreen: false,
+  isLoading: false,
   onExitNavigateTo: '../',
 };
 
