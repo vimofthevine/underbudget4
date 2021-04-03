@@ -13,7 +13,9 @@ const render = (category, code = 200) => {
   const mockAxios = new MockAdapter(axios);
   mockAxios.onGet(`/api/account-categories/${category.id}`).reply(code, category);
 
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
 
   localStorage.setItem('underbudget.selected.ledger', '2');
 
@@ -32,9 +34,14 @@ const render = (category, code = 200) => {
 };
 
 test('should close dialog when unable to fetch category', async () => {
-  const { mockAxios } = render({ id: 3 }, 404);
-  await waitFor(() => expect(mockAxios.history.get).toHaveLength(1));
-  expect(screen.queryByRole('heading', { name: /modify ledger/i })).not.toBeInTheDocument();
+  const { history } = render({ id: 3 }, 404);
+  await waitFor(() =>
+    expect(screen.getByRole('heading', { name: /modify category/i })).toBeInTheDocument(),
+  );
+  await waitFor(() =>
+    expect(screen.queryByRole('heading', { name: /modify category/i })).not.toBeInTheDocument(),
+  );
+  await waitFor(() => expect(history.location.pathname).toBe('/accounts/'));
 });
 
 test('should prevent submission when required fields are missing', async () => {
