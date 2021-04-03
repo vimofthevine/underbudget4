@@ -24,7 +24,7 @@ const AccountForm = () => (
       component={AccountCategorySelectField}
       id='account-category'
       label='Category'
-      name='category'
+      name='categoryId'
       variant='outlined'
     />
     <Field
@@ -50,9 +50,16 @@ const AccountForm = () => (
   </>
 );
 
+AccountForm.initialValues = {
+  name: '',
+  categoryId: 0,
+  institution: '',
+  accountNumber: '',
+};
+
 AccountForm.validationSchema = yup.object().shape({
   name: yup.string().required('Required'),
-  category: yup.number().min(1, 'Required'),
+  categoryId: yup.number().min(1, 'Required'),
 });
 
 export default AccountForm;

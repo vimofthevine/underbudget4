@@ -6,7 +6,7 @@ import useSelectedLedger from '../../ledgers/hooks/useSelectedLedger';
 export default (opts) => {
   const ledger = useSelectedLedger();
   return useMutation(
-    ({ category, ...data }) => axios.post(`/api/account-categories/${category}/accounts`, data),
+    ({ categoryId, ...data }) => axios.post(`/api/account-categories/${categoryId}/accounts`, data),
     {
       createErrorMessage: useErrorMessage({ request: 'Unable to create account' }),
       refetchQueries: [['account-categories', { ledger }]],
