@@ -10,7 +10,10 @@ export default (opts) => {
       axios.put(`/api/account-categories/${id}`, data),
     {
       createErrorMessage: useErrorMessage({ request: 'Unable to modify account category' }),
-      refetchQueries: [['account-categories', { ledger }]],
+      refetchQueries: (_, { id }) => [
+        ['account-categories', { ledger }],
+        ['account-category', id],
+      ],
       ...opts,
     },
   );

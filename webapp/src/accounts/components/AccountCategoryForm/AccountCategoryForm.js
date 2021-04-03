@@ -19,6 +19,10 @@ const AccountCategoryForm = () => (
   />
 );
 
+AccountCategoryForm.initialValues = {
+  name: '',
+};
+
 AccountCategoryForm.validationSchema = yup.object().shape({
   name: yup.string().required('Required'),
 });

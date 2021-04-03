@@ -4,10 +4,6 @@ import FormDialog from '../../../common/components/FormDialog';
 import useCreateAccountCategory from '../../hooks/useCreateAccountCategory';
 import AccountCategoryForm from '../AccountCategoryForm';
 
-const initialValues = {
-  name: '',
-};
-
 const CreateAccountCategoryDialog = () => {
   const { mutate } = useCreateAccountCategory();
   return (
@@ -15,7 +11,7 @@ const CreateAccountCategoryDialog = () => {
       actionText='Create'
       disableFullScreen
       FormComponent={AccountCategoryForm}
-      initialValues={initialValues}
+      initialValues={AccountCategoryForm.initialValues}
       onSubmit={mutate}
       title='Create Category'
       validationSchema={AccountCategoryForm.validationSchema}

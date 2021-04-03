@@ -7,10 +7,6 @@ import useFetchAccountCategory from '../../hooks/useFetchAccountCategory';
 import useModifyAccountCategory from '../../hooks/useModifyAccountCategory';
 import AccountCategoryForm from '../AccountCategoryForm';
 
-const noCategory = {
-  name: '',
-};
-
 const ModifyAccountCategoryDialog = () => {
   const navigate = useNavigateKeepingSearch();
   const { id } = useParams();
@@ -18,7 +14,7 @@ const ModifyAccountCategoryDialog = () => {
     { id },
     { onError: () => navigate('../../') },
   );
-  const category = data || noCategory;
+  const category = data || AccountCategoryForm.initialValues;
   const { mutate } = useModifyAccountCategory();
 
   return (
