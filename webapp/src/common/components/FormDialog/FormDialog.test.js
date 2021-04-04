@@ -7,16 +7,11 @@ import React from 'react';
 import { Router } from 'react-router-dom';
 import * as yup from 'yup';
 
+import createMediaQuery from '../../../tests/createMediaQuery';
 import { ConfirmationContextProvider } from '../../contexts/confirmation';
 import FormDialog from './FormDialog';
 
 const Form = () => <Field name='fieldName' />;
-
-const createMediaQuery = (width) => (query) => ({
-  matches: mediaQuery.match(query, { width }),
-  addListener: () => 0,
-  removeListener: () => 0,
-});
 
 const render = (ui, { route = '/', width = '800px' } = {}) => {
   const history = createMemoryHistory({ initialEntries: [route] });

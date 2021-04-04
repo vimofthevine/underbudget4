@@ -1,17 +1,11 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import mediaQuery from 'css-mediaquery';
 import { Field } from 'formik';
 import React from 'react';
 
+import createMediaQuery from '../../../tests/createMediaQuery';
 import ResponsiveDialogForm from './ResponsiveDialogForm';
 
 const Form = () => <Field name='fieldName' />;
-
-const createMediaQuery = (width) => (query) => ({
-  matches: mediaQuery.match(query, { width }),
-  addListener: () => 0,
-  removeListener: () => 0,
-});
 
 describe('ResponsiveDialogForm', () => {
   it('should display title when mobile', async () => {

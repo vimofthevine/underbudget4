@@ -2,11 +2,11 @@ import { configure, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import mediaQuery from 'css-mediaquery';
 import moment from 'moment';
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
+import createMediaQuery from '../../../tests/createMediaQuery';
 import renderWithRouter from '../../../tests/renderWithRouter';
 import LedgersPage from './LedgersPage';
 
@@ -28,12 +28,6 @@ const render = () => {
     </QueryClientProvider>,
   );
 };
-
-const createMediaQuery = (width) => (query) => ({
-  matches: mediaQuery.match(query, { width }),
-  addListener: () => 0,
-  removeListener: () => 0,
-});
 
 const ledger1 = {
   id: 'ledger-id-1',

@@ -1,19 +1,13 @@
 import { configure, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import mediaQuery from 'css-mediaquery';
 import moment from 'moment';
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
+import createMediaQuery from '../../../tests/createMediaQuery';
 import renderWithRouter from '../../../tests/renderWithRouter';
 import LedgersListing from './LedgersListing';
-
-const createMediaQuery = (width) => (query) => ({
-  matches: mediaQuery.match(query, { width }),
-  addListener: () => 0,
-  removeListener: () => 0,
-});
 
 const render = ({ route = '/ledgers', width = '800px' } = {}) => {
   window.matchMedia = createMediaQuery(width);
