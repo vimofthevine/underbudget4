@@ -1,7 +1,9 @@
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import PropTypes from 'prop-types';
 import React from 'react';
 
+import actionPropsShape from '../../utils/action-props';
 import PureActionMenu from '../PureActionMenu';
 
 const MoreActionsButton = ({ actions }) => {
@@ -18,8 +20,8 @@ const MoreActionsButton = ({ actions }) => {
   );
 };
 
-MoreActionsButton.propTypes = PureActionMenu.propTypes;
-
-MoreActionsButton.defaultProps = PureActionMenu.defaultProps;
+MoreActionsButton.propTypes = {
+  actions: PropTypes.arrayOf(actionPropsShape).isRequired,
+};
 
 export default MoreActionsButton;

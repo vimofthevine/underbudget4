@@ -29,6 +29,7 @@ const AccountCategoryActionsButton = ({ category }) => {
     },
     {
       'aria-label': 'Delete account category',
+      disabled: category.accounts.length > 0,
       icon: null,
       onClick: handleDelete,
       text: 'Delete',
