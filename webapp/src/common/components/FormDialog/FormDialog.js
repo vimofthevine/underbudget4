@@ -35,6 +35,7 @@ const FormDialog = ({
   cancelConfirmText,
   cancelText,
   disableFullScreen,
+  formProps,
   FormComponent,
   isLoading,
   onExitNavigateTo,
@@ -107,7 +108,7 @@ const FormDialog = ({
                 <CircularProgress style={{ margin: 'auto' }} />
               </div>
             )}
-            {!isLoading && <FormComponent />}
+            {!isLoading && <FormComponent {...formProps} />}
           </DialogContent>
 
           {!mobile && !isLoading && (
@@ -129,6 +130,7 @@ FormDialog.propTypes = {
   cancelConfirmText: PropTypes.string,
   cancelText: PropTypes.string,
   disableFullScreen: PropTypes.bool,
+  formProps: PropTypes.shape({}),
   FormComponent: PropTypes.elementType.isRequired,
   isLoading: PropTypes.bool,
   onExitNavigateTo: PropTypes.string,
@@ -140,6 +142,7 @@ FormDialog.defaultProps = {
   cancelConfirmText: 'You have unsaved changes. Are you sure you wish to cancel?',
   cancelText: 'Cancel',
   disableFullScreen: false,
+  formProps: null,
   isLoading: false,
   onExitNavigateTo: '../',
 };
