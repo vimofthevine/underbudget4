@@ -1,10 +1,10 @@
+import axios from 'axios';
 import sortBy from 'lodash/sortBy';
 import React from 'react';
 import { useQuery } from 'react-query';
 
 import useErrorMessage from '../../common/hooks/useErrorMessage';
 import useSelectedLedger from '../../ledgers/hooks/useSelectedLedger';
-import fetchEnvelopeCategories from '../api/fetchEnvelopeCategories';
 
 export default function useEnvelopes() {
   const ledger = useSelectedLedger();
@@ -12,19 +12,23 @@ export default function useEnvelopes() {
   const createErrorMessage = useErrorMessage({ request: 'Unable to retrieve envelopes' });
 
   const { data, error, status } = useQuery(
-    ['envelopeCategories', { ledger }],
-    () => fetchEnvelopeCategories(ledger),
+    ['envelope-categories', { ledger }],
+    async () => {
+      const { data: resp } = await axios.get(`/api/ledgers/${ledger}/envelope-categories`);
+      return resp;
+    },
     { enabled: !!ledger },
   );
-  const unsorted = data ? data._embedded.envelopeCategories : [];
 
   const categories = React.useMemo(
     () =>
-      sortBy(unsorted, ['name']).map((c) => ({
-        ...c,
-        envelopes: sortBy(c.envelopes, ['name']),
-      })),
-    [unsorted],
+      !data
+        ? []
+        : sortBy(data.categories, ['name']).map((c) => ({
+            ...c,
+            envelopes: sortBy(c.envelopes, ['name']),
+          })),
+    [data],
   );
 
   return {

@@ -1,30 +1,14 @@
-import { useMutation } from 'react-query';
+import axios from 'axios';
 
-import useConfirmation from '../../common/hooks/useConfirmation';
 import useErrorMessage from '../../common/hooks/useErrorMessage';
-import useSnackbar from '../../common/hooks/useSnackbar';
-import deleteEnvelope from '../api/deleteEnvelope';
-import useEnvelopesRefetch from './useEnvelopesRefetch';
+import useMutation from '../../common/hooks/useMutation';
+import useSelectedLedger from '../../ledgers/hooks/useSelectedLedger';
 
-export default function useDeleteEnvelope(envelope) {
-  const confirm = useConfirmation();
-  const snackbar = useSnackbar();
-  const refetch = useEnvelopesRefetch();
-
-  const createErrorMessage = useErrorMessage({ request: 'Unable to delete envelope' });
-
-  const { mutate } = useMutation(deleteEnvelope, {
-    onError: (err) => snackbar(createErrorMessage(err)),
-    onSuccess: refetch,
+export default (opts) => {
+  const ledger = useSelectedLedger();
+  return useMutation((id) => axios.delete(`/api/envelopes/${id}`), {
+    createErrorMessage: useErrorMessage({ request: 'Unable to delete envelope' }),
+    refetchQueries: [['envelope-categories', { ledger }]],
+    ...opts,
   });
-
-  return () =>
-    confirm({
-      message: [
-        `Delete envelope ${envelope.name}?`,
-        'This action is permanent and cannot be undone.',
-      ],
-    }).then(() => {
-      mutate(envelope.id);
-    });
-}
+};
