@@ -19,7 +19,7 @@ const AccountsListPage = () => {
       'aria-label': 'Create account',
       icon: <AddCircleIcon />,
       onClick: () => navigate('create'),
-      text: 'Create category',
+      text: 'Create account',
     },
     {
       'aria-label': 'Create account category',
