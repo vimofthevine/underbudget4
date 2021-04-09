@@ -1,6 +1,7 @@
 import { Field } from 'formik';
 import { TextField } from 'formik-material-ui';
 import React from 'react';
+import * as yup from 'yup';
 
 const EnvelopeCategoryForm = () => (
   <Field
@@ -17,5 +18,13 @@ const EnvelopeCategoryForm = () => (
     variant='outlined'
   />
 );
+
+EnvelopeCategoryForm.initialValues = {
+  name: '',
+};
+
+EnvelopeCategoryForm.validationSchema = yup.object().shape({
+  name: yup.string().required('Required'),
+});
 
 export default EnvelopeCategoryForm;

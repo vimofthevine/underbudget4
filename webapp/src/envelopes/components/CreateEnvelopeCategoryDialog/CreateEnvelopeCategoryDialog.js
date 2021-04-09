@@ -1,22 +1,20 @@
 import React from 'react';
 
-import EnvelopeCategoryDialogForm from '../EnvelopeCategoryDialogForm';
-import useCreateEnvelopeCategoryDialog from './useCreateEnvelopeCategoryDialog';
-
-const initialValues = {
-  name: '',
-};
+import FormDialog from '../../../common/components/FormDialog';
+import useCreateEnvelopeCategory from '../../hooks/useCreateEnvelopeCategory';
+import EnvelopeCategoryForm from '../EnvelopeCategoryForm';
 
 const CreateEnvelopeCategoryDialog = () => {
-  const { dialogOpen, handleCloseDialog, handleCreate } = useCreateEnvelopeCategoryDialog();
+  const { mutate } = useCreateEnvelopeCategory();
   return (
-    <EnvelopeCategoryDialogForm
+    <FormDialog
       actionText='Create'
-      initialValues={initialValues}
-      onClose={handleCloseDialog}
-      onSubmit={handleCreate}
-      open={dialogOpen}
+      disableFullScreen
+      FormComponent={EnvelopeCategoryForm}
+      initialValues={EnvelopeCategoryForm.initialValues}
+      onSubmit={mutate}
       title='Create Category'
+      validationSchema={EnvelopeCategoryForm.validationSchema}
     />
   );
 };
