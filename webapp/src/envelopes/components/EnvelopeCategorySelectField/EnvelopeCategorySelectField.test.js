@@ -9,16 +9,14 @@ import { MemoryRouter } from 'react-router-dom';
 
 import EnvelopeCategorySelectField from './EnvelopeCategorySelectField';
 
-const URL = '/api/ledgers/ledger-id/envelopeCategories?projection=categoryWithEnvelopes';
+const URL = '/api/ledgers/2/envelope-categories';
 
 const defaultConfigureMock = (mock) => {
   mock.onGet(URL).reply(200, {
-    _embedded: {
-      envelopeCategories: [
-        { id: 'category-id-1', name: 'Category 1' },
-        { id: 'category-id-2', name: 'Category 2' },
-      ],
-    },
+    categories: [
+      { id: 1, name: 'Category 1' },
+      { id: 2, name: 'Category 2' },
+    ],
   });
 };
 
@@ -27,16 +25,12 @@ const render = (
   {
     configureMock = defaultConfigureMock,
     initialValues = {},
-    selectedLedger = 'ledger-id',
+    selectedLedger = '2',
     validate = () => ({}),
   },
 ) => {
   localStorage.setItem('underbudget.selected.ledger', selectedLedger);
 
-  const mock = new MockAdapter(axios);
-  configureMock(mock);
-
-  const handleSubmit = jest.fn();
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -44,6 +38,11 @@ const render = (
       },
     },
   });
+
+  const mock = new MockAdapter(axios);
+  configureMock(mock);
+
+  const handleSubmit = jest.fn();
 
   // eslint-disable-next-line react/prop-types
   const Wrapper = ({ children }) => (
@@ -68,7 +67,7 @@ const render = (
 describe('EnvelopeCategorySelectField', () => {
   it('should display current category name', async () => {
     render(<Field name='catField' component={EnvelopeCategorySelectField} />, {
-      initialValues: { catField: 'category-id-2' },
+      initialValues: { catField: 2 },
     });
     await waitFor(() => expect(screen.getByRole('textbox')).toHaveValue('Category 2'));
   });
@@ -84,7 +83,7 @@ describe('EnvelopeCategorySelectField', () => {
   it('should display nothing when unable to fetch categories', async () => {
     const { mock } = render(<Field name='catField' component={EnvelopeCategorySelectField} />, {
       configureMock: () => 0,
-      initialValues: { catField: 'category-id-2' },
+      initialValues: { catField: 2 },
     });
     await waitFor(() => expect(mock.history.get.length).toBe(1));
     expect(screen.getByRole('textbox')).toHaveValue('');
@@ -92,7 +91,7 @@ describe('EnvelopeCategorySelectField', () => {
 
   it('should display nothing when category does not exist', async () => {
     const { mock } = render(<Field name='catField' component={EnvelopeCategorySelectField} />, {
-      initialValues: { catField: 'category-id-3' },
+      initialValues: { catField: 3 },
     });
     await waitFor(() => expect(mock.history.get.length).toBe(1));
     expect(screen.getByRole('textbox')).toHaveValue('');
@@ -102,7 +101,7 @@ describe('EnvelopeCategorySelectField', () => {
     const { handleSubmit } = render(
       <Field name='catField' component={EnvelopeCategorySelectField} />,
       {
-        initialValues: { catField: 'category-id-1' },
+        initialValues: { catField: 1 },
       },
     );
     await waitFor(() => expect(screen.getByRole('textbox')).toHaveValue('Category 1'));
@@ -114,7 +113,7 @@ describe('EnvelopeCategorySelectField', () => {
     userEvent.click(screen.getByRole('button', { name: /submit/i }));
 
     await waitFor(() => expect(handleSubmit).toHaveBeenCalled());
-    expect(handleSubmit.mock.calls[0][0]).toEqual({ catField: 'category-id-2' });
+    expect(handleSubmit.mock.calls[0][0]).toEqual({ catField: 2 });
     expect(screen.getByRole('textbox')).toBeDisabled();
   });
 
@@ -122,7 +121,7 @@ describe('EnvelopeCategorySelectField', () => {
     const { handleSubmit } = render(
       <Field name='catField' component={EnvelopeCategorySelectField} />,
       {
-        initialValues: { catField: 'category-id-1' },
+        initialValues: { catField: 1 },
       },
     );
     await waitFor(() => expect(screen.getByRole('textbox')).toHaveValue('Category 1'));
@@ -133,7 +132,7 @@ describe('EnvelopeCategorySelectField', () => {
     userEvent.click(screen.getByRole('button', { name: /submit/i }));
 
     await waitFor(() => expect(handleSubmit).toHaveBeenCalled());
-    expect(handleSubmit.mock.calls[0][0]).toEqual({ catField: 'category-id-2' });
+    expect(handleSubmit.mock.calls[0][0]).toEqual({ catField: 2 });
     expect(screen.getByRole('textbox')).toBeDisabled();
   });
 
@@ -141,7 +140,7 @@ describe('EnvelopeCategorySelectField', () => {
     const { handleSubmit } = render(
       <Field name='catField' component={EnvelopeCategorySelectField} />,
       {
-        initialValues: { catField: 'category-id-1' },
+        initialValues: { catField: 1 },
       },
     );
     await waitFor(() => expect(screen.getByRole('textbox')).toHaveValue('Category 1'));
@@ -151,14 +150,14 @@ describe('EnvelopeCategorySelectField', () => {
     userEvent.click(screen.getByRole('button', { name: /submit/i }));
 
     await waitFor(() => expect(handleSubmit).toHaveBeenCalled());
-    expect(handleSubmit.mock.calls[0][0]).toEqual({ catField: 'category-id-1' });
+    expect(handleSubmit.mock.calls[0][0]).toEqual({ catField: 1 });
 
     expect(screen.getByRole('textbox')).toHaveValue('Category 1');
   });
 
   it('should show validation error text when invalid', async () => {
     render(<Field name='catField' component={EnvelopeCategorySelectField} />, {
-      initialValues: { catField: 'category-id-1' },
+      initialValues: { catField: 1 },
       validate: () => ({ catField: 'Category is bad' }),
     });
     await waitFor(() => expect(screen.getByRole('textbox')).toHaveValue('Category 1'));
