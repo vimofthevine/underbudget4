@@ -5,6 +5,7 @@ module.exports = {
     '@storybook/addon-a11y',
     '@storybook/addon-actions',
     '@storybook/addon-links',
+    '@storybook/addon-queryparams',
     '@storybook/addon-viewport',
     'storybook-dark-mode',
   ],
