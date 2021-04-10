@@ -3,33 +3,32 @@ import React from 'react';
 import MoreActionsButton from '../../../common/components/MoreActionsButton';
 import useConfirmation from '../../../common/hooks/useConfirmation';
 import useNavigateKeepingSearch from '../../../common/hooks/useNavigateKeepingSearch';
-import useDeleteEnvelopeCategory from '../../hooks/useDeleteEnvelopeCategory';
-import EnvelopeCategoryPropTypes from '../../utils/envelope-category-prop-types';
+import useDeleteEnvelope from '../../hooks/useDeleteEnvelope';
+import EnvelopePropTypes from '../../utils/envelope-prop-types';
 
-const EnvelopeCategoryActionsButton = ({ category }) => {
+const EnvelopeActionsButton = ({ envelope }) => {
   const navigate = useNavigateKeepingSearch();
   const confirm = useConfirmation();
-  const { mutate } = useDeleteEnvelopeCategory();
+  const { mutate } = useDeleteEnvelope();
   const handleDelete = () =>
     confirm({
       message: [
-        `Delete envelope category ${category.name}?`,
+        `Delete envelope ${envelope.name}?`,
         'This action is permanent and cannot be undone.',
       ],
     }).then(() => {
-      mutate(category.id);
+      mutate(envelope.id);
     });
 
   const actions = [
     {
-      'aria-label': 'Modify envelope category',
+      'aria-label': 'Modify envelope',
       icon: null,
-      onClick: () => navigate(`modify-category/${category.id}`),
+      onClick: () => navigate(`modify/${envelope.id}`),
       text: 'Modify',
     },
     {
-      'aria-label': 'Delete envelope category',
-      disabled: category.envelopes.length > 0,
+      'aria-label': 'Delete envelope',
       icon: null,
       onClick: handleDelete,
       text: 'Delete',
@@ -38,8 +37,8 @@ const EnvelopeCategoryActionsButton = ({ category }) => {
   return <MoreActionsButton actions={actions} />;
 };
 
-EnvelopeCategoryActionsButton.propTypes = {
-  category: EnvelopeCategoryPropTypes.isRequired,
+EnvelopeActionsButton.propTypes = {
+  envelope: EnvelopePropTypes.isRequired,
 };
 
-export default EnvelopeCategoryActionsButton;
+export default EnvelopeActionsButton;
