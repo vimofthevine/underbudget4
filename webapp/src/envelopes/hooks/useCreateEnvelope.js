@@ -6,7 +6,8 @@ import useSelectedLedger from '../../ledgers/hooks/useSelectedLedger';
 export default (opts) => {
   const ledger = useSelectedLedger();
   return useMutation(
-    ({ categoryId, ...data }) => axios.post(`/api/envelope-categories/${categoryId}/envelopes`, data),
+    ({ categoryId, ...data }) =>
+      axios.post(`/api/envelope-categories/${categoryId}/envelopes`, data),
     {
       createErrorMessage: useErrorMessage({ request: 'Unable to create envelope' }),
       refetchQueries: [['envelope-categories', { ledger }]],

@@ -1,6 +1,5 @@
 import { render as baseRender, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import mediaQuery from 'css-mediaquery';
 import { Field } from 'formik';
 import { createMemoryHistory } from 'history';
 import React from 'react';

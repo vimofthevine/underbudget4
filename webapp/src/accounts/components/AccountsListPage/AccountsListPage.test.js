@@ -85,13 +85,13 @@ test('should open create dialogs when using nav bar actions', async () => {
 
   userEvent.click(screen.getByRole('button', { name: /create account$/i }));
   await waitFor(() =>
-    expect(screen.getByRole('heading', { name: /create account/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /create account/i })).toBeInTheDocument(),
   );
   expect(history.location.pathname).toBe('/accounts/create');
 
   userEvent.click(screen.getByRole('button', { name: /create account category/i }));
   await waitFor(() =>
-    expect(screen.getByRole('heading', { name: /create category/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /create category/i })).toBeInTheDocument(),
   );
   expect(history.location.pathname).toBe('/accounts/create-category');
 });

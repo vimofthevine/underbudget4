@@ -126,7 +126,7 @@ test('should prompt to confirm deletion of category', async () => {
   mockAxios.onGet('/api/ledgers/2/envelope-categories').reply(200, threeCategories);
   mockAxios.onDelete('/api/envelope-categories/2').reply(204);
 
-  const { baseElement, queryClient } = render();
+  const { queryClient } = render();
   const invalidateQueries = jest.spyOn(queryClient, 'invalidateQueries');
 
   await waitFor(() => expect(screen.getByText('Category 1')).toBeInTheDocument());
@@ -141,7 +141,9 @@ test('should prompt to confirm deletion of category', async () => {
   // Click on the menu backdrop
   userEvent.click(screen.getByRole('presentation').firstChild);
   await waitFor(() =>
-    expect(screen.queryByRole('menuitem', { name: /delete envelope category/i })).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('menuitem', { name: /delete envelope category/i }),
+    ).not.toBeInTheDocument(),
   );
 
   // Reject cancellation

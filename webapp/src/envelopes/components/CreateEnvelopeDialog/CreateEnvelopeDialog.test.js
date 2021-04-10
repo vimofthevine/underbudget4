@@ -20,14 +20,12 @@ const render = () => {
   });
 
   const mock = new MockAdapter(axios);
-  mock
-    .onGet('/api/ledgers/2/envelope-categories')
-    .reply(200, {
-      categories: [
-        { id: 1, name: 'Category 1' },
-        { id: 2, name: 'Category 2' },
-      ],
-    });
+  mock.onGet('/api/ledgers/2/envelope-categories').reply(200, {
+    categories: [
+      { id: 1, name: 'Category 1' },
+      { id: 2, name: 'Category 2' },
+    ],
+  });
 
   return {
     ...renderWithRouter(
