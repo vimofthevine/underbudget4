@@ -1,23 +1,33 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
 
-import EnvelopeCategoryDialogForm from '../EnvelopeCategoryDialogForm';
-import useModifyEnvelopeCategoryDialog from './useModifyEnvelopeCategoryDialog';
+import FormDialog from '../../../common/components/FormDialog';
+import useNavigateKeepingSearch from '../../../common/hooks/useNavigateKeepingSearch';
+import useFetchEnvelopeCategory from '../../hooks/useFetchEnvelopeCategory';
+import useModifyEnvelopeCategory from '../../hooks/useModifyEnvelopeCategory';
+import EnvelopeCategoryForm from '../EnvelopeCategoryForm';
 
 const ModifyEnvelopeCategoryDialog = () => {
-  const {
-    category,
-    dialogOpen,
-    handleCloseDialog,
-    handleModify,
-  } = useModifyEnvelopeCategoryDialog();
+  const navigate = useNavigateKeepingSearch();
+  const { id } = useParams();
+  const { data, isLoading } = useFetchEnvelopeCategory(
+    { id },
+    { onError: () => navigate('../../') },
+  );
+  const category = data || EnvelopeCategoryForm.initialValues;
+  const { mutate } = useModifyEnvelopeCategory();
+
   return (
-    <EnvelopeCategoryDialogForm
+    <FormDialog
       actionText='Save'
+      enableReinitialize
+      FormComponent={EnvelopeCategoryForm}
       initialValues={category}
-      onClose={handleCloseDialog}
-      onSubmit={handleModify}
-      open={dialogOpen}
+      isLoading={isLoading}
+      onExitNavigateTo='../../'
+      onSubmit={mutate}
       title='Modify Category'
+      validationSchema={EnvelopeCategoryForm.validationSchema}
     />
   );
 };
