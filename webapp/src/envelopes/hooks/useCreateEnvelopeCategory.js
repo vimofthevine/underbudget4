@@ -1,9 +1,13 @@
-import { useEnvelopeDispatch } from '../contexts/envelope';
+import axios from 'axios';
+import useErrorMessage from '../../common/hooks/useErrorMessage';
+import useMutation from '../../common/hooks/useMutation';
+import useSelectedLedger from '../../ledgers/hooks/useSelectedLedger';
 
-export default function useCreateEnvelopeCategory() {
-  const dispatch = useEnvelopeDispatch();
-  return () =>
-    dispatch({
-      type: 'showCreateEnvelopeCategory',
-    });
-}
+export default (opts) => {
+  const ledger = useSelectedLedger();
+  return useMutation((data) => axios.post(`/api/ledgers/${ledger}/envelope-categories`, data), {
+    createErrorMessage: useErrorMessage({ request: 'Unable to create envelope category' }),
+    refetchQueries: [['envelope-categories', { ledger }]],
+    ...opts,
+  });
+};

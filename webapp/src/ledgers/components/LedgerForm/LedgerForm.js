@@ -1,6 +1,8 @@
+import currency from 'currency-codes';
 import { Field } from 'formik';
 import { TextField } from 'formik-material-ui';
 import React from 'react';
+import * as yup from 'yup';
 
 import CurrencyInputField from '../../../common/components/CurrencyInputField';
 
@@ -34,5 +36,16 @@ const LedgerForm = () => (
     />
   </>
 );
+
+LedgerForm.validationSchema = yup.object().shape({
+  name: yup.string().required('Required'),
+  currency: yup
+    .number()
+    .oneOf(
+      currency.numbers().map((n) => Number(n)),
+      'Must be a valid currency',
+    )
+    .required('Required'),
+});
 
 export default LedgerForm;

@@ -59,14 +59,14 @@ EntitySelectField.propTypes = {
   disabled: PropTypes.bool,
   entities: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.string.isRequired,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       name: PropTypes.string.isRequired,
     }),
   ).isRequired,
   field: PropTypes.shape({
     name: PropTypes.string.isRequired,
     onBlur: PropTypes.func,
-    value: PropTypes.string.isRequired,
+    value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }).isRequired,
   form: PropTypes.shape({
     errors: PropTypes.shape({}),

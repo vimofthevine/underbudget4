@@ -2,14 +2,19 @@ import { render, waitFor } from '@testing-library/react';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
-import { ReactQueryConfigProvider, setConsole, useQuery } from 'react-query';
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 
-import origQueryConfig from './queryConfig';
+import queryConfig from './queryConfig';
 
-const queryConfig = {
-  ...origQueryConfig,
-  retryDelay: 100,
-};
+const queryClient = new QueryClient({
+  defaultOptions: {
+    ...queryConfig,
+    queries: {
+      ...queryConfig.queries,
+      retryDelay: 100,
+    },
+  },
+});
 
 const Fetch = () => {
   const { status } = useQuery('test', () => axios.get('/'));
@@ -17,22 +22,14 @@ const Fetch = () => {
 };
 
 describe('query configuration', () => {
-  beforeEach(() => {
-    setConsole({
-      log: () => 0,
-      warn: () => 0,
-      error: () => 0,
-    });
-  });
-
   it('should not retry on error', async () => {
     const mockAxios = new MockAdapter(axios);
     mockAxios.onGet('/').reply(503);
 
     const { getByText } = render(
-      <ReactQueryConfigProvider config={queryConfig}>
+      <QueryClientProvider client={queryClient}>
         <Fetch />
-      </ReactQueryConfigProvider>,
+      </QueryClientProvider>,
     );
 
     await waitFor(() => expect(getByText('error')).toBeInTheDocument());

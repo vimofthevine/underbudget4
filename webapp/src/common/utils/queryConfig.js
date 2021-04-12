@@ -1,3 +1,5 @@
 export default {
-  retry: false,
+  queries: {
+    retry: false,
+  },
 };

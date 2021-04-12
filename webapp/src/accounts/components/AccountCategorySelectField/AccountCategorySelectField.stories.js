@@ -3,7 +3,6 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { Field, Form, Formik } from 'formik';
 import React from 'react';
-import { MemoryRouter } from 'react-router';
 
 import setSelectedLedger from '../../../ledgers/utils/setSelectedLedger';
 import AccountCategorySelectField from './AccountCategorySelectField';
@@ -13,7 +12,6 @@ export default {
   component: AccountCategorySelectField,
   decorators: [
     (story) => story({ mock: new MockAdapter(axios, { delayResponse: 1000 }) }),
-    (story) => <MemoryRouter>{story()}</MemoryRouter>,
     (story) => {
       setSelectedLedger('ledger-id');
       return story();
@@ -22,7 +20,7 @@ export default {
 };
 
 export const FetchError = (_, { mock }) => {
-  mock.onGet('/api/ledgers/ledger-id/accountCategories?projection=categoryWithAccounts').reply(500);
+  mock.onGet('/api/ledgers/ledger-id/account-categories').reply(500);
   return (
     <Formik initialValues={{ category: '' }}>
       <Field component={AccountCategorySelectField} label='Category' name='category' />
@@ -31,11 +29,9 @@ export const FetchError = (_, { mock }) => {
 };
 
 export const NoCategories = (_, { mock }) => {
-  mock
-    .onGet('/api/ledgers/ledger-id/accountCategories?projection=categoryWithAccounts')
-    .reply(200, {
-      _embedded: { accountCategories: [] },
-    });
+  mock.onGet('/api/ledgers/ledger-id/account-categories').reply(200, {
+    categories: [],
+  });
   return (
     <Formik initialValues={{ category: '' }}>
       <Field
@@ -49,17 +45,13 @@ export const NoCategories = (_, { mock }) => {
 };
 
 export const InitiallyEmpty = (_, { mock }) => {
-  mock
-    .onGet('/api/ledgers/ledger-id/accountCategories?projection=categoryWithAccounts')
-    .reply(200, {
-      _embedded: {
-        accountCategories: [
-          { id: 'cat-id-1', name: 'Category 1' },
-          { id: 'cat-id-2', name: 'Category 2' },
-          { id: 'cat-id-3', name: 'Category 3' },
-        ],
-      },
-    });
+  mock.onGet('/api/ledgers/ledger-id/account-categories').reply(200, {
+    categories: [
+      { id: 'cat-id-1', name: 'Category 1' },
+      { id: 'cat-id-2', name: 'Category 2' },
+      { id: 'cat-id-3', name: 'Category 3' },
+    ],
+  });
   return (
     <Formik initialValues={{ category: '' }} onSubmit={action('submit')}>
       <Form>
@@ -71,17 +63,13 @@ export const InitiallyEmpty = (_, { mock }) => {
 };
 
 export const InitiallyPopulated = (_, { mock }) => {
-  mock
-    .onGet('/api/ledgers/ledger-id/accountCategories?projection=categoryWithAccounts')
-    .reply(200, {
-      _embedded: {
-        accountCategories: [
-          { id: 'cat-id-1', name: 'Category 1' },
-          { id: 'cat-id-2', name: 'Category 2' },
-          { id: 'cat-id-3', name: 'Category 3' },
-        ],
-      },
-    });
+  mock.onGet('/api/ledgers/ledger-id/account-categories').reply(200, {
+    categories: [
+      { id: 'cat-id-1', name: 'Category 1' },
+      { id: 'cat-id-2', name: 'Category 2' },
+      { id: 'cat-id-3', name: 'Category 3' },
+    ],
+  });
   return (
     <Formik initialValues={{ category: 'cat-id-2' }} onSubmit={action('submit')}>
       <Form>

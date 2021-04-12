@@ -20,5 +20,8 @@
   },
   "python.analysis.extraPaths": [
     "./backend"
-  ]
+  ],
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

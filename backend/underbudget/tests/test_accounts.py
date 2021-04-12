@@ -134,7 +134,7 @@ class AccountsTestCase(BaseTestCase):
         self._test_resource_is_audited(
             f"/api/account-categories/{category_id}/accounts",
             "/api/accounts",
-            {"name": "Account"},
+            {"categoryId": category_id, "name": "Account"},
         )
 
     def test_account_modification(self):
@@ -159,6 +159,7 @@ class AccountsTestCase(BaseTestCase):
         resp = self.client.put(
             f"/api/accounts/{account_id}",
             json={
+                "categoryId": category_id,
                 "name": "Modified Name",
                 "institution": "Bank Name",
                 "accountNumber": "8675309",
@@ -254,7 +255,11 @@ class AccountsTestCase(BaseTestCase):
         assert len(sub[0].value.get("accounts")) == 0
 
         resp = self.client.put(
-            f"/api/accounts/{acct_id}/category", json={"id": cat2_id}
+            f"/api/accounts/{acct_id}",
+            json={
+                "categoryId": cat2_id,
+                "name": "Account",
+            },
         )
         assert resp.status_code == 200
 

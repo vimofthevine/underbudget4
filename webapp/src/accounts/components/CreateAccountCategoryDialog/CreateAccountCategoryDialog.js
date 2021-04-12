@@ -1,22 +1,20 @@
 import React from 'react';
 
-import AccountCategoryDialogForm from '../AccountCategoryDialogForm';
-import useCreateAccountCategoryDialog from './useCreateAccountCategoryDialog';
-
-const initialValues = {
-  name: '',
-};
+import FormDialog from '../../../common/components/FormDialog';
+import useCreateAccountCategory from '../../hooks/useCreateAccountCategory';
+import AccountCategoryForm from '../AccountCategoryForm';
 
 const CreateAccountCategoryDialog = () => {
-  const { dialogOpen, handleCloseDialog, handleCreate } = useCreateAccountCategoryDialog();
+  const { mutate } = useCreateAccountCategory();
   return (
-    <AccountCategoryDialogForm
+    <FormDialog
       actionText='Create'
-      initialValues={initialValues}
-      onClose={handleCloseDialog}
-      onSubmit={handleCreate}
-      open={dialogOpen}
+      disableFullScreen
+      FormComponent={AccountCategoryForm}
+      initialValues={AccountCategoryForm.initialValues}
+      onSubmit={mutate}
       title='Create Category'
+      validationSchema={AccountCategoryForm.validationSchema}
     />
   );
 };

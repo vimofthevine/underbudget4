@@ -48,7 +48,7 @@ const PureAppBar = ({ actions, navAction, title }) => {
           {title}
         </Typography>
 
-        {iterate(actions, (action, last) => (
+        {iterate(actions, ({ fabIcon, ...action }, last) => (
           <IconButton color='inherit' edge={last ? 'end' : false} key={action.text} {...action}>
             {action.icon}
           </IconButton>

@@ -1,4 +1,3 @@
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import CloseIcon from '@material-ui/icons/Close';
 import MenuIcon from '@material-ui/icons/Menu';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -13,22 +12,17 @@ import NavIconList from '../NavIconList';
 import PureActionMenu from '../PureActionMenu';
 import PureAppBar from '../PureAppBar';
 import PureDrawer from '../PureDrawer';
-import UserMenu from '../UserMenu';
 import useDrawerState from './useDrawerState';
 
-const FullAppBar = ({ primaryActions, selectionActions, title }) => {
+const FullAppBar = ({ primaryActions, secondaryActions, selectionActions, title }) => {
   const [drawerOpen, toggleDrawer] = useDrawerState();
 
   const { clear, selected } = useSelection();
   const hasSelection = selected && selected.length > 0;
 
-  const [userMenuAnchor, setUserMenuAnchor] = React.useState(null);
-  const handleOpenUserMenu = (e) => setUserMenuAnchor(e.currentTarget);
-  const handleCloseUserMenu = () => setUserMenuAnchor(null);
-
   const [overflowMenuAnchor, setOverflowMenuAnchor] = React.useState(null);
   const handleOpenOverflowMenu = (e) => setOverflowMenuAnchor(e.currentTarget);
-  const handleCloseOVerflowMenu = () => setOverflowMenuAnchor(null);
+  const handleCloseOverflowMenu = () => setOverflowMenuAnchor(null);
 
   const mobile = useMobile();
 
@@ -49,37 +43,34 @@ const FullAppBar = ({ primaryActions, selectionActions, title }) => {
   const appBarTitle = hasSelection ? `${selected.length} Selected` : title;
 
   let actionProps = toList(hasSelection ? selectionActions : primaryActions);
-  if (!hasSelection && !mobile) {
-    actionProps.push({
-      'aria-label': 'open account menu',
-      icon: <AccountCircleIcon />,
-      onClick: handleOpenUserMenu,
-      text: 'Open account menu',
-    });
-  }
-
+  let overflowActions = hasSelection ? [] : toList(secondaryActions);
   let overflowMenu = null;
 
-  if (mobile && actionProps.length > 2) {
+  // If we have to truncate, move all actions into overflow actions
+  if (mobile && actionProps.length + overflowActions.length > 2) {
+    overflowActions = [...actionProps, ...overflowActions];
+    actionProps = [];
+  }
+
+  if (overflowActions.length > 0) {
     overflowMenu = (
       <PureActionMenu
-        actions={actionProps}
+        actions={overflowActions}
         anchor={overflowMenuAnchor}
-        onClose={handleCloseOVerflowMenu}
+        onClose={handleCloseOverflowMenu}
       />
     );
-    actionProps = {
+    actionProps.push({
       'aria-label': 'open actions menu',
       icon: <MoreVertIcon />,
       onClick: handleOpenOverflowMenu,
       text: 'Open actions menu',
-    };
+    });
   }
 
   return (
     <>
       <PureAppBar actions={actionProps} navAction={navActionProps} title={appBarTitle} />
-      <UserMenu anchor={userMenuAnchor} onClose={handleCloseUserMenu} />
       {overflowMenu}
       <PureDrawer
         onClose={toggleDrawer}
@@ -99,12 +90,14 @@ const actionPropsType = PropTypes.oneOfType([
 
 FullAppBar.propTypes = {
   primaryActions: actionPropsType,
+  secondaryActions: actionPropsType,
   selectionActions: actionPropsType,
   title: PropTypes.string,
 };
 
 FullAppBar.defaultProps = {
   primaryActions: null,
+  secondaryActions: null,
   selectionActions: null,
   title: undefined,
 };

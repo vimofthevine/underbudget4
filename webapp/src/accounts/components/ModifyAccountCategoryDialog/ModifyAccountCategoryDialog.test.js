@@ -3,106 +3,92 @@ import userEvent from '@testing-library/user-event';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
-import { ReactQueryCacheProvider, makeQueryCache, setConsole } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { Routes, Route } from 'react-router-dom';
 
 import renderWithRouter from '../../../tests/renderWithRouter';
-import { AccountContextProvider } from '../../contexts/account';
-import useModifyAccountCategory from '../../hooks/useModifyAccountCategory';
 import ModifyAccountCategoryDialog from './ModifyAccountCategoryDialog';
 
-const OpenDialogButton = ({ category }) => (
-  <button onClick={useModifyAccountCategory(category)} type='button'>
-    Open
-  </button>
-);
+const render = (category, code = 200) => {
+  const mockAxios = new MockAdapter(axios);
+  mockAxios.onGet(`/api/account-categories/${category.id}`).reply(code, category);
 
-const render = (category) => {
-  const queryCache = makeQueryCache();
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+
+  localStorage.setItem('underbudget.selected.ledger', '2');
+
   return {
     ...renderWithRouter(
-      <ReactQueryCacheProvider queryCache={queryCache}>
-        <AccountContextProvider>
-          <>
-            <OpenDialogButton category={category} />
-            <ModifyAccountCategoryDialog />
-          </>
-        </AccountContextProvider>
-      </ReactQueryCacheProvider>,
+      <QueryClientProvider client={queryClient}>
+        <Routes>
+          <Route path='/accounts/modify-category/:id' element={<ModifyAccountCategoryDialog />} />
+        </Routes>
+      </QueryClientProvider>,
+      { route: `/accounts/modify-category/${category.id}` },
     ),
-    queryCache,
+    mockAxios,
+    queryClient,
   };
 };
 
-const openDialog = async () => {
-  userEvent.click(screen.getByRole('button', { name: 'Open' }));
+test('should close dialog when unable to fetch category', async () => {
+  const { history } = render({ id: 3 }, 404);
   await waitFor(() =>
     expect(screen.getByRole('heading', { name: /modify category/i })).toBeInTheDocument(),
   );
-};
+  await waitFor(() =>
+    expect(screen.queryByRole('heading', { name: /modify category/i })).not.toBeInTheDocument(),
+  );
+  await waitFor(() => expect(history.location.pathname).toBe('/accounts/'));
+});
 
-describe('CreateAccountCategoryDialog', () => {
-  beforeEach(() => {
-    setConsole({
-      log: () => 0,
-      warn: () => 0,
-      error: () => 0,
-    });
+test('should prevent submission when required fields are missing', async () => {
+  render({ id: 3, name: 'A category', lastUpdated: '' });
+
+  await waitFor(() => expect(screen.getByLabelText(/name/i)).toHaveValue('A category'));
+
+  userEvent.clear(screen.getByLabelText(/name/i));
+
+  const saveButton = screen.getByRole('button', { name: /save/i });
+  userEvent.click(saveButton);
+  await waitFor(() => expect(screen.getByText(/required/i)).toBeInTheDocument());
+  expect(saveButton).toBeDisabled();
+});
+
+test('should show error message when request error', async () => {
+  const { mockAxios } = render({ id: 3, name: 'A category', lastUpdated: '' });
+  mockAxios.onPut('/api/account-categories/3').reply(400);
+
+  await waitFor(() => expect(screen.getByLabelText(/name/i)).toHaveValue('A category'));
+
+  userEvent.click(screen.getByRole('button', { name: /save/i }));
+  await waitFor(() =>
+    expect(screen.getByText(/unable to modify account category/i)).toBeInTheDocument(),
+  );
+});
+
+test('should close and refresh query when successful modify', async () => {
+  const { mockAxios, queryClient } = render({ id: 3, name: 'A category', lastUpdated: '' });
+  mockAxios.onPut('/api/account-categories/3').reply(200);
+  const invalidateQueries = jest.spyOn(queryClient, 'invalidateQueries');
+
+  await waitFor(() => expect(screen.getByLabelText(/name/i)).toHaveValue('A category'));
+
+  userEvent.type(screen.getByLabelText(/name/i), '{selectall}my category name');
+  userEvent.click(screen.getByRole('button', { name: /save/i }));
+
+  await waitFor(() =>
+    expect(screen.queryByRole('heading', { name: /modify category/i })).not.toBeInTheDocument(),
+  );
+  expect(JSON.parse(mockAxios.history.put[0].data)).toEqual({
+    name: 'my category name',
   });
-
-  it('should prevent submission when required fields are missing', async () => {
-    render({ id: 'acct-cat-id', name: 'A category' });
-    await openDialog();
-
-    expect(screen.getByLabelText(/name/i)).toHaveValue('A category');
-
-    userEvent.clear(screen.getByLabelText(/name/i));
-
-    const saveButton = screen.getByRole('button', { name: /save/i });
-    userEvent.click(saveButton);
-    await waitFor(() => expect(screen.getByText(/required/i)).toBeInTheDocument());
-
-    expect(saveButton).toBeDisabled();
-  });
-
-  it('should show error message when request error', async () => {
-    const mockAxios = new MockAdapter(axios);
-    mockAxios.onPatch('/api/account-categories/acct-cat-id').reply(400);
-
-    render({ id: 'acct-cat-id', name: 'A category' });
-    await openDialog();
-
-    userEvent.click(screen.getByRole('button', { name: /save/i }));
-    await waitFor(() =>
-      expect(screen.getByText(/unable to modify account category/i)).toBeInTheDocument(),
-    );
-  });
-
-  it('should close and refresh query when successful modify', async () => {
-    const mockAxios = new MockAdapter(axios);
-    mockAxios.onPatch('/api/account-categories/acct-cat-id').reply(200);
-
-    localStorage.setItem('underbudget.selected.ledger', 'ledger-id');
-
-    const { queryCache } = render({ id: 'acct-cat-id', name: 'A category' });
-    const refetchQueries = jest.spyOn(queryCache, 'refetchQueries');
-
-    await openDialog();
-
-    userEvent.clear(screen.getByLabelText(/name/i));
-    await userEvent.type(screen.getByLabelText(/name/i), 'my category name');
-    userEvent.click(screen.getByRole('button', { name: /save/i }));
-
-    await waitFor(() =>
-      expect(screen.queryByRole('heading', { name: /modify category/i })).not.toBeInTheDocument(),
-    );
-    expect(JSON.parse(mockAxios.history.patch[0].data)).toEqual({
-      name: 'my category name',
-    });
-    expect(refetchQueries).toHaveBeenCalledWith([
-      'accountCategories',
-      {
-        ledger: 'ledger-id',
-      },
-    ]);
-  });
+  expect(invalidateQueries).toHaveBeenCalledWith([
+    'account-categories',
+    {
+      ledger: '2',
+    },
+  ]);
 });

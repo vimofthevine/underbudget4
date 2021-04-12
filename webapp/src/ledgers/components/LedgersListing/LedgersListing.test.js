@@ -1,35 +1,33 @@
 import { configure, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import mediaQuery from 'css-mediaquery';
 import moment from 'moment';
 import React from 'react';
-import { ReactQueryConfigProvider, queryCache, setConsole } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
+import createMediaQuery from '../../../tests/createMediaQuery';
 import renderWithRouter from '../../../tests/renderWithRouter';
-import { LedgersContextProvider } from '../LedgersContext';
 import LedgersListing from './LedgersListing';
-
-const queryConfig = {
-  retryDelay: 200,
-};
-
-const createMediaQuery = (width) => (query) => ({
-  matches: mediaQuery.match(query, { width }),
-  addListener: () => 0,
-  removeListener: () => 0,
-});
 
 const render = ({ route = '/ledgers', width = '800px' } = {}) => {
   window.matchMedia = createMediaQuery(width);
-  return renderWithRouter(
-    <ReactQueryConfigProvider config={queryConfig}>
-      <LedgersContextProvider>
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retryDelay: 200,
+      },
+    },
+  });
+
+  return {
+    ...renderWithRouter(
+      <QueryClientProvider client={queryClient}>
         <LedgersListing />
-      </LedgersContextProvider>
-    </ReactQueryConfigProvider>,
-    { route },
-  );
+      </QueryClientProvider>,
+      { route },
+    ),
+    queryClient,
+  };
 };
 
 const currencies = [840, 978, 980];
@@ -54,12 +52,6 @@ describe('LedgersListing', () => {
   beforeEach(() => {
     configure({ defaultHidden: true });
     window.HTMLElement.prototype.scrollTo = () => 0;
-    queryCache.clear();
-    setConsole({
-      log: () => 0,
-      warn: () => 0,
-      error: () => 0,
-    });
   });
 
   it('should show error message when not logged in', async () => {
@@ -94,9 +86,9 @@ describe('LedgersListing', () => {
 
   it('should show one page of ledgers on desktop', async () => {
     const mockAxios = new MockAdapter(axios);
-    mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
-      _embedded: { ledgers: createLedgers(0, 2) },
-      page: { totalElements: 2 },
+    mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
+      ledgers: createLedgers(0, 2),
+      total: 2,
     });
 
     render();
@@ -139,9 +131,9 @@ describe('LedgersListing', () => {
 
   it('should show one page of ledgers on mobile', async () => {
     const mockAxios = new MockAdapter(axios);
-    mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
-      _embedded: { ledgers: createLedgers(0, 2) },
-      page: { totalElements: 2 },
+    mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
+      ledgers: createLedgers(0, 2),
+      total: 2,
     });
 
     render({ width: '400px' });
@@ -177,17 +169,17 @@ describe('LedgersListing', () => {
 
   it('should show multiple pages of ledgers', async () => {
     const mockAxios = new MockAdapter(axios, { delayResponse: 0 });
-    mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
-      _embedded: { ledgers: createLedgers(0, 10) },
-      page: { totalElements: 24 },
-    });
     mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
-      _embedded: { ledgers: createLedgers(10, 20) },
-      page: { totalElements: 24 },
+      ledgers: createLedgers(0, 10),
+      total: 24,
     });
     mockAxios.onGet('/api/ledgers?page=2&size=10').reply(200, {
-      _embedded: { ledgers: createLedgers(20, 24) },
-      page: { totalElements: 24 },
+      ledgers: createLedgers(10, 20),
+      total: 24,
+    });
+    mockAxios.onGet('/api/ledgers?page=3&size=10').reply(200, {
+      ledgers: createLedgers(20, 24),
+      total: 24,
     });
 
     render();
@@ -254,9 +246,9 @@ describe('LedgersListing', () => {
 
   it('should redirect to accounts page when selecting a ledger', async () => {
     const mockAxios = new MockAdapter(axios);
-    mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
-      _embedded: { ledgers: createLedgers(0, 2) },
-      page: { totalElements: 2 },
+    mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
+      ledgers: createLedgers(0, 2),
+      total: 2,
     });
 
     const { history } = render();
@@ -269,17 +261,14 @@ describe('LedgersListing', () => {
     const row = within(rows[1]);
     fireEvent.click(row.getByRole('cell', { name: 'Ledger 0' }));
     expect(history.location.pathname).toBe('/accounts');
-    expect(localStorage.setItem).toHaveBeenLastCalledWith(
-      'underbudget.selected.ledger',
-      'ledger-id-0',
-    );
+    expect(localStorage.getItem('underbudget.selected.ledger')).toBe('ledger-id-0');
   });
 
   it('should redirect to previous location state when selecting a ledger', async () => {
     const mockAxios = new MockAdapter(axios);
-    mockAxios.onGet('/api/ledgers?page=0&size=10').reply(200, {
-      _embedded: { ledgers: createLedgers(0, 2) },
-      page: { totalElements: 2 },
+    mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
+      ledgers: createLedgers(0, 2),
+      total: 2,
     });
 
     const { history } = render({
@@ -297,9 +286,66 @@ describe('LedgersListing', () => {
     const row = within(rows[2]);
     fireEvent.click(row.getByRole('cell', { name: 'EUR' }));
     expect(history.location.pathname).toBe('/last-page');
-    expect(localStorage.setItem).toHaveBeenLastCalledWith(
-      'underbudget.selected.ledger',
-      'ledger-id-1',
+    expect(localStorage.getItem('underbudget.selected.ledger')).toBe('ledger-id-1');
+  });
+
+  it('should prompt to confirm deletion of a ledger', async () => {
+    const mockAxios = new MockAdapter(axios);
+    mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
+      ledgers: createLedgers(0, 2),
+      total: 2,
+    });
+
+    render();
+
+    await waitFor(() => expect(screen.queryByRole('progressbar')).toBeInTheDocument());
+    await waitFor(() => expect(screen.queryAllByRole('row')).toHaveLength(3));
+
+    const rows = screen.queryAllByRole('row');
+
+    const row1 = within(rows[1]);
+    fireEvent.click(row1.getByRole('button', { name: /delete ledger/i }));
+
+    await waitFor(() =>
+      expect(screen.getByRole('heading', { name: /confirm/i })).toBeInTheDocument(),
     );
+    fireEvent.click(screen.getByRole('button', { name: /cancel/i }));
+
+    await waitFor(() =>
+      expect(screen.queryByRole('heading', { name: /confirm/i })).not.toBeInTheDocument(),
+    );
+    expect(mockAxios.history.delete).toHaveLength(0);
+  });
+
+  it('should delete ledger when confirmed', async () => {
+    const mockAxios = new MockAdapter(axios);
+    mockAxios.onGet('/api/ledgers?page=1&size=10').reply(200, {
+      ledgers: createLedgers(0, 2),
+      total: 2,
+    });
+    mockAxios.onDelete('/api/ledgers/ledger-id-0').reply(204);
+
+    const { queryClient } = render();
+    const invalidateQueries = jest.spyOn(queryClient, 'invalidateQueries');
+
+    await waitFor(() => expect(screen.queryByRole('progressbar')).toBeInTheDocument());
+    await waitFor(() => expect(screen.queryAllByRole('row')).toHaveLength(3));
+
+    const rows = screen.queryAllByRole('row');
+
+    const row1 = within(rows[1]);
+    fireEvent.click(row1.getByRole('button', { name: /delete ledger/i }));
+
+    await waitFor(() =>
+      expect(screen.getByRole('heading', { name: /confirm/i })).toBeInTheDocument(),
+    );
+    fireEvent.click(screen.getByRole('button', { name: /ok/i }));
+
+    await waitFor(() =>
+      expect(screen.queryByRole('heading', { name: /confirm/i })).not.toBeInTheDocument(),
+    );
+    await waitFor(() => expect(mockAxios.history.delete).toHaveLength(1));
+    expect(mockAxios.history.delete[0].url).toBe('/api/ledgers/ledger-id-0');
+    expect(invalidateQueries).toHaveBeenCalledWith('ledgers');
   });
 });

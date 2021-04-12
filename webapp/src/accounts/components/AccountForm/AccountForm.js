@@ -1,6 +1,7 @@
 import { Field } from 'formik';
 import { TextField } from 'formik-material-ui';
 import React from 'react';
+import * as yup from 'yup';
 
 import AccountCategorySelectField from '../AccountCategorySelectField';
 
@@ -23,7 +24,7 @@ const AccountForm = () => (
       component={AccountCategorySelectField}
       id='account-category'
       label='Category'
-      name='category'
+      name='categoryId'
       variant='outlined'
     />
     <Field
@@ -48,5 +49,17 @@ const AccountForm = () => (
     />
   </>
 );
+
+AccountForm.initialValues = {
+  name: '',
+  categoryId: 0,
+  institution: '',
+  accountNumber: '',
+};
+
+AccountForm.validationSchema = yup.object().shape({
+  name: yup.string().required('Required'),
+  categoryId: yup.number().min(1, 'Required'),
+});
 
 export default AccountForm;

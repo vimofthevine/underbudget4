@@ -1,23 +1,33 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
 
-import AccountCategoryDialogForm from '../AccountCategoryDialogForm';
-import useModifyAccountCategoryDialog from './useModifyAccountCategoryDialog';
+import FormDialog from '../../../common/components/FormDialog';
+import useNavigateKeepingSearch from '../../../common/hooks/useNavigateKeepingSearch';
+import useFetchAccountCategory from '../../hooks/useFetchAccountCategory';
+import useModifyAccountCategory from '../../hooks/useModifyAccountCategory';
+import AccountCategoryForm from '../AccountCategoryForm';
 
 const ModifyAccountCategoryDialog = () => {
-  const {
-    category,
-    dialogOpen,
-    handleCloseDialog,
-    handleModify,
-  } = useModifyAccountCategoryDialog();
+  const navigate = useNavigateKeepingSearch();
+  const { id } = useParams();
+  const { data, isLoading } = useFetchAccountCategory(
+    { id },
+    { onError: () => navigate('../../') },
+  );
+  const category = data || AccountCategoryForm.initialValues;
+  const { mutate } = useModifyAccountCategory();
+
   return (
-    <AccountCategoryDialogForm
+    <FormDialog
       actionText='Save'
+      enableReinitialize
+      FormComponent={AccountCategoryForm}
       initialValues={category}
-      onClose={handleCloseDialog}
-      onSubmit={handleModify}
-      open={dialogOpen}
+      isLoading={isLoading}
+      onExitNavigateTo='../../'
+      onSubmit={mutate}
       title='Modify Category'
+      validationSchema={AccountCategoryForm.validationSchema}
     />
   );
 };

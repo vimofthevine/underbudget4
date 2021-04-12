@@ -1,35 +1,17 @@
-import { queryCache, useMutation } from 'react-query';
-
 import useConfirmation from '../../../common/hooks/useConfirmation';
-import useErrorMessage from '../../../common/hooks/useErrorMessage';
+import useNavigateKeepingSearch from '../../../common/hooks/useNavigateKeepingSearch';
 import useMobile from '../../../common/hooks/useMobile';
-import useSnackbar from '../../../common/hooks/useSnackbar';
-import deleteLedger from '../../api/deleteLedger';
-import { useLedgersDispatch, useLedgersState } from '../LedgersContext';
+import useDeleteLedger from '../../hooks/useDeleteLedger';
 
 // eslint-disable-next-line import/prefer-default-export
 export function useLedgerActions(ledger) {
+  const navigate = useNavigateKeepingSearch();
   const mobile = useMobile();
   const confirm = useConfirmation();
-  const snackbar = useSnackbar();
-  const dispatch = useLedgersDispatch();
-  const state = useLedgersState();
 
-  const handleModify = () =>
-    dispatch({
-      type: 'showModifyLedger',
-      payload: ledger,
-    });
+  const handleModify = () => navigate(`modify/${ledger.id}`);
 
-  const createErrorMessage = useErrorMessage({ request: 'Unable to delete ledger' });
-
-  const [mutate] = useMutation(deleteLedger, {
-    onError: (err) => snackbar(createErrorMessage(err)),
-    onSuccess: () => {
-      queryCache.refetchQueries('ledgers', state.pagination);
-    },
-  });
-
+  const { mutate } = useDeleteLedger();
   const handleDelete = () =>
     confirm({
       message: [

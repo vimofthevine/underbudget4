@@ -1,9 +1,13 @@
-import { useAccountDispatch } from '../contexts/account';
+import axios from 'axios';
+import useErrorMessage from '../../common/hooks/useErrorMessage';
+import useMutation from '../../common/hooks/useMutation';
+import useSelectedLedger from '../../ledgers/hooks/useSelectedLedger';
 
-export default function useCreateAccountCategory() {
-  const dispatch = useAccountDispatch();
-  return () =>
-    dispatch({
-      type: 'showCreateAccountCategory',
-    });
-}
+export default (opts) => {
+  const ledger = useSelectedLedger();
+  return useMutation((data) => axios.post(`/api/ledgers/${ledger}/account-categories`, data), {
+    createErrorMessage: useErrorMessage({ request: 'Unable to create account category' }),
+    refetchQueries: [['account-categories', { ledger }]],
+    ...opts,
+  });
+};

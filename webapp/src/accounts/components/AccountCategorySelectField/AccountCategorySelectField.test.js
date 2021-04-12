@@ -4,25 +4,19 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { Field, Form, Formik } from 'formik';
 import React from 'react';
-import { ReactQueryCacheProvider, ReactQueryConfigProvider, makeQueryCache } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { MemoryRouter } from 'react-router-dom';
 
 import AccountCategorySelectField from './AccountCategorySelectField';
 
-const URL = '/api/ledgers/ledger-id/accountCategories?projection=categoryWithAccounts';
-
-const queryConfig = {
-  staleTime: Infinity,
-};
+const URL = '/api/ledgers/ledger-id/account-categories';
 
 const defaultConfigureMock = (mock) => {
   mock.onGet(URL).reply(200, {
-    _embedded: {
-      accountCategories: [
-        { id: 'category-id-1', name: 'Category 1' },
-        { id: 'category-id-2', name: 'Category 2' },
-      ],
-    },
+    categories: [
+      { id: 'category-id-1', name: 'Category 1' },
+      { id: 'category-id-2', name: 'Category 2' },
+    ],
   });
 };
 
@@ -37,26 +31,31 @@ const render = (
 ) => {
   localStorage.setItem('underbudget.selected.ledger', selectedLedger);
 
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: Infinity,
+      },
+    },
+  });
+
   const mock = new MockAdapter(axios);
   configureMock(mock);
 
   const handleSubmit = jest.fn();
-  const queryCache = makeQueryCache();
 
   // eslint-disable-next-line react/prop-types
   const Wrapper = ({ children }) => (
-    <ReactQueryConfigProvider config={queryConfig}>
-      <ReactQueryCacheProvider queryCache={queryCache}>
-        <MemoryRouter>
-          <Formik initialValues={initialValues} onSubmit={handleSubmit} validate={validate}>
-            <Form>
-              {children}
-              <button type='submit'>Submit</button>
-            </Form>
-          </Formik>
-        </MemoryRouter>
-      </ReactQueryCacheProvider>
-    </ReactQueryConfigProvider>
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter>
+        <Formik initialValues={initialValues} onSubmit={handleSubmit} validate={validate}>
+          <Form>
+            {children}
+            <button type='submit'>Submit</button>
+          </Form>
+        </Formik>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
   return {
     ...baseRender(ui, { wrapper: Wrapper }),

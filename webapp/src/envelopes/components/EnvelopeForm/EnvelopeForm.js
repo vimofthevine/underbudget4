@@ -1,6 +1,7 @@
 import { Field } from 'formik';
 import { TextField } from 'formik-material-ui';
 import React from 'react';
+import * as yup from 'yup';
 
 import EnvelopeCategorySelectField from '../EnvelopeCategorySelectField';
 
@@ -23,10 +24,20 @@ const EnvelopeForm = () => (
       component={EnvelopeCategorySelectField}
       id='envelope-category'
       label='Category'
-      name='category'
+      name='categoryId'
       variant='outlined'
     />
   </>
 );
+
+EnvelopeForm.initialValues = {
+  name: '',
+  categoryId: 0,
+};
+
+EnvelopeForm.validationSchema = yup.object().shape({
+  name: yup.string().required('Required'),
+  categoryId: yup.number().min(1, 'Required'),
+});
 
 export default EnvelopeForm;

@@ -1,60 +1,33 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
-import { ReactQueryCacheProvider, makeQueryCache, setConsole } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 import renderWithRouter from '../../../tests/renderWithRouter';
-import { LedgersContextProvider, useLedgersDispatch } from '../LedgersContext';
 import CreateLedgerDialog from './CreateLedgerDialog';
 
-const CreateLedgerButton = () => {
-  const dispatch = useLedgersDispatch();
-  return (
-    <button onClick={() => dispatch({ type: 'showCreateLedger' })} type='button'>
-      create ledger
-    </button>
-  );
-};
-
 const render = () => {
-  const queryCache = makeQueryCache();
+  const queryClient = new QueryClient();
   return {
     ...renderWithRouter(
-      <ReactQueryCacheProvider queryCache={queryCache}>
-        <LedgersContextProvider>
-          <>
-            <CreateLedgerButton />
-            <CreateLedgerDialog />
-          </>
-        </LedgersContextProvider>
-        ,
-      </ReactQueryCacheProvider>,
+      <QueryClientProvider client={queryClient}>
+        <CreateLedgerDialog />
+      </QueryClientProvider>,
     ),
-    queryCache,
+    queryClient,
   };
 };
 
 describe('CreateLedgerDialog', () => {
-  beforeEach(() => {
-    setConsole({
-      log: () => 0,
-      warn: () => 0,
-      error: () => 0,
-    });
-  });
-
   it('should prevent submission when required fields are missing', async () => {
     render();
-
-    fireEvent.click(screen.getByRole('button', { name: /create ledger/i }));
-    await waitFor(() =>
-      expect(screen.getByRole('heading', { name: /create ledger/i })).toBeInTheDocument(),
-    );
+    expect(screen.getByRole('heading', { name: /create ledger/i })).toBeInTheDocument();
 
     const createButton = screen.getByRole('button', { name: /create/i });
 
-    fireEvent.click(createButton);
+    userEvent.click(createButton);
     await waitFor(() => expect(screen.getByText(/required/i)).toBeInTheDocument());
 
     expect(createButton).toBeDisabled();
@@ -65,19 +38,11 @@ describe('CreateLedgerDialog', () => {
     mockAxios.onPost('/api/ledgers').reply(400);
 
     render();
+    expect(screen.getByRole('heading', { name: /create ledger/i })).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: /create ledger/i }));
-    await waitFor(() =>
-      expect(screen.getByRole('heading', { name: /create ledger/i })).toBeInTheDocument(),
-    );
-
-    fireEvent.change(screen.getByLabelText(/name/i), {
-      target: { value: 'my ledger name' },
-    });
-    fireEvent.change(screen.getByLabelText(/currency/i), {
-      target: { value: 'UAH' },
-    });
-    fireEvent.click(screen.getByRole('button', { name: /create/i }));
+    userEvent.type(screen.getByLabelText(/name/i), 'my ledger name');
+    userEvent.type(screen.getByLabelText(/currency/i), '{selectall}UAH');
+    userEvent.click(screen.getByRole('button', { name: /create/i }));
 
     await waitFor(() => expect(screen.getByText(/unable to create ledger/i)).toBeInTheDocument());
   });
@@ -86,21 +51,14 @@ describe('CreateLedgerDialog', () => {
     const mockAxios = new MockAdapter(axios);
     mockAxios.onPost('/api/ledgers').reply(201);
 
-    const { queryCache } = render();
-    const refetchQueries = jest.spyOn(queryCache, 'refetchQueries');
+    const { queryClient } = render();
+    const invalidateQueries = jest.spyOn(queryClient, 'invalidateQueries');
 
-    fireEvent.click(screen.getByRole('button', { name: /create ledger/i }));
-    await waitFor(() =>
-      expect(screen.getByRole('heading', { name: /create ledger/i })).toBeInTheDocument(),
-    );
+    expect(screen.getByRole('heading', { name: /create ledger/i })).toBeInTheDocument();
 
-    fireEvent.change(screen.getByLabelText(/name/i), {
-      target: { value: 'my ledger name' },
-    });
-    fireEvent.change(screen.getByLabelText(/currency/i), {
-      target: { value: 'UAH' },
-    });
-    fireEvent.click(screen.getByRole('button', { name: /create/i }));
+    userEvent.type(screen.getByLabelText(/name/i), 'my ledger name');
+    userEvent.type(screen.getByLabelText(/currency/i), '{selectall}UAH');
+    userEvent.click(screen.getByRole('button', { name: /create/i }));
 
     await waitFor(() =>
       expect(screen.queryByRole('heading', { name: /create ledger/i })).not.toBeInTheDocument(),
@@ -109,9 +67,6 @@ describe('CreateLedgerDialog', () => {
       name: 'my ledger name',
       currency: 980,
     });
-    expect(refetchQueries).toHaveBeenCalledWith('ledgers', {
-      page: 0,
-      size: 10,
-    });
+    expect(invalidateQueries).toHaveBeenCalledWith('ledgers');
   });
 });

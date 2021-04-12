@@ -5,11 +5,6 @@ import React from 'react';
 import App from './App';
 
 describe('App', () => {
-  it('should prompt to log in', () => {
-    const { getByText } = render(<App />);
-    expect(getByText(/log in/i)).toBeInTheDocument();
-  });
-
   it('should render with dark mode preference', () => {
     window.matchMedia = (query) => ({
       matches: mediaQuery.match(query, { 'prefers-color-scheme': 'dark' }),

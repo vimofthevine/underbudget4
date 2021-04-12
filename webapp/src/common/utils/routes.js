@@ -1,7 +1,3 @@
-export const LOGIN = '/login';
-export const LOGOUT = '/logout';
-export const TOKENS = '/tokens';
-
 export const DASHBOARD = '/';
 export const LEDGERS = '/ledgers';
 export const ACCOUNTS = '/accounts';

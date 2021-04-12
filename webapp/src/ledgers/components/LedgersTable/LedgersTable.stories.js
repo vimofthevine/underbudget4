@@ -1,10 +1,8 @@
 import { action } from '@storybook/addon-actions';
 import moment from 'moment';
 import React from 'react';
-import { MemoryRouter } from 'react-router';
 
 import AppProviders from '../../../common/components/AppProviders';
-import { LedgersContextProvider } from '../LedgersContext';
 import LedgersTable from './LedgersTable';
 
 const handleSelect = action('select');
@@ -12,11 +10,7 @@ const handleSelect = action('select');
 export default {
   title: 'ledgers/LedgersTable',
   component: LedgersTable,
-  decorators: [
-    (story) => <LedgersContextProvider>{story()}</LedgersContextProvider>,
-    (story) => <AppProviders>{story()}</AppProviders>,
-    (story) => <MemoryRouter>{story()}</MemoryRouter>,
-  ],
+  decorators: [(story) => <AppProviders>{story()}</AppProviders>],
 };
 
 export const NoLedgers = () => <LedgersTable ledgers={[]} onSelect={handleSelect} />;

@@ -1,18 +1,39 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
 
-import LedgerDialogForm from '../LedgerDialogForm';
-import { useModifyLedger } from './useModifyLedger';
+import FormDialog from '../../../common/components/FormDialog';
+import useNavigateKeepingSearch from '../../../common/hooks/useNavigateKeepingSearch';
+import useFetchLedger from '../../hooks/useFetchLedger';
+import useModifyLedger from '../../hooks/useModifyLedger';
+import LedgerForm from '../LedgerForm';
+
+const noLedger = {
+  name: '',
+  currency: 0,
+};
 
 const ModifyLedgerDialog = () => {
-  const { dialogOpen, handleCloseDialog, handleModify, ledger } = useModifyLedger();
+  const navigate = useNavigateKeepingSearch();
+  const { id } = useParams();
+  const { data } = useFetchLedger(
+    { id },
+    {
+      onError: () => navigate('../../'),
+    },
+  );
+  const ledger = data || noLedger;
+  const { mutate } = useModifyLedger();
+
   return (
-    <LedgerDialogForm
+    <FormDialog
       actionText='Save'
+      enableReinitialize
+      FormComponent={LedgerForm}
       initialValues={ledger}
-      onClose={handleCloseDialog}
-      onSubmit={handleModify}
-      open={dialogOpen}
+      onExitNavigateTo='../../'
+      onSubmit={mutate}
       title='Modify Ledger'
+      validationSchema={LedgerForm.validationSchema}
     />
   );
 };

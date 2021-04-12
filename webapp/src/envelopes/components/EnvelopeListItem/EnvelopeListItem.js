@@ -1,4 +1,5 @@
 import ListItem from '@material-ui/core/ListItem';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -7,6 +8,7 @@ import { useNavigate } from 'react-router';
 
 import { envelopeRoute } from '../../../common/utils/routes';
 import EnvelopePropTypes from '../../utils/envelope-prop-types';
+import EnvelopeActionsButton from '../EnvelopeActionsButton';
 
 const useStyles = makeStyles((theme) => ({
   item: {
@@ -22,6 +24,9 @@ const EnvelopeListItem = ({ envelope, dense }) => {
   return (
     <ListItem button className={classes.item} dense={dense} onClick={handleClick}>
       <ListItemText inset primary={envelope.name} />
+      <ListItemSecondaryAction>
+        <EnvelopeActionsButton envelope={envelope} />
+      </ListItemSecondaryAction>
     </ListItem>
   );
 };

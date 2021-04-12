@@ -8,6 +8,8 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import fromNow from '../../../common/utils/fromNow';
+import ledgerPropTypes from '../../utils/ledger-prop-types';
 import LedgerActions from '../LedgerActions';
 
 const LedgersTable = ({ ledgers, mobile, onSelect }) => (
@@ -32,7 +34,7 @@ const LedgersTable = ({ ledgers, mobile, onSelect }) => (
             {ledger.name}
           </TableCell>
           <TableCell>{currency.number(ledger.currency).code}</TableCell>
-          {!mobile && <TableCell>{moment(ledger.lastUpdated).fromNow()}</TableCell>}
+          {!mobile && <TableCell>{fromNow(moment.utc(ledger.lastUpdated))}</TableCell>}
           <TableCell onClick={(e) => e.stopPropagation()}>
             <LedgerActions ledger={ledger} />
           </TableCell>
@@ -43,14 +45,7 @@ const LedgersTable = ({ ledgers, mobile, onSelect }) => (
 );
 
 LedgersTable.propTypes = {
-  ledgers: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      currency: PropTypes.number.isRequired,
-      lastUpdated: PropTypes.string.isRequired,
-    }),
-  ).isRequired,
+  ledgers: PropTypes.arrayOf(ledgerPropTypes).isRequired,
   mobile: PropTypes.bool,
   onSelect: PropTypes.func.isRequired,
 };

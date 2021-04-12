@@ -18,5 +18,10 @@ dev-ps:
 dev-db-upgrade:
 	docker exec underbudget-dev-api flask db upgrade
 
+dev-db-rebuild:
+	docker exec underbudget-dev-db psql -U postgres -c \
+		'DROP SCHEMA "public" CASCADE; CREATE SCHEMA "public"; GRANT ALL ON SCHEMA public TO postgres; GRANT ALL ON SCHEMA public TO public;'
+	docker exec underbudget-dev-api flask db upgrade
+
 api-test:
 	docker exec underbudget-dev-api pytest $(TEST_ARGS)

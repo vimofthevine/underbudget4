@@ -6,6 +6,7 @@ class AccountSchema(Schema):
     """ Account schema """
 
     id = fields.Integer(dump_only=True)
+    category_id = fields.Integer(data_key="categoryId")
     name = fields.String(required=True, validate=validate.Length(min=1))
     institution = fields.String(missing="")
     account_number = fields.String(data_key="accountNumber", missing="")

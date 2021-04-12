@@ -2,28 +2,16 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import moment from 'moment';
 import React from 'react';
-import { ReactQueryConfigProvider, queryCache } from 'react-query';
-import { MemoryRouter } from 'react-router-dom';
 
 import AppProviders from '../../../common/components/AppProviders';
-import { LedgersContextProvider } from '../LedgersContext';
 import LedgersListing from './LedgersListing';
-
-const queryConfig = { retry: false };
 
 export default {
   title: 'ledgers/LedgersListing',
   component: LedgersListing,
   decorators: [
-    (story) => {
-      queryCache.clear();
-      return story();
-    },
-    (story) => <LedgersContextProvider>{story()}</LedgersContextProvider>,
     (story) => story({ mock: new MockAdapter(axios, { delayResponse: 1000 }) }),
-    (story) => <MemoryRouter>{story()}</MemoryRouter>,
     (story) => <AppProviders>{story()}</AppProviders>,
-    (story) => <ReactQueryConfigProvider config={queryConfig}>{story()}</ReactQueryConfigProvider>,
   ],
 };
 
@@ -48,16 +36,16 @@ const createLedgers = (num) => {
 
 export const FewLedgers = (_, { mock }) => {
   mock.onGet(/\/api\/ledgers.*/).reply(200, {
-    _embedded: { ledgers: createLedgers(5) },
-    page: { totalElements: 5 },
+    ledgers: createLedgers(5),
+    total: 5,
   });
   return <LedgersListing />;
 };
 
 export const ManyLedgers = (_, { mock }) => {
   mock.onGet(/\/api\/ledgers.*/).reply(200, {
-    _embedded: { ledgers: createLedgers(10) },
-    page: { totalElements: 42 },
+    ledgers: createLedgers(10),
+    total: 42,
   });
   return <LedgersListing />;
 };

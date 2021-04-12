@@ -1,66 +1,117 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
-import { ReactQueryCacheProvider, ReactQueryConfigProvider, makeQueryCache } from 'react-query';
-import { MemoryRouter } from 'react-router-dom';
 
 import AppProviders from '../../../common/components/AppProviders';
 import setSelectedLedger from '../../../ledgers/utils/setSelectedLedger';
-import { AccountContextProvider } from '../../contexts/account';
 import AccountsListPage from './AccountsListPage';
 
-const queryCache = makeQueryCache();
-const queryConfig = { retry: false };
+const createAccount = (catId, acctId) => ({
+  id: catId * 100 + acctId,
+  name: `Account ${catId}.${acctId}`,
+});
+const createCategory = (numAccts, catId) => ({
+  id: catId,
+  name: `Category ${catId}`,
+  accounts: [...Array(numAccts)].map((_, i) => createAccount(catId, i)),
+});
 
 export default {
   title: 'accounts/AccountsListPage',
   component: AccountsListPage,
   decorators: [
-    (story) => <AccountContextProvider>{story()}</AccountContextProvider>,
-    (story) => <MemoryRouter>{story()}</MemoryRouter>,
     (story) => <AppProviders>{story()}</AppProviders>,
-    (story) => <ReactQueryCacheProvider queryCache={queryCache}>{story()}</ReactQueryCacheProvider>,
-    (story) => <ReactQueryConfigProvider config={queryConfig}>{story()}</ReactQueryConfigProvider>,
     (story) => {
-      setSelectedLedger('ledger-id');
+      setSelectedLedger('2');
       return story();
     },
-    (story) => {
-      const mock = new MockAdapter(axios, { delayResponse: 1000 });
-      mock
-        .onGet('/api/ledgers/ledger-id/accountCategories?projection=categoryWithAccounts')
-        .reply(200, {
-          _embedded: {
-            accountCategories: [
-              {
-                id: 'cat-id-2',
-                name: 'Category 2',
-                accounts: [{ id: 'acct-id-3', name: 'Account 2.1' }],
-              },
-              {
-                id: 'cat-id-3',
-                name: 'Category 3',
-                accounts: [{ id: 'acct-id-4', name: 'Account 3.1' }],
-              },
-              {
-                id: 'cat-id-1',
-                name: 'Category 1',
-                accounts: [
-                  { id: 'acct-id-2', name: 'Account 1.2' },
-                  { id: 'acct-id-1', name: 'Account 1.1' },
-                ],
-              },
-            ],
-          },
-        });
+    (story, { parameters } = {}) => {
+      const {
+        categories = [],
+        delayResponse = 1000,
+        deleteCode = 204,
+        getAllCode = 200,
+        getOneCode = 200,
+        postCode = 201,
+        putCode = 200,
+      } = parameters;
+
+      const mockAxios = new MockAdapter(axios, { delayResponse });
+
+      // Categories
+      mockAxios.onGet('/api/ledgers/2/account-categories').reply(getAllCode, {
+        categories: categories.map((num, i) => createCategory(num, i + 1)),
+      });
+      mockAxios.onPost('/api/ledgers/2/account-categories').reply(postCode);
+
+      mockAxios.onGet(/\/api\/account-categories\/\d+/).reply((conf) => {
+        const [id] = conf.url.match(/\d+/);
+        return [getOneCode, createCategory(0, id)];
+      });
+      mockAxios.onDelete(/\/api\/account-categories\/\d+/).reply(deleteCode);
+      mockAxios.onPut(/\/api\/account-categories\/\d+/).reply(putCode);
+
+      // Accounts
+      mockAxios.onPost(/\/api\/account-categories\/\d+\/accounts/).reply(postCode);
+      mockAxios.onGet(/\/api\/accounts\/\d+/).reply((conf) => {
+        const [id] = conf.url.match(/\d+/);
+        const acctId = id % 100;
+        const catId = (id - acctId) / 100;
+        return [getOneCode, createAccount(catId, acctId)];
+      });
+      mockAxios.onDelete(/\/api\/accounts\/\d+/).reply(deleteCode);
+      mockAxios.onPut(/\/api\/accounts\/\d+/).reply(putCode);
+
       return story();
     },
   ],
 };
 
-export const Desktop = () => <AccountsListPage />;
+const Template = () => <AccountsListPage />;
 
-export const Mobile = () => <AccountsListPage />;
-Mobile.parameters = {
+export const NoAccounts = Template.bind({});
+
+export const GetError = Template.bind({});
+GetError.parameters = {
+  getAllCode: 500,
+};
+
+export const FewCategories = Template.bind({});
+FewCategories.parameters = {
+  categories: [1, 1, 2],
+};
+
+export const ManyAccounts = Template.bind({});
+ManyAccounts.parameters = {
+  categories: [3, 8, 5, 16],
+};
+
+export const ManyAccountsOnMobile = Template.bind({});
+ManyAccountsOnMobile.parameters = {
+  ...ManyAccounts.parameters,
   viewport: { defaultViewport: 'mobile1' },
+};
+
+export const CreateRequestError = Template.bind({});
+CreateRequestError.parameters = {
+  ...FewCategories.parameters,
+  postCode: 400,
+};
+
+export const ModifyGetError = Template.bind({});
+ModifyGetError.parameters = {
+  ...FewCategories.parameters,
+  getOneCode: 404,
+};
+
+export const ModifyRequestError = Template.bind({});
+ModifyRequestError.parameters = {
+  ...FewCategories.parameters,
+  putCode: 400,
+};
+
+export const DeleteRequestError = Template.bind({});
+DeleteRequestError.parameters = {
+  ...FewCategories.parameters,
+  deleteCode: 400,
 };

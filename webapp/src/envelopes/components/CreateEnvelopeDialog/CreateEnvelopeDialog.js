@@ -1,23 +1,19 @@
 import React from 'react';
 
-import EnvelopeDialogForm from '../EnvelopeDialogForm';
-import useCreateEnvelopeDialog from './useCreateEnvelopeDialog';
-
-const initialValues = {
-  name: '',
-  category: '',
-};
+import FormDialog from '../../../common/components/FormDialog';
+import useCreateEnvelope from '../../hooks/useCreateEnvelope';
+import EnvelopeForm from '../EnvelopeForm';
 
 const CreateEnvelopeDialog = () => {
-  const { dialogOpen, handleCloseDialog, handleCreate } = useCreateEnvelopeDialog();
+  const { mutate } = useCreateEnvelope();
   return (
-    <EnvelopeDialogForm
+    <FormDialog
       actionText='Create'
-      initialValues={initialValues}
-      onClose={handleCloseDialog}
-      onSubmit={handleCreate}
-      open={dialogOpen}
+      FormComponent={EnvelopeForm}
+      initialValues={EnvelopeForm.initialValues}
+      onSubmit={mutate}
       title='Create Envelope'
+      validationSchema={EnvelopeForm.validationSchema}
     />
   );
 };
