@@ -74,6 +74,67 @@ underbudget-proxy |    Your key file has been saved at:
 underbudget-proxy |    /etc/letsencrypt/live/mycooldomain.com/privkey.pem
 ```
 
-## Authelia
+Since we will only be using the `underbudget` subdomain, it will be necessary
+for you to register a CNAME DNS record for the `underbudget` subdomain pointing
+to your host.
+
+## Security
+
+In our standalone production setup, we will be using
+[Authelia](https://www.authelia.com/) for authentication. Since the SWAG
+container runs an instance of nginx, we use
+[these instructions](https://www.authelia.com/docs/deployment/supported-proxies/nginx.html)
+when integrating Authelia into our reverse proxy.
+
+SWAG provides most of the necessary configuration for Authelia out of the box.
+This repository even includes the
+`proxy/nginx/proxy-confs/underbudget.subdomain.conf` configuration file for
+the `underbudget` subdomain with the necessary configuration to integrate
+with Authelia.
+
+With the proxy fully configured, we move on to setting up Authelia itself.
+
+The `docker-compose.yml` file defines a service running the `authelia/authelia`
+image. You may provide a `.auth.env` file to define environment variables
+for the container. Authelia does not rely on environment variables, so the
+only variables we've set are to control the ownership of files created by
+the image.
+
+```
+PUID=1000
+PGID=1000
+```
+
+The Authelia container will mount the `./authelia` directory into `/config`.
+This is where all Authelia configuration and data will reside.
+
+You must provide a `configuration.yml` file in the `./authelia` directory
+according to the [Authelia documentation](https://www.authelia.com/docs/configuration/).
+
+A sample configuration file has been provided that uses an internal user
+database. To use this sample file, rename it to `configuration.yml` and change
+all instances of `mycooldomain.com` to the appropriate domain name.
+
+Since we are using a flat file user database, we will follow
+[these instructions](https://www.authelia.com/docs/configuration/authentication/file.html)
+for defining users in `./authelia/users_database.yml` (because that is the location
+specified in the sample configuration).
+
+To create a hashed password, run the following:
+
+```
+?> docker run --rm authelia/authelia:latest authelia hash-password "yourpassword"
+Password hash: $argon2id$v=19$m=1048576,t=1,p=8$aVZ0T2JCbXBmYmMwYWFEdg$QBaGSDnp+BQXgvZ50HwVzkJZazQnIV774b3pLPBTsFU
+```
+
+Example `users_database.yml`:
+
+```
+users:
+  james:
+    displayname: "James Dean"
+    password "$argon2id$v=19$m=1048576,t=1,p=8$aVZ0T2JCbXBmYmMwYWFEdg$QBaGSDnp+BQXgvZ50HwVzkJZazQnIV774b3pLPBTsFU"
+    email: james.dean@authelia.com
+```
 
 ## Database backups
