@@ -38,5 +38,12 @@ services:
       - db
     env_file: .db.env
 
+  app:
+    build: webapp
+    container_name: underbudget-app
+    restart: always
+    depends_on:
+      - api
+
 volumes:
   db-data:
