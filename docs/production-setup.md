@@ -137,4 +137,30 @@ users:
     email: james.dean@authelia.com
 ```
 
-## Database backups
+## Database
+
+UnderBudget uses a PostgreSQL database. The `docker-compose.yml` file defines
+a database service running the `postgres` image. It uses a docker volume to
+store the actual database content.
+
+Both the database service and the UnderBudget backend API service use a
+`.db.env` file to define environment variables to specify connection parameters
+for the database.
+
+```
+POSTGRES_DB=postgres
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+```
+
+By default the UnderBudget backend API will connect to the database at
+`db:5432`. If integrating with other services and the database service
+has a different hostname or port, you can tell the backend API where
+to find the database using the `POSTGRES_HOST` and `POSTGRES_PORT`
+environment variables in `db.env`.
+
+## Running
+
+Once all configured, you can run `docker-compose up` to start all services
+of the UnderBudget application. Once fully initialized, you can access the
+application at `https://underbudget.mycooldomain.com`.
