@@ -159,6 +159,27 @@ has a different hostname or port, you can tell the backend API where
 to find the database using the `POSTGRES_HOST` and `POSTGRES_PORT`
 environment variables in `db.env`.
 
+## Backups
+
+Database backups are provided by running the
+[`prodrigestivill/postgres-backup-local`]https://github.com/prodrigestivill/docker-postgres-backup-local)
+image alongside our database. The `docker-compose.yml` file defines
+a `db-backup` service running this image, mounting the `./backups` directory
+into the container.
+
+This service uses the same `.db.env` file to configure connection to the
+database. It also uses a `.backup.env` file to configure the frequency of
+backups and deletion of old backups.
+
+For example, this would make a weekly backup and retain the last 6 weeks of
+backups.
+
+```
+SCHEDULE=@weekly
+BACKUP_KEEP_WEEKS=6
+POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
+```
+
 ## Running
 
 Once all configured, you can run `docker-compose up` to start all services

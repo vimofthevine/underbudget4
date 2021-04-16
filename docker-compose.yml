@@ -30,6 +30,20 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
 
+  db-backup:
+    image: prodrigestivill/postgres-backup-local
+    container_name: underbudget-backup
+    restart: always
+    volumes:
+      - ./backups:/backups
+    links:
+      - db
+    depends_on:
+      - db
+    env_file:
+      - .db.env
+      - .backup.env
+
   api:
     build: backend
     container_name: underbudget-api
