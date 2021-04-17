@@ -7,9 +7,13 @@ target/
 
 ### Docker ###
 .auth.env
+.backup.env
 .db.env
 .proxy.env
-/authelia/
+/authelia/*
+!/authelia
+!/authelia/sample.configuration.yml
+/backups/*
 /proxy/*
 !/proxy
 /proxy/nginx/*

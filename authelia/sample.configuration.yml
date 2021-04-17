@@ -1,0 +1,61 @@
+###############################################################
+#                   Authelia configuration                    #
+###############################################################
+
+host: 0.0.0.0
+port: 9091
+server:
+  read_buffer_size: 4096
+  write_buffer_size: 4096
+  path: "authelia"
+log_level: debug
+# This secret can also be set using the env variables AUTHELIA_JWT_SECRET_FILE
+jwt_secret: a_very_important_secret
+default_redirection_url: https://underbudget.mycooldomain.com
+totp:
+  issuer: authelia.com
+
+#duo_api:
+#  hostname: api-123456789.example.com
+#  integration_key: ABCDEF
+#  # This secret can also be set using the env variables AUTHELIA_DUO_API_SECRET_KEY_FILE
+#  secret_key: 1234567890abcdefghifjkl
+
+authentication_backend:
+  file:
+    path: /config/users_database.yml
+    password:
+      algorithm: argon2id
+      iterations: 1
+      key_length: 32
+      salt_length: 16
+      memory: 512
+      parallelism: 8
+
+access_control:
+  default_policy: deny
+  rules:
+    # Rules applied to everyone
+    - domain: "*.mycooldomain.com"
+      policy: one_factor
+
+session:
+  name: authelia_session
+  # This secret can also be set using the env variables AUTHELIA_SESSION_SECRET_FILE
+  secret: unsecure_session_secret
+  expiration: 3600 # 1 hour
+  inactivity: 300 # 5 minutes
+  domain: mycooldomain.com # Should match whatever your root protected domain is
+
+regulation:
+  max_retries: 3
+  find_time: 120
+  ban_time: 300
+
+storage:
+  local:
+    path: /config/db.sqlite3
+
+notifier:
+  filesystem:
+    filename: /config/notification.txt

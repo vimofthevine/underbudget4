@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.4'
 
 services:
   proxy:
@@ -30,6 +30,20 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
 
+  db-backup:
+    image: prodrigestivill/postgres-backup-local
+    container_name: underbudget-backup
+    restart: always
+    volumes:
+      - ./backups:/backups
+    links:
+      - db
+    depends_on:
+      - db
+    env_file:
+      - .db.env
+      - .backup.env
+
   api:
     build: backend
     container_name: underbudget-api
@@ -38,5 +52,13 @@ services:
       - db
     env_file: .db.env
 
+  app:
+    build: webapp
+    container_name: underbudget-app
+    restart: always
+    depends_on:
+      - api
+
 volumes:
   db-data:
+    name: underbudget-db-data
