@@ -182,6 +182,13 @@ POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
 
 ## Running
 
-Once all configured, you can run `docker-compose up` to start all services
-of the UnderBudget application. Once fully initialized, you can access the
-application at `https://underbudget.mycooldomain.com`.
+Once all configured, you can run `docker-compose up -d` to start all services
+of the UnderBudget application.
+
+You will need to initialize the database by executing
+`docker-compose exec -e FLASK_APP=underbudget.app api flask db upgrade`.
+You will also need to run this after any upgrade to Underbudget, in order to
+update the database with any changes.
+
+Once fully initialized, you can access the application at
+`https://underbudget.mycooldomain.com`.
