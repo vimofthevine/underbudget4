@@ -192,3 +192,16 @@ update the database with any changes.
 
 Once fully initialized, you can access the application at
 `https://underbudget.mycooldomain.com`.
+
+## Restoring From a Backup
+
+Assuming you have a `.sql.gz` file from the `./backups` folder you wish to use
+to restore the database, you can fully restore the contents of the database.
+
+This restore only works on a new database volume. Delete the volume if it already
+exists using `docker volume rm`.
+
+After bringing up all services (but not running the initial database migration),
+execute the following command:
+`zcat ./backups/weekly/postgres-202115.sql.gz | docker-compose exec -T db psql --username=$USERNAME --dbname=$DBNAME -W`.
+The `$USERNAME` and `$DBNAME` must match the values in `.db.env`.
