@@ -6,6 +6,7 @@ class EnvelopeSchema(Schema):
     """ Envelope schema """
 
     id = fields.Integer(dump_only=True)
+    category_id = fields.Integer(data_key="categoryId")
     name = fields.String(required=True, validate=validate.Length(min=1))
     archived = fields.Boolean(missing=False)
     external_id = fields.String(data_key="externalId", missing="")

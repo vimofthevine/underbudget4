@@ -3,12 +3,12 @@ from datetime import datetime
 from typing import Any, Dict, Optional
 from flask import Flask
 from flask.views import MethodView
+from werkzeug.exceptions import BadRequest
 
 from underbudget.common.decorators import use_args
 from underbudget.models.envelope import EnvelopeCategoryModel, EnvelopeModel
 from underbudget.models.ledger import LedgerModel
 import underbudget.schemas.envelope as schema
-from underbudget.schemas.common import IdSchema
 
 
 envelope_schema = schema.EnvelopeSchema()
@@ -111,11 +111,6 @@ class EnvelopesView(MethodView):
             view_func=view,
             methods=["GET", "PUT", "DELETE"],
         )
-        app.add_url_rule(
-            "/api/envelopes/<int:envelope_id>/category",
-            view_func=EnvelopeParentCategoryView.as_view("envelope-parent"),
-            methods=["PUT"],
-        )
 
     @staticmethod
     def get(envelope_id: int):
@@ -145,6 +140,16 @@ class EnvelopesView(MethodView):
     def put(args: Dict[str, Any], envelope_id: int):
         """ Modifies a specific envelope """
         envelope = EnvelopeModel.query.get_or_404(envelope_id)
+
+        if args["category_id"] != envelope.category_id:
+            old_category = EnvelopeCategoryModel.query.get_or_404(envelope.category_id)
+            new_category = EnvelopeCategoryModel.query.get_or_404(args["category_id"])
+
+            if old_category.ledger_id != new_category.ledger_id:
+                raise BadRequest("Parent category is from different ledger")
+
+            envelope.category_id = new_category.id
+
         envelope.name = args["name"]
         envelope.archived = args["archived"]
         envelope.external_id = args["external_id"]
@@ -158,17 +163,3 @@ class EnvelopesView(MethodView):
         envelope = EnvelopeModel.query.get_or_404(envelope_id)
         envelope.delete()
         return {}, 204
-
-
-class EnvelopeParentCategoryView(MethodView):
-    """ Envelope parent category REST resource view """
-
-    @staticmethod
-    @use_args(IdSchema)
-    def put(args: Dict[str, Any], envelope_id: int):
-        """ Moves an envelope to another category """
-        envelope = EnvelopeModel.query.get_or_404(envelope_id)
-        category = EnvelopeCategoryModel.query.get_or_404(args["id"])
-        envelope.category_id = category.id
-        envelope.save()
-        return {}, 200

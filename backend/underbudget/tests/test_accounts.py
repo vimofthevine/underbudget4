@@ -238,8 +238,10 @@ class AccountsTestCase(BaseTestCase):
 
     def test_move_account_to_category(self):
         ledger_id = self.create_ledger()
+        ledger2_id = self.create_ledger()
         cat1_id = self.create_account_category(ledger_id)
         cat2_id = self.create_account_category(ledger_id)
+        cat3_id = self.create_account_category(ledger2_id)
         acct_id = self.create_account(cat1_id)
 
         resp = self.client.get(f"/api/ledgers/{ledger_id}/account-categories")
@@ -256,10 +258,13 @@ class AccountsTestCase(BaseTestCase):
 
         resp = self.client.put(
             f"/api/accounts/{acct_id}",
-            json={
-                "categoryId": cat2_id,
-                "name": "Account",
-            },
+            json={"categoryId": cat3_id, "name": "Account"},
+        )
+        assert resp.status_code == 400
+
+        resp = self.client.put(
+            f"/api/accounts/{acct_id}",
+            json={"categoryId": cat2_id, "name": "Account"},
         )
         assert resp.status_code == 200
 

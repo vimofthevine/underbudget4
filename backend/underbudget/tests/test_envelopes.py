@@ -135,7 +135,7 @@ class EnvelopesTestCase(BaseTestCase):
         self._test_resource_is_audited(
             f"/api/envelope-categories/{category_id}/envelopes",
             "/api/envelopes",
-            {"name": "Envelope"},
+            {"categoryId": category_id, "name": "Envelope"},
         )
 
     def test_envelope_modification(self):
@@ -158,6 +158,7 @@ class EnvelopesTestCase(BaseTestCase):
         resp = self.client.put(
             f"/api/envelopes/{envelope_id}",
             json={
+                "categoryId": category_id,
                 "name": "Modified Name",
                 "archived": True,
                 "externalId": "tk-421",
@@ -232,8 +233,10 @@ class EnvelopesTestCase(BaseTestCase):
 
     def test_move_envelope_to_category(self):
         ledger_id = self.create_ledger()
+        ledger2_id = self.create_ledger()
         cat1_id = self.create_envelope_category(ledger_id)
         cat2_id = self.create_envelope_category(ledger_id)
+        cat3_id = self.create_envelope_category(ledger2_id)
         env_id = self.create_envelope(cat1_id)
 
         resp = self.client.get(f"/api/ledgers/{ledger_id}/envelope-categories")
@@ -249,7 +252,14 @@ class EnvelopesTestCase(BaseTestCase):
         assert len(sub[0].value.get("envelopes")) == 0
 
         resp = self.client.put(
-            f"/api/envelopes/{env_id}/category", json={"id": cat2_id}
+            f"/api/envelopes/{env_id}",
+            json={"categoryId": cat3_id, "name": "Envelope"},
+        )
+        assert resp.status_code == 400
+
+        resp = self.client.put(
+            f"/api/envelopes/{env_id}",
+            json={"categoryId": cat2_id, "name": "Envelope"},
         )
         assert resp.status_code == 200
 
