@@ -33,6 +33,7 @@ const EntitySelectField = ({
   return (
     <Autocomplete
       {...autoCompleteProps}
+      autoSelect
       disabled={disabled || isSubmitting}
       getOptionLabel={(o) => (o ? o.name : '')}
       getOptionSelected={(opt, val) => opt.id === val.id}
