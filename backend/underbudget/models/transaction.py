@@ -1,6 +1,8 @@
 """ Transaction database models """
 import enum
 from typing import List, Optional, Type
+from flask_sqlalchemy import Pagination
+from sqlalchemy import text
 from werkzeug.exceptions import BadRequest
 
 from underbudget.database import db
@@ -141,6 +143,37 @@ class AccountTransactionModel(db.Model):
     amount = db.Column(db.Integer, nullable=False)
     memo = db.Column(db.String(256), nullable=False)
     cleared = db.Column(db.Boolean, nullable=False)
+
+    @classmethod
+    def get_history(
+        cls: Type["AccountTransactionModel"],
+        account_id: int,
+        page: int = 1,
+        size: int = 20,
+    ):
+        """ Gets ordered transaction history for a single account. """
+        sql = text(
+            "SELECT "
+            f"{cls.__tablename__}.id as id, "
+            f"{cls.__tablename__}.amount as amount, "
+            f"{cls.__tablename__}.memo as memo, "
+            f"{cls.__tablename__}.cleared as cleared, "
+            f"{cls.__tablename__}.transaction_id as transaction_id, "
+            f"{TransactionModel.__tablename__}.transaction_type as transaction_type, "
+            f"{TransactionModel.__tablename__}.recorded_date as recorded_date, "
+            f"{TransactionModel.__tablename__}.payee as payee "
+            f"FROM {cls.__tablename__}, {TransactionModel.__tablename__} "
+            f"WHERE {cls.__tablename__}.transaction_id = {TransactionModel.__tablename__}.id "
+            f"AND {cls.__tablename__}.account_id = :account_id "
+            f"ORDER BY {TransactionModel.__tablename__}.recorded_date DESC, "
+            f"{cls.__tablename__}.id DESC "
+            "LIMIT :size OFFSET :page"
+        )
+        transactions = db.session.execute(
+            sql, {"account_id": account_id, "page": ((page - 1) * size), "size": size}
+        )
+        total = cls.query.filter_by(account_id=account_id).count()
+        return Pagination(cls.query, page, size, total, transactions)
 
 
 class EnvelopeTransactionModel(db.Model):

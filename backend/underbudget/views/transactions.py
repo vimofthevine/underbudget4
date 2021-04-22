@@ -5,7 +5,7 @@ from flask import Flask
 from flask.views import MethodView
 from werkzeug.exceptions import BadRequest, NotFound
 
-from underbudget.common.decorators import use_args
+from underbudget.common.decorators import use_args, with_pagination
 from underbudget.database import db
 from underbudget.models.account import AccountCategoryModel, AccountModel
 from underbudget.models.envelope import EnvelopeCategoryModel, EnvelopeModel
@@ -21,6 +21,7 @@ import underbudget.schemas.transaction as schema
 
 transaction_schema = schema.TransactionSchema()
 patch_schema = schema.TransactionPatchSchema()
+acct_trn_history_schema = schema.AccountTransactionHistorySchema()
 
 
 class TransactionsView(MethodView):
@@ -223,3 +224,25 @@ class TransactionsView(MethodView):
                 transaction.envelope_transactions.remove(env_trn)
                 return
         raise NotFound("Account transaction not found")
+
+
+class AccountTransactionsView(MethodView):
+    """ Account transaction REST resource view """
+
+    @classmethod
+    def register(cls, app: Flask):
+        """ Registers routes for this view """
+        view = cls.as_view("account-transactions")
+        app.add_url_rule(
+            "/api/accounts/<int:account_id>/transactions",
+            view_func=view,
+            methods=["GET"],
+        )
+
+    @staticmethod
+    @with_pagination
+    def get(account_id: int, page: int, size: int):
+        """ Gets transaction history for an account """
+        return acct_trn_history_schema.dump(
+            AccountTransactionModel.get_history(account_id, page, size)
+        )

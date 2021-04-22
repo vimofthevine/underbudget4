@@ -86,3 +86,29 @@ class TransactionPatchSchema(TransactionSchema):
     envelope_transactions = fields.Nested(
         EnvelopeTransactionPatchSchema, data_key="envelopeTransactions", missing={}
     )
+
+
+class AccountTransactionHistoryEntrySchema(Schema):
+    """ Single account transaction in history (read-only) schema """
+
+    # AccountTransaction fields
+    id = fields.Integer()
+    amount = fields.Integer()
+    memo = fields.String(missing="")
+    cleared = fields.Boolean(missing=False)
+    transaction_id = fields.Integer(data_key="transactionId")
+    # Transaction fields
+    transaction_type = fields.String(data_key="type")
+    recorded_date = fields.Date(data_key="recordedDate")
+    payee = fields.String()
+
+
+class AccountTransactionHistorySchema(Schema):
+    """ Paginated account transaction history (read-only) schema """
+
+    items = fields.List(
+        fields.Nested(AccountTransactionHistoryEntrySchema), data_key="transactions"
+    )
+    page = fields.Integer()
+    per_page = fields.Integer(data_key="size")
+    total = fields.Integer()

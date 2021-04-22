@@ -24,7 +24,7 @@ def create_app(app_config=config.BaseConfig) -> Flask:
     from underbudget.views.envelopes import EnvelopeCategoriesView, EnvelopesView
     from underbudget.views.health import HealthView
     from underbudget.views.ledgers import LedgersView
-    from underbudget.views.transactions import TransactionsView
+    from underbudget.views.transactions import AccountTransactionsView, TransactionsView
 
     HealthView.register(app)
     LedgersView.register(app)
@@ -33,6 +33,7 @@ def create_app(app_config=config.BaseConfig) -> Flask:
     EnvelopeCategoriesView.register(app)
     EnvelopesView.register(app)
     TransactionsView.register(app)
+    AccountTransactionsView.register(app)
     DemoView.register(app)
 
     # pylint: disable=unused-variable
