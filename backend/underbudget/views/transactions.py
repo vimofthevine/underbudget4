@@ -246,3 +246,25 @@ class AccountTransactionsView(MethodView):
         return acct_trn_history_schema.dump(
             AccountTransactionModel.get_history(account_id, page, size)
         )
+
+
+class EnvelopeTransactionsView(MethodView):
+    """ Envelope transaction REST resource view """
+
+    @classmethod
+    def register(cls, app: Flask):
+        """ Registers routes for this view """
+        view = cls.as_view("envelope-transactions")
+        app.add_url_rule(
+            "/api/envelopes/<int:envelope_id>/transactions",
+            view_func=view,
+            methods=["GET"],
+        )
+
+    @staticmethod
+    @with_pagination
+    def get(envelope_id: int, page: int, size: int):
+        """ Gets transaction history for an envelope """
+        return acct_trn_history_schema.dump(
+            EnvelopeTransactionModel.get_history(envelope_id, page, size)
+        )

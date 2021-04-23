@@ -113,3 +113,29 @@ class AccountTransactionHistorySchema(Schema):
     page = fields.Integer()
     per_page = fields.Integer(data_key="size")
     total = fields.Integer()
+
+
+class EnvelopeTransactionHistoryEntrySchema(Schema):
+    """ Single envelope transaction in history (read-only) schema """
+
+    # EnvelopeTransaction fields
+    id = fields.Integer()
+    amount = fields.Integer()
+    balance = fields.Integer()
+    memo = fields.String(missing="")
+    transaction_id = fields.Integer(data_key="transactionId")
+    # Transaction fields
+    transaction_type = fields.String(data_key="type")
+    recorded_date = fields.Date(data_key="recordedDate")
+    payee = fields.String()
+
+
+class EnvelopeTransactionHistorySchema(Schema):
+    """ Paginated envelope transaction history (read-only) schema """
+
+    items = fields.List(
+        fields.Nested(EnvelopeTransactionHistoryEntrySchema), data_key="transactions"
+    )
+    page = fields.Integer()
+    per_page = fields.Integer(data_key="size")
+    total = fields.Integer()

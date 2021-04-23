@@ -118,9 +118,8 @@ class TransactionRetrievalTestCase(BaseTestCase):
             if len(expected_trn) == 7:
                 (date, payee, trn_type, amount, balance, memo, cleared) = expected_trn
             else:
-                memo = None
                 cleared = None
-                (date, payee, trn_type, amount, balance) = expected_trn
+                (date, payee, trn_type, amount, balance, memo) = expected_trn
             actual_trn = actual["transactions"][i]
             assert actual_trn.get("id") is not None
             assert actual_trn.get("transactionId") is not None
@@ -129,8 +128,7 @@ class TransactionRetrievalTestCase(BaseTestCase):
             assert trn_type == actual_trn.get("type")
             assert amount == actual_trn.get("amount")
             assert balance == actual_trn.get("balance")
-            if memo is not None:
-                assert memo == actual_trn.get("memo")
+            assert memo == actual_trn.get("memo")
             if cleared is not None:
                 assert cleared == actual_trn.get("cleared")
 
@@ -220,3 +218,88 @@ class TransactionRetrievalTestCase(BaseTestCase):
         resp = self.client.get(f"/api/accounts/{ids['acct_id_2']}/transactions?page=2")
         assert resp.status_code == 200
         self.check_transaction_history(resp.json, acct_2_transactions[10:16], 2, 10, 16)
+
+    def test_envelope_transaction_history(self):
+        env_1_transactions = [
+            ["2021-04-29", "Vendor B", "income", 10000, 29000, ""],
+            ["2021-04-28", "Vendor A", "expense", -1000, 19000, ""],
+            ["2021-04-28", "Vendor B", "expense", -1500, 20000, ""],
+            ["2021-04-27", "Vendor C", "expense", -1000, 21500, "Note 9"],
+            ["2021-04-26", "Vendor B", "income", 10000, 22500, ""],
+            ["2021-04-24", "Vendor B", "expense", -1000, 12500, ""],
+            ["2021-04-21", "Vendor A", "expense", -1000, 13500, ""],
+            ["2021-04-21", "Vendor B", "expense", -1000, 14500, ""],
+            ["2021-04-21", "Vendor A", "expense", -1000, 15500, ""],
+            ["2021-04-19", "Vendor C", "expense", -1500, 16500, "Note 7"],
+            ["2021-04-17", "Vendor B", "expense", -1000, 18000, ""],
+            ["2021-04-15", "Vendor B", "expense", -1000, 19000, ""],
+            ["2021-04-14", "Vendor B", "expense", -1500, 20000, ""],
+            ["2021-04-14", "Vendor B", "expense", -1000, 21500, ""],
+            ["2021-04-12", "Vendor C", "income", 10000, 22500, "Note 6"],
+            ["2021-04-11", "Vendor C", "expense", -1000, 12500, "Note 5"],
+            ["2021-04-10", "Vendor B", "expense", -1000, 13500, ""],
+            ["2021-04-07", "Vendor A", "expense", -1000, 14500, ""],
+            ["2021-04-06", "Vendor C", "income", 10000, 15500, "Note 3"],
+            ["2021-04-04", "Vendor C", "expense", -1000, 5500, "Note 2"],
+            ["2021-04-03", "Vendor B", "expense", -1000, 6500, ""],
+            ["2021-04-02", "Vendor B", "expense", -1000, 7500, ""],
+            ["2021-04-01", "Vendor A", "expense", -1500, 8500, ""],
+            ["2021-04-01", "Vendor A", "income", 10000, 10000, ""],
+        ]
+        env_2_transactions = [
+            ["2021-04-30", "Vendor A", "expense", -1000, 4500, ""],
+            ["2021-04-29", "Vendor C", "expense", -1500, 5500, "Note 11"],
+            ["2021-04-28", "Vendor C", "expense", -1000, 7000, "Note 10"],
+            ["2021-04-26", "Vendor A", "expense", -1000, 8000, ""],
+            ["2021-04-24", "Vendor A", "expense", -1000, 9000, ""],
+            ["2021-04-22", "Vendor C", "expense", -1500, 10000, "Note 8"],
+            ["2021-04-20", "Vendor A", "income", 10000, 11500, ""],
+            ["2021-04-20", "Vendor B", "expense", -1000, 1500, ""],
+            ["2021-04-17", "Vendor B", "expense", -1000, 2500, ""],
+            ["2021-04-15", "Vendor B", "expense", -1000, 3500, ""],
+            ["2021-04-14", "Vendor A", "expense", -1000, 4500, ""],
+            ["2021-04-14", "Vendor A", "income", 10000, 5500, ""],
+            ["2021-04-08", "Vendor C", "expense", -1500, -4500, "Note 4"],
+            ["2021-04-06", "Vendor B", "expense", -1000, -3000, ""],
+            ["2021-04-03", "Vendor B", "expense", -1000, -2000, ""],
+            ["2021-04-02", "Vendor C", "expense", -1000, -1000, "Note 1"],
+        ]
+
+        ids = self.create_transaction_history()
+
+        # Default pagination
+        resp = self.client.get(f"/api/envelopes/{ids['env_id_1']}/transactions")
+        assert resp.status_code == 200
+        self.check_transaction_history(resp.json, env_1_transactions[0:10], 1, 10, 24)
+
+        # Second page, default size
+        resp = self.client.get(f"/api/envelopes/{ids['env_id_1']}/transactions?page=2")
+        assert resp.status_code == 200
+        self.check_transaction_history(resp.json, env_1_transactions[10:20], 2, 10, 24)
+
+        # Third page, default size
+        resp = self.client.get(f"/api/envelopes/{ids['env_id_1']}/transactions?page=3")
+        assert resp.status_code == 200
+        self.check_transaction_history(resp.json, env_1_transactions[20:], 3, 10, 24)
+
+        # Explicit size
+        resp = self.client.get(f"/api/envelopes/{ids['env_id_1']}/transactions?size=12")
+        assert resp.status_code == 200
+        self.check_transaction_history(resp.json, env_1_transactions[0:12], 1, 12, 24)
+
+        # Explicit size, second page
+        resp = self.client.get(
+            f"/api/envelopes/{ids['env_id_1']}/transactions?size=12&page=2"
+        )
+        assert resp.status_code == 200
+        self.check_transaction_history(resp.json, env_1_transactions[12:], 2, 12, 24)
+
+        # Other envelope, first page
+        resp = self.client.get(f"/api/envelopes/{ids['env_id_2']}/transactions")
+        assert resp.status_code == 200
+        self.check_transaction_history(resp.json, env_2_transactions[0:10], 1, 10, 16)
+
+        # Other envelope, second page
+        resp = self.client.get(f"/api/envelopes/{ids['env_id_2']}/transactions?page=2")
+        assert resp.status_code == 200
+        self.check_transaction_history(resp.json, env_2_transactions[10:16], 2, 10, 16)
