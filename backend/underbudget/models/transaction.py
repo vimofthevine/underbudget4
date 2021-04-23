@@ -152,6 +152,9 @@ class AccountTransactionModel(db.Model):
         size: int = 20,
     ):
         """ Gets ordered transaction history for a single account. """
+        # Join account transactions and transactions so we can sort by date
+        # and include payee, date, type.
+        # Use a postgres window function to calculate the running balance.
         sql = text(
             "SELECT "
             f"{cls.__tablename__}.id as id, "
@@ -161,7 +164,12 @@ class AccountTransactionModel(db.Model):
             f"{cls.__tablename__}.transaction_id as transaction_id, "
             f"{TransactionModel.__tablename__}.transaction_type as transaction_type, "
             f"{TransactionModel.__tablename__}.recorded_date as recorded_date, "
-            f"{TransactionModel.__tablename__}.payee as payee "
+            f"{TransactionModel.__tablename__}.payee as payee, "
+            f"sum({cls.__tablename__}.amount) over "
+            f"  (partition by {cls.__tablename__}.account_id "
+            f"  ORDER BY {TransactionModel.__tablename__}.recorded_date, "
+            f"  {cls.__tablename__}.id"
+            f") AS balance "
             f"FROM {cls.__tablename__}, {TransactionModel.__tablename__} "
             f"WHERE {cls.__tablename__}.transaction_id = {TransactionModel.__tablename__}.id "
             f"AND {cls.__tablename__}.account_id = :account_id "

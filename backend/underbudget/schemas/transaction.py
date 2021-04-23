@@ -94,6 +94,7 @@ class AccountTransactionHistoryEntrySchema(Schema):
     # AccountTransaction fields
     id = fields.Integer()
     amount = fields.Integer()
+    balance = fields.Integer()
     memo = fields.String(missing="")
     cleared = fields.Boolean(missing=False)
     transaction_id = fields.Integer(data_key="transactionId")
