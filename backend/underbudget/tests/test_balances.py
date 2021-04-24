@@ -134,11 +134,46 @@ class BalanceTestCase(BaseTestCase):
         assert resp.status_code == 200
         assert resp.json.get("balance") == 20000
 
+    def test_envelope_balance(self):
+        ids = self.create_transaction_history()
+
+        # Default date (since this is written in April 2021 and all transactions
+        # are marked for March 2021, it includes all history)
+        resp = self.client.get(f"/api/envelopes/{ids['env_id_1']}/balance")
+        assert resp.status_code == 200
+        assert resp.json.get("balance") == 29000
+
+        # Explicit date, no transactions on date
+        resp = self.client.get(
+            f"/api/envelopes/{ids['env_id_1']}/balance?date=2021-03-18"
+        )
+        assert resp.status_code == 200
+        assert resp.json.get("balance") == 18000
+
+        # Explicit date, one transaction on date
+        resp = self.client.get(
+            f"/api/envelopes/{ids['env_id_1']}/balance?date=2021-03-07"
+        )
+        assert resp.status_code == 200
+        assert resp.json.get("balance") == 14500
+
+        # Explicit date, multiple transactions on date
+        resp = self.client.get(
+            f"/api/envelopes/{ids['env_id_1']}/balance?date=2021-03-21"
+        )
+        assert resp.status_code == 200
+        assert resp.json.get("balance") == 13500
+
     def test_invalid_dates(self):
         ids = self.create_transaction_history()
 
         resp = self.client.get(
             f"/api/accounts/{ids['acct_id_1']}/balance?date=yesterday"
+        )
+        assert resp.status_code == 400
+
+        resp = self.client.get(
+            f"/api/envelopes/{ids['env_id_1']}/balance?date=yesterday"
         )
         assert resp.status_code == 400
 
