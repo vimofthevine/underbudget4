@@ -305,7 +305,7 @@ class TransactionRetrievalTestCase(BaseTestCase):
         self.check_transaction_history(resp.json, env_2_transactions[10:16], 2, 10, 16)
 
     def test_invalid_ids(self):
-        ids = self.create_transaction_history()
+        self.create_transaction_history()
 
         resp = self.client.get("/api/accounts/99999/transactions")
         assert resp.status_code == 404
