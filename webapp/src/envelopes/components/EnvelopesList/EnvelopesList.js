@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
 import React from 'react';
 
-import useMobile from '../../../common/hooks/useMobile';
 import useEnvelopes from '../../hooks/useEnvelopes';
 import EnvelopeCategoryListItem from '../EnvelopeCategoryListItem';
 
@@ -16,7 +15,6 @@ const useStyles = makeStyles((theme) => ({
 
 const EnvelopesList = () => {
   const classes = useStyles();
-  const mobile = useMobile();
   const { categories, error, status } = useEnvelopes();
 
   return (
@@ -24,7 +22,7 @@ const EnvelopesList = () => {
       {status === 'success' && (
         <List className={classes.list} disablePadding>
           {categories.map((cat) => (
-            <EnvelopeCategoryListItem category={cat} dense={!mobile} key={cat.id} />
+            <EnvelopeCategoryListItem category={cat} dense key={cat.id} />
           ))}
         </List>
       )}

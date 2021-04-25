@@ -303,3 +303,12 @@ class TransactionRetrievalTestCase(BaseTestCase):
         resp = self.client.get(f"/api/envelopes/{ids['env_id_2']}/transactions?page=2")
         assert resp.status_code == 200
         self.check_transaction_history(resp.json, env_2_transactions[10:16], 2, 10, 16)
+
+    def test_invalid_ids(self):
+        self.create_transaction_history()
+
+        resp = self.client.get("/api/accounts/99999/transactions")
+        assert resp.status_code == 404
+
+        resp = self.client.get("/api/envelopes/99999/transactions")
+        assert resp.status_code == 404

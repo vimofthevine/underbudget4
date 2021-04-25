@@ -20,27 +20,26 @@ def create_app(app_config=config.BaseConfig) -> Flask:
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from underbudget.views.accounts import AccountCategoriesView, AccountsView
-    from underbudget.views.demo import DemoView
-    from underbudget.views.envelopes import EnvelopeCategoriesView, EnvelopesView
-    from underbudget.views.health import HealthView
-    from underbudget.views.ledgers import LedgersView
-    from underbudget.views.transactions import (
-        AccountTransactionsView,
-        EnvelopeTransactionsView,
-        TransactionsView,
-    )
+    import underbudget.views.accounts as accounts
+    import underbudget.views.balances as balances
+    import underbudget.views.demo as demo
+    import underbudget.views.envelopes as envelopes
+    import underbudget.views.health as health
+    import underbudget.views.ledgers as ledgers
+    import underbudget.views.transactions as transactions
 
-    HealthView.register(app)
-    LedgersView.register(app)
-    AccountCategoriesView.register(app)
-    AccountsView.register(app)
-    EnvelopeCategoriesView.register(app)
-    EnvelopesView.register(app)
-    TransactionsView.register(app)
-    AccountTransactionsView.register(app)
-    EnvelopeTransactionsView.register(app)
-    DemoView.register(app)
+    health.HealthView.register(app)
+    ledgers.LedgersView.register(app)
+    accounts.AccountCategoriesView.register(app)
+    accounts.AccountsView.register(app)
+    envelopes.EnvelopeCategoriesView.register(app)
+    envelopes.EnvelopesView.register(app)
+    transactions.TransactionsView.register(app)
+    transactions.AccountTransactionsView.register(app)
+    transactions.EnvelopeTransactionsView.register(app)
+    balances.AccountBalancesView.register(app)
+    balances.EnvelopeBalancesView.register(app)
+    demo.DemoView.register(app)
 
     # pylint: disable=unused-variable
     @app.errorhandler(SQLAlchemyError)

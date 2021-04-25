@@ -36,11 +36,16 @@ const threeCategories = {
   ],
 };
 
-const render = ({ route = '/accounts', width = '800px' } = {}) => {
+const render = (categories, code = 200, { route = '/accounts', width = '800px' } = {}) => {
   window.matchMedia = createMediaQuery(width);
   configure({ defaultHidden: true });
 
   localStorage.setItem('underbudget.selected.ledger', '2');
+
+  const mockAxios = new MockAdapter(axios);
+  mockAxios.onGet('/api/ledgers/2').reply(200, { currency: 840 });
+  mockAxios.onGet('/api/ledgers/2/account-categories').reply(code, categories);
+  mockAxios.onGet(/\/api\/accounts\/\d\/balance/).reply(200, { balance: 1234 });
 
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -59,6 +64,7 @@ const render = ({ route = '/accounts', width = '800px' } = {}) => {
       </QueryClientProvider>,
       { route },
     ),
+    mockAxios,
     queryClient,
   };
 };
@@ -92,23 +98,20 @@ const getListItems = () => {
 };
 
 test('should show error message when not logged in', async () => {
-  const mockAxios = new MockAdapter(axios);
-  mockAxios.onGet('/api/ledgers/2/account-categories').reply(401);
-
-  render();
+  render({}, 401);
 
   await waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument());
   expect(screen.getByText(/you are no longer logged in/i)).toBeInTheDocument();
 });
 
 test('should collapse category sections', async () => {
-  const mockAxios = new MockAdapter(axios);
-  mockAxios.onGet('/api/ledgers/2/account-categories').reply(200, threeCategories);
+  render(threeCategories);
 
-  render();
   expect(screen.getByRole('progressbar')).toBeInTheDocument();
   await waitFor(() => expect(screen.getByText('Category 1')).toBeInTheDocument());
   expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+
+  expect(screen.getAllByText('$12.34')).toHaveLength(4);
 
   const items = getListItems();
 
@@ -122,12 +125,9 @@ test('should collapse category sections', async () => {
 });
 
 test('should prompt to confirm deletion of category', async () => {
-  const mockAxios = new MockAdapter(axios);
-  mockAxios.onGet('/api/ledgers/2/account-categories').reply(200, threeCategories);
-  mockAxios.onDelete('/api/account-categories/2').reply(204);
-
-  const { queryClient } = render();
+  const { mockAxios, queryClient } = render(threeCategories);
   const invalidateQueries = jest.spyOn(queryClient, 'invalidateQueries');
+  mockAxios.onDelete('/api/account-categories/2').reply(204);
 
   await waitFor(() => expect(screen.getByText('Category 1')).toBeInTheDocument());
 
@@ -176,12 +176,9 @@ test('should prompt to confirm deletion of category', async () => {
 });
 
 test('should prompt to confirm deletion of account', async () => {
-  const mockAxios = new MockAdapter(axios);
-  mockAxios.onGet('/api/ledgers/2/account-categories').reply(200, threeCategories);
-  mockAxios.onDelete('/api/accounts/2').reply(204);
-
-  const { queryClient } = render();
+  const { mockAxios, queryClient } = render(threeCategories);
   const invalidateQueries = jest.spyOn(queryClient, 'invalidateQueries');
+  mockAxios.onDelete('/api/accounts/2').reply(204);
 
   await waitFor(() => expect(screen.getByText('Category 1')).toBeInTheDocument());
 
@@ -219,10 +216,7 @@ test('should prompt to confirm deletion of account', async () => {
 });
 
 test('should navigate to route to modify category', async () => {
-  const mockAxios = new MockAdapter(axios);
-  mockAxios.onGet('/api/ledgers/2/account-categories').reply(200, threeCategories);
-
-  const { history } = render({ route: '/accounts?show-archived=true' });
+  const { history } = render(threeCategories, 200, { route: '/accounts?show-archived=true' });
   await waitFor(() => expect(screen.getByText('Category 1')).toBeInTheDocument());
 
   const items = getListItems();
@@ -234,10 +228,7 @@ test('should navigate to route to modify category', async () => {
 });
 
 test('should navigate to route to modify account', async () => {
-  const mockAxios = new MockAdapter(axios);
-  mockAxios.onGet('/api/ledgers/2/account-categories').reply(200, threeCategories);
-
-  const { history } = render({ route: '/accounts?show-archived=true' });
+  const { history } = render(threeCategories, 200, { route: '/accounts?show-archived=true' });
   await waitFor(() => expect(screen.getByText('Category 1')).toBeInTheDocument());
 
   const items = getListItems();

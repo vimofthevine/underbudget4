@@ -243,6 +243,7 @@ class AccountTransactionsView(MethodView):
     @with_pagination
     def get(account_id: int, page: int, size: int):
         """ Gets transaction history for an account """
+        AccountModel.query.get_or_404(account_id)
         return acct_trn_history_schema.dump(
             AccountTransactionModel.get_history(account_id, page, size)
         )
@@ -265,6 +266,7 @@ class EnvelopeTransactionsView(MethodView):
     @with_pagination
     def get(envelope_id: int, page: int, size: int):
         """ Gets transaction history for an envelope """
+        EnvelopeModel.query.get_or_404(envelope_id)
         return acct_trn_history_schema.dump(
             EnvelopeTransactionModel.get_history(envelope_id, page, size)
         )
