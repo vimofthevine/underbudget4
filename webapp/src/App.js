@@ -29,7 +29,7 @@ function App() {
           <AppProviders>
             <Routes>
               <Route path={`${routes.ACCOUNTS}/*`} element={<AccountsListPage />} />
-              <Route path={`${routes.ACCOUNT}/:id`} element={<AccountTransactionsPage />} />
+              <Route path={`${routes.ACCOUNT}/:id/*`} element={<AccountTransactionsPage />} />
               <Route path={`${routes.ENVELOPES}/*`} element={<EnvelopePages />} />
               <Route path={`${routes.LEDGERS}/*`} element={<LedgerPages />} />
               <Route path='*' element={<div>hi</div>} />
