@@ -5,7 +5,8 @@ import React, { useMemo } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import AccountPages from './accounts/components/AccountPages';
+import AccountsListPage from './accounts/components/AccountsListPage';
+import AccountTransactionsPage from './accounts/components/AccountTransactionsPage';
 import AppProviders from './common/components/AppProviders';
 import createTheme from './common/utils/createTheme';
 import queryConfig from './common/utils/queryConfig';
@@ -27,7 +28,8 @@ function App() {
         <BrowserRouter>
           <AppProviders>
             <Routes>
-              <Route path={`${routes.ACCOUNTS}/*`} element={<AccountPages />} />
+              <Route path={`${routes.ACCOUNTS}/*`} element={<AccountsListPage />} />
+              <Route path={`${routes.ACCOUNT}/:id`} element={<AccountTransactionsPage />} />
               <Route path={`${routes.ENVELOPES}/*`} element={<EnvelopePages />} />
               <Route path={`${routes.LEDGERS}/*`} element={<LedgerPages />} />
               <Route path='*' element={<div>hi</div>} />
