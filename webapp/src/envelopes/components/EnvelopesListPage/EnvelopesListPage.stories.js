@@ -29,6 +29,7 @@ export default {
     (story, { parameters }) => {
       const {
         categories = [],
+        currency = 840,
         delayResponse = 1000,
         deleteCode = 204,
         getAllCode = 200,
@@ -38,6 +39,9 @@ export default {
       } = parameters;
 
       const mockAxios = new MockAdapter(axios, { delayResponse });
+
+      // Ledger
+      mockAxios.onGet('/api/ledgers/2').reply(getAllCode, { currency });
 
       // Categories
       mockAxios.onGet('/api/ledgers/2/envelope-categories').reply(getAllCode, {
@@ -54,6 +58,10 @@ export default {
 
       // Envelopes
       mockAxios.onPost(/\/api\/envelope-categories\/\d+\/envelopes/).reply(postCode);
+      mockAxios.onGet(/\/api\/envelopes\/\d+\/balance/).reply((conf) => {
+        const [id] = conf.url.match(/\d+/);
+        return [getAllCode, { balance: id * 110 + 20 }];
+      });
       mockAxios.onGet(/\/api\/envelopes\/\d+/).reply((conf) => {
         const [id] = conf.url.match(/\d+/);
         const acctId = id % 100;
@@ -80,6 +88,12 @@ GetError.parameters = {
 export const FewCategories = Template.bind({});
 FewCategories.parameters = {
   categories: [1, 1, 2],
+};
+
+export const HryvniaCategories = Template.bind({});
+HryvniaCategories.parameters = {
+  categories: [1, 1, 2],
+  currency: 980,
 };
 
 export const ManyEnvelopes = Template.bind({});

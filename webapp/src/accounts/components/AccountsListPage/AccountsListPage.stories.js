@@ -28,6 +28,7 @@ export default {
     (story, { parameters } = {}) => {
       const {
         categories = [],
+        currency = 840,
         delayResponse = 1000,
         deleteCode = 204,
         getAllCode = 200,
@@ -37,6 +38,9 @@ export default {
       } = parameters;
 
       const mockAxios = new MockAdapter(axios, { delayResponse });
+
+      // Ledger
+      mockAxios.onGet('/api/ledgers/2').reply(getAllCode, { currency });
 
       // Categories
       mockAxios.onGet('/api/ledgers/2/account-categories').reply(getAllCode, {
@@ -53,6 +57,10 @@ export default {
 
       // Accounts
       mockAxios.onPost(/\/api\/account-categories\/\d+\/accounts/).reply(postCode);
+      mockAxios.onGet(/\/api\/accounts\/\d+\/balance/).reply((conf) => {
+        const [id] = conf.url.match(/\d+/);
+        return [getAllCode, { balance: id * 1010 + 50 }];
+      });
       mockAxios.onGet(/\/api\/accounts\/\d+/).reply((conf) => {
         const [id] = conf.url.match(/\d+/);
         const acctId = id % 100;
@@ -79,6 +87,12 @@ GetError.parameters = {
 export const FewCategories = Template.bind({});
 FewCategories.parameters = {
   categories: [1, 1, 2],
+};
+
+export const EuroCurrency = Template.bind({});
+EuroCurrency.parameters = {
+  categories: [1, 1, 2],
+  currency: 978,
 };
 
 export const ManyAccounts = Template.bind({});
