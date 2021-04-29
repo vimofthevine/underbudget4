@@ -1,0 +1,153 @@
+import React from 'react';
+
+import FullTransactionsTable from './FullTransactionsTable';
+
+export default {
+  title: 'transactions/FullTransactionsTable',
+  component: FullTransactionsTable,
+};
+
+const Template = (args) => <FullTransactionsTable {...args} />;
+Template.args = {
+  formatMoney: (v) =>
+    new Intl.NumberFormat(undefined, { currency: 'USD', style: 'currency' }).format(v / 100),
+};
+
+export const NoTransactions = Template.bind({});
+
+export const OneTransaction = Template.bind({});
+OneTransaction.args = {
+  ...Template.args,
+  transactions: [
+    {
+      id: 12,
+      recordedDate: '2021-04-26',
+      payee: 'Grocer',
+      memo: 'baking supplies',
+      cleared: false,
+      amount: -1674,
+      balance: 51244,
+    },
+  ],
+};
+
+export const SeveralTransactions = Template.bind({});
+SeveralTransactions.args = {
+  ...Template.args,
+  transactions: [
+    OneTransaction.args.transactions[0],
+    {
+      id: 11,
+      recordedDate: '2021-04-26',
+      payee: 'Gas',
+      memo: '',
+      cleared: false,
+      amount: -2000,
+      balance: 53244,
+    },
+    {
+      id: 10,
+      recordedDate: '2021-04-24',
+      payee: 'Rent',
+      memo: '',
+      cleared: true,
+      amount: -64579,
+      balance: 117823,
+    },
+  ],
+};
+
+export const ManyTransactions = Template.bind({});
+ManyTransactions.args = {
+  ...Template.args,
+  transactions: [
+    ...SeveralTransactions.args.transactions,
+    {
+      id: 9,
+      recordedDate: '2021-04-22',
+      payee: 'Payday',
+      memo: '',
+      cleared: true,
+      amount: 63408,
+      balance: 54415,
+    },
+    {
+      id: 8,
+      recordedDate: '2021-04-20',
+      payee: 'Movies',
+      memo: '',
+      cleared: true,
+      amount: -1466,
+      balance: 55881,
+    },
+    {
+      id: 7,
+      recordedDate: '2021-04-20',
+      payee: 'Restaurant with a really long name',
+      memo: '',
+      cleared: true,
+      amount: -2786,
+      balance: 58667,
+    },
+    {
+      id: 6,
+      recordedDate: '2021-04-14',
+      payee: 'Utilities',
+      memo: '',
+      cleared: true,
+      amount: -9872,
+      balance: 68539,
+    },
+    {
+      id: 5,
+      recordedDate: '2021-04-13',
+      payee: 'Grocer',
+      memo: '',
+      cleared: true,
+      amount: -14730,
+      balance: 83269,
+    },
+    {
+      id: 4,
+      recordedDate: '2021-04-12',
+      payee: 'Dept. store',
+      memo: 'new shoes',
+      cleared: true,
+      amount: -4351,
+      balance: 87620,
+    },
+    {
+      id: 3,
+      recordedDate: '2021-04-11',
+      payee: 'Online order',
+      memo: 'Pantry items, new socks, craft supplies, pet food, and candy',
+      cleared: true,
+      amount: -26174,
+      balance: 113794,
+    },
+    {
+      id: 2,
+      recordedDate: '2021-04-07',
+      payee: 'Payday',
+      memo: '',
+      cleared: true,
+      amount: 63409,
+      balance: 50385,
+    },
+    {
+      id: 1,
+      recordedDate: '2021-04-05',
+      payee: 'Phone bill',
+      memo: '',
+      cleared: true,
+      amount: -4997,
+      balance: 55382,
+    },
+  ],
+};
+
+export const HasCleared = Template.bind({});
+HasCleared.args = {
+  ...ManyTransactions.args,
+  hasCleared: true,
+};
