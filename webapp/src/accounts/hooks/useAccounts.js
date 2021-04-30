@@ -6,7 +6,7 @@ import { useQuery } from 'react-query';
 import useErrorMessage from '../../common/hooks/useErrorMessage';
 import useSelectedLedger from '../../ledgers/hooks/useSelectedLedger';
 
-export default function useAccounts() {
+export default function useAccounts({ sorted = true } = {}) {
   const ledger = useSelectedLedger();
 
   const createErrorMessage = useErrorMessage({ request: 'Unable to retrieve accounts' });
@@ -20,16 +20,18 @@ export default function useAccounts() {
     { enabled: !!ledger },
   );
 
-  const categories = React.useMemo(
-    () =>
-      !data
-        ? []
-        : sortBy(data.categories, ['name']).map((c) => ({
-            ...c,
-            accounts: sortBy(c.accounts, ['name']),
-          })),
-    [data],
-  );
+  const categories = React.useMemo(() => {
+    if (!data) {
+      return [];
+    }
+    if (!sorted) {
+      return data.categories;
+    }
+    return sortBy(data.categories, ['name']).map((c) => ({
+      ...c,
+      accounts: sortBy(c.accounts, ['name']),
+    }));
+  }, [data, sorted]);
 
   return {
     categories,
