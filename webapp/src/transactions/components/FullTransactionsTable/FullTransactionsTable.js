@@ -1,5 +1,6 @@
 import Box from '@material-ui/core/Box';
 import Collapse from '@material-ui/core/Collapse';
+import IconButton from '@material-ui/core/IconButton';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -7,9 +8,11 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import CheckIcon from '@material-ui/icons/Check';
+import EditIcon from '@material-ui/icons/Edit';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import useNavigateKeepingSearch from '../../../common/hooks/useNavigateKeepingSearch';
 import HistoryTransactionPropTypes from '../../utils/history-transaction-prop-types';
 import TransactionDetailsTable from '../TransactionDetailsTable';
 
@@ -20,8 +23,9 @@ const FullTableHead = ({ hasCleared }) => (
       <TableCell>Payee</TableCell>
       <TableCell>Memo</TableCell>
       {hasCleared && <TableCell>Cleared</TableCell>}
-      <TableCell style={{ width: '12em' }}>Amount</TableCell>
-      <TableCell style={{ width: '12em' }}>Balance</TableCell>
+      <TableCell style={{ width: '10em' }}>Amount</TableCell>
+      <TableCell style={{ width: '10em' }}>Balance</TableCell>
+      <TableCell />
     </TableRow>
   </TableHead>
 );
@@ -33,6 +37,10 @@ FullTableHead.propTypes = {
 const FullTableRow = ({ formatMoney, hasCleared, transaction }) => {
   const [open, setOpen] = React.useState(false);
   const handleClick = () => setOpen((old) => !old);
+
+  const navigate = useNavigateKeepingSearch();
+  const handleModify = () => navigate(`modify-transaction/${transaction.transactionId}`);
+
   return (
     <>
       <TableRow hover onClick={handleClick} style={{ cursor: 'pointer' }}>
@@ -46,9 +54,14 @@ const FullTableRow = ({ formatMoney, hasCleared, transaction }) => {
         )}
         <TableCell>{formatMoney(transaction.amount)}</TableCell>
         <TableCell>{formatMoney(transaction.balance)}</TableCell>
+        <TableCell onClick={(e) => e.stopPropagation()} padding='checkbox'>
+          <IconButton onClick={handleModify}>
+            <EditIcon />
+          </IconButton>
+        </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell colSpan={hasCleared ? 6 : 5} style={{ paddingBottom: 0, paddingTop: 0 }}>
+        <TableCell colSpan={hasCleared ? 7 : 6} style={{ paddingBottom: 0, paddingTop: 0 }}>
           <Collapse in={open} timeout='auto' unmountOnExit>
             <Box margin={1}>
               <Typography component='div' gutterBottom variant='h6'>
