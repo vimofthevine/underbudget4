@@ -1,3 +1,5 @@
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 
 import FullTransactionsTable from './FullTransactionsTable';
@@ -5,6 +7,31 @@ import FullTransactionsTable from './FullTransactionsTable';
 export default {
   title: 'transactions/FullTransactionsTable',
   component: FullTransactionsTable,
+  decorators: [
+    (story) => {
+      const mockAxios = new MockAdapter(axios, { delayResponse: 1000 });
+      mockAxios.onGet(/\/api\/transactions\/\d+/).reply(200, {
+        accountTransactions: [
+          {
+            id: 2,
+            accountId: 2,
+            memo: '',
+            amount: -1450,
+          },
+        ],
+        envelopeTransactions: [
+          {
+            id: 5,
+            envelopeId: 2,
+            memo: '',
+            amount: -1450,
+          },
+        ],
+      });
+
+      return story();
+    },
+  ],
 };
 
 const Template = (args) => <FullTransactionsTable {...args} />;
@@ -21,6 +48,7 @@ OneTransaction.args = {
   transactions: [
     {
       id: 12,
+      transactionId: 12,
       recordedDate: '2021-04-26',
       payee: 'Grocer',
       memo: 'baking supplies',
@@ -38,6 +66,7 @@ SeveralTransactions.args = {
     OneTransaction.args.transactions[0],
     {
       id: 11,
+      transactionId: 12,
       recordedDate: '2021-04-26',
       payee: 'Gas',
       memo: '',
@@ -47,6 +76,7 @@ SeveralTransactions.args = {
     },
     {
       id: 10,
+      transactionId: 12,
       recordedDate: '2021-04-24',
       payee: 'Rent',
       memo: '',
@@ -64,6 +94,7 @@ ManyTransactions.args = {
     ...SeveralTransactions.args.transactions,
     {
       id: 9,
+      transactionId: 12,
       recordedDate: '2021-04-22',
       payee: 'Payday',
       memo: '',
@@ -73,6 +104,7 @@ ManyTransactions.args = {
     },
     {
       id: 8,
+      transactionId: 12,
       recordedDate: '2021-04-20',
       payee: 'Movies',
       memo: '',
@@ -82,6 +114,7 @@ ManyTransactions.args = {
     },
     {
       id: 7,
+      transactionId: 12,
       recordedDate: '2021-04-20',
       payee: 'Restaurant with a really long name',
       memo: '',
@@ -91,6 +124,7 @@ ManyTransactions.args = {
     },
     {
       id: 6,
+      transactionId: 12,
       recordedDate: '2021-04-14',
       payee: 'Utilities',
       memo: '',
@@ -100,6 +134,7 @@ ManyTransactions.args = {
     },
     {
       id: 5,
+      transactionId: 12,
       recordedDate: '2021-04-13',
       payee: 'Grocer',
       memo: '',
@@ -109,6 +144,7 @@ ManyTransactions.args = {
     },
     {
       id: 4,
+      transactionId: 12,
       recordedDate: '2021-04-12',
       payee: 'Dept. store',
       memo: 'new shoes',
@@ -118,6 +154,7 @@ ManyTransactions.args = {
     },
     {
       id: 3,
+      transactionId: 12,
       recordedDate: '2021-04-11',
       payee: 'Online order',
       memo: 'Pantry items, new socks, craft supplies, pet food, and candy',
@@ -127,6 +164,7 @@ ManyTransactions.args = {
     },
     {
       id: 2,
+      transactionId: 12,
       recordedDate: '2021-04-07',
       payee: 'Payday',
       memo: '',
@@ -136,6 +174,7 @@ ManyTransactions.args = {
     },
     {
       id: 1,
+      transactionId: 12,
       recordedDate: '2021-04-05',
       payee: 'Phone bill',
       memo: '',
