@@ -3,6 +3,7 @@ import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
+import TableContainer from '@material-ui/core/TableContainer';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -84,19 +85,21 @@ FullTableRow.propTypes = {
 
 const FullTransactionsTable = ({ formatMoney, hasCleared, transactions }) => {
   return (
-    <Table aria-label='transactions table' size='small' stickyHeader>
-      <FullTableHead hasCleared={hasCleared} />
-      <TableBody>
-        {transactions.map((transaction) => (
-          <FullTableRow
-            key={transaction.id}
-            formatMoney={formatMoney}
-            hasCleared={hasCleared}
-            transaction={transaction}
-          />
-        ))}
-      </TableBody>
-    </Table>
+    <TableContainer>
+      <Table aria-label='transactions table' size='small' stickyHeader>
+        <FullTableHead hasCleared={hasCleared} />
+        <TableBody>
+          {transactions.map((transaction) => (
+            <FullTableRow
+              key={transaction.id}
+              formatMoney={formatMoney}
+              hasCleared={hasCleared}
+              transaction={transaction}
+            />
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 

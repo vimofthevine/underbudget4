@@ -1,6 +1,7 @@
 import Collapse from '@material-ui/core/Collapse';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
+import TableContainer from '@material-ui/core/TableContainer';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import groupBy from 'lodash/groupBy';
@@ -36,25 +37,27 @@ MobileTableRow.propTypes = {
 const MobileTransactionsTable = ({ formatMoney, hasCleared, transactions }) => {
   const byDate = React.useMemo(() => groupBy(transactions, 'recordedDate'), [transactions]);
   return (
-    <Table aria-label='transactions table' size='small' stickyHeader>
-      <TableBody>
-        {Object.keys(byDate).map((recordedDate) => (
-          <React.Fragment key={recordedDate}>
-            <TableRow>
-              <TableCell colSpan={2}>{recordedDate}</TableCell>
-            </TableRow>
-            {byDate[recordedDate].map((transaction) => (
-              <MobileTableRow
-                key={transaction.id}
-                formatMoney={formatMoney}
-                hasCleared={hasCleared}
-                transaction={transaction}
-              />
-            ))}
-          </React.Fragment>
-        ))}
-      </TableBody>
-    </Table>
+    <TableContainer>
+      <Table aria-label='transactions table' size='small' stickyHeader>
+        <TableBody>
+          {Object.keys(byDate).map((recordedDate) => (
+            <React.Fragment key={recordedDate}>
+              <TableRow>
+                <TableCell colSpan={2}>{recordedDate}</TableCell>
+              </TableRow>
+              {byDate[recordedDate].map((transaction) => (
+                <MobileTableRow
+                  key={transaction.id}
+                  formatMoney={formatMoney}
+                  hasCleared={hasCleared}
+                  transaction={transaction}
+                />
+              ))}
+            </React.Fragment>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 
