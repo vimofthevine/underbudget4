@@ -7,12 +7,16 @@ import { useParams } from 'react-router-dom';
 // import { Routes, Route } from 'react-router-dom';
 
 import FullAppPage from '../../../common/components/FullAppPage';
+import useMobile from '../../../common/hooks/useMobile';
 import useNavigateKeepingSearch from '../../../common/hooks/useNavigateKeepingSearch';
 import useFormatMoney from '../../../ledgers/hooks/useFormatMoney';
+import TransactionHistory from '../../../transactions/components/TransactionHistory';
+import useFetchAccountTransactions from '../../../transactions/hooks/useFetchAccountTransactions';
 import useFetchAccount from '../../hooks/useFetchAccount';
 import useFetchAccountBalance from '../../hooks/useFetchAccountBalance';
 
 const AccountTransactionsPage = () => {
+  const mobile = useMobile();
   const formatMoney = useFormatMoney();
   const navigate = useNavigateKeepingSearch();
   const { id } = useParams();
@@ -51,17 +55,17 @@ const AccountTransactionsPage = () => {
 
   const title = React.useMemo(() => {
     if (!data) {
-      return 'Account';
+      return '...';
     }
-    if (!balanceData) {
+    if (mobile || !balanceData) {
       return data.name;
     }
     return `${data.name} | ${formatMoney(balanceData.balance)}`;
-  }, [data, balanceData]);
+  }, [data, balanceData, mobile]);
 
   return (
     <FullAppPage primaryActions={primaryActions} secondaryActions={secondaryActions} title={title}>
-      <div>account transactions</div>
+      <TransactionHistory hasCleared useFetchTransactions={useFetchAccountTransactions} />
     </FullAppPage>
   );
 };

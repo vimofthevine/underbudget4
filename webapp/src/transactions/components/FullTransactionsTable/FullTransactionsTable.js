@@ -49,9 +49,7 @@ const FullTableRow = ({ formatMoney, hasCleared, transaction }) => {
         <TableCell>{transaction.payee}</TableCell>
         <TableCell>{transaction.memo}</TableCell>
         {hasCleared && (
-          <TableCell align='center'>
-            {transaction.cleared && <CheckIcon style={{ fontSize: '0.9em' }} />}
-          </TableCell>
+          <TableCell padding='checkbox'>{transaction.cleared && <CheckIcon />}</TableCell>
         )}
         <TableCell>{formatMoney(transaction.amount)}</TableCell>
         <TableCell>{formatMoney(transaction.balance)}</TableCell>
