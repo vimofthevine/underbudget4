@@ -5,7 +5,7 @@ const propTypes = PropTypes.shape({
   transactionId: PropTypes.number.isRequired,
   type: PropTypes.string.isRequired,
   recordedDate: PropTypes.string.isRequired,
-  payee: PropTypes.number.isRequired,
+  payee: PropTypes.string.isRequired,
   memo: PropTypes.string.isRequired,
   amount: PropTypes.number.isRequired,
   balance: PropTypes.number.isRequired,

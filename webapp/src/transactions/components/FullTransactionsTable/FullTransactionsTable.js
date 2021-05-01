@@ -49,12 +49,14 @@ const FullTableRow = ({ formatMoney, hasCleared, transaction }) => {
         <TableCell>{transaction.payee}</TableCell>
         <TableCell>{transaction.memo}</TableCell>
         {hasCleared && (
-          <TableCell padding='checkbox'>{transaction.cleared && <CheckIcon />}</TableCell>
+          <TableCell aria-label={transaction.cleared ? 'cleared' : 'uncleared'} padding='checkbox'>
+            {transaction.cleared && <CheckIcon />}
+          </TableCell>
         )}
         <TableCell>{formatMoney(transaction.amount)}</TableCell>
         <TableCell>{formatMoney(transaction.balance)}</TableCell>
         <TableCell onClick={(e) => e.stopPropagation()} padding='checkbox'>
-          <IconButton onClick={handleModify}>
+          <IconButton aria-label='modify transaction' onClick={handleModify}>
             <EditIcon />
           </IconButton>
         </TableCell>
@@ -102,13 +104,12 @@ const FullTransactionsTable = ({ formatMoney, hasCleared, transactions }) => {
 };
 
 FullTransactionsTable.propTypes = {
-  formatMoney: PropTypes.func,
+  formatMoney: PropTypes.func.isRequired,
   hasCleared: PropTypes.bool,
   transactions: PropTypes.arrayOf(HistoryTransactionPropTypes),
 };
 
 FullTransactionsTable.defaultProps = {
-  formatMoney: (v) => v,
   hasCleared: false,
   transactions: [],
 };

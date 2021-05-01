@@ -1,4 +1,3 @@
-import Collapse from '@material-ui/core/Collapse';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -8,33 +7,29 @@ import groupBy from 'lodash/groupBy';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import useNavigateKeepingSearch from '../../../common/hooks/useNavigateKeepingSearch';
 import HistoryTransactionPropTypes from '../../utils/history-transaction-prop-types';
 
-const MobileTableRow = ({ formatMoney, hasCleared, transaction }) => {
-  const [open, setOpen] = React.useState(false);
-  const handleClick = () => setOpen((old) => !old);
+const MobileTableRow = ({ formatMoney, transaction }) => {
+  const navigate = useNavigateKeepingSearch();
+  const handleClick = () => navigate(`transaction/${transaction.transactionId}`);
+
   return (
     <>
       <TableRow onClick={handleClick}>
         <TableCell style={{ paddingLeft: '2em' }}>{transaction.payee}</TableCell>
         <TableCell>{formatMoney(transaction.amount)}</TableCell>
       </TableRow>
-      <Collapse in={open} unmountOnExit>
-        <TableRow>
-          <TableCell colSpan={2}>details {hasCleared}</TableCell>
-        </TableRow>
-      </Collapse>
     </>
   );
 };
 
 MobileTableRow.propTypes = {
   formatMoney: PropTypes.func.isRequired,
-  hasCleared: PropTypes.bool.isRequired,
   transaction: HistoryTransactionPropTypes.isRequired,
 };
 
-const MobileTransactionsTable = ({ formatMoney, hasCleared, transactions }) => {
+const MobileTransactionsTable = ({ formatMoney, transactions }) => {
   const byDate = React.useMemo(() => groupBy(transactions, 'recordedDate'), [transactions]);
   return (
     <TableContainer>
@@ -49,7 +44,6 @@ const MobileTransactionsTable = ({ formatMoney, hasCleared, transactions }) => {
                 <MobileTableRow
                   key={transaction.id}
                   formatMoney={formatMoney}
-                  hasCleared={hasCleared}
                   transaction={transaction}
                 />
               ))}
@@ -62,14 +56,11 @@ const MobileTransactionsTable = ({ formatMoney, hasCleared, transactions }) => {
 };
 
 MobileTransactionsTable.propTypes = {
-  formatMoney: PropTypes.func,
-  hasCleared: PropTypes.bool,
+  formatMoney: PropTypes.func.isRequired,
   transactions: PropTypes.arrayOf(HistoryTransactionPropTypes),
 };
 
 MobileTransactionsTable.defaultProps = {
-  formatMoney: (v) => v,
-  hasCleared: false,
   transactions: [],
 };
 
