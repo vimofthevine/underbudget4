@@ -29,10 +29,10 @@ const render = (account, code = 200) => {
     ...renderWithRouter(
       <QueryClientProvider client={queryClient}>
         <Routes>
-          <Route path='/accounts/modify/:id' element={<ModifyAccountDialog />} />
+          <Route path='/accounts/:id/modify' element={<ModifyAccountDialog />} />
         </Routes>
       </QueryClientProvider>,
-      { route: `/accounts/modify/${account.id}` },
+      { route: `/accounts/${account.id}/modify` },
     ),
     mockAxios,
     queryClient,
@@ -47,7 +47,7 @@ test('should close dialog when unable to fetch account', async () => {
   await waitFor(() =>
     expect(screen.queryByRole('heading', { name: /modify account/i })).not.toBeInTheDocument(),
   );
-  await waitFor(() => expect(history.location.pathname).toBe('/accounts/'));
+  await waitFor(() => expect(history.location.pathname).toBe('/accounts/3'));
 });
 
 test('should prevent submission when required fields are missing', async () => {

@@ -58,6 +58,14 @@ const render = ({ route = '/account/7', width = '800px' } = {}) => {
 // TODO implement these tests
 // test('should display create-transaction dialog if initial route matches', async () => {});
 
+test('should display modify-account dialog if initial route matches', async () => {
+  const { history } = render({ route: '/account/1/modify' });
+  expect(screen.getByRole('heading', { name: /modify account/i })).toBeInTheDocument();
+
+  await waitFor(() => expect(history.location.pathname).toBe('/account/1'));
+  expect(screen.queryByRole('heading', { name: /modify account/i })).not.toBeInTheDocument();
+});
+
 // test('should prompt to delete account', async () => {});
 
 // test('should archive account', async () => {});

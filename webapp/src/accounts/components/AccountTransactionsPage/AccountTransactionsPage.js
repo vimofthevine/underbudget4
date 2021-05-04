@@ -4,7 +4,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-// import { Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 import FullAppPage from '../../../common/components/FullAppPage';
 import useMobile from '../../../common/hooks/useMobile';
@@ -14,6 +14,7 @@ import TransactionHistory from '../../../transactions/components/TransactionHist
 import useFetchAccountTransactions from '../../../transactions/hooks/useFetchAccountTransactions';
 import useFetchAccount from '../../hooks/useFetchAccount';
 import useFetchAccountBalance from '../../hooks/useFetchAccountBalance';
+import ModifyAccountDialog from '../ModifyAccountDialog';
 
 const AccountTransactionsPage = () => {
   const mobile = useMobile();
@@ -66,6 +67,9 @@ const AccountTransactionsPage = () => {
   return (
     <FullAppPage primaryActions={primaryActions} secondaryActions={secondaryActions} title={title}>
       <TransactionHistory hasCleared useFetchTransactions={useFetchAccountTransactions} />
+      <Routes>
+        <Route path='modify' element={<ModifyAccountDialog />} />
+      </Routes>
     </FullAppPage>
   );
 };
