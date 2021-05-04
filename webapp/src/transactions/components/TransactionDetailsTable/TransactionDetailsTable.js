@@ -48,7 +48,7 @@ const TransactionDetailsTable = ({ formatMoney, id }) => {
           <TableRow key={trn.id}>
             <TableCell>{accountName(trn.accountId)}</TableCell>
             <TableCell>{trn.memo}</TableCell>
-            <TableCell>{trn.cleared && <CheckIcon style={{ fontSize: '0.9em' }} />}</TableCell>
+            <TableCell padding='checkbox'>{trn.cleared && <CheckIcon />}</TableCell>
             <TableCell>{formatMoney(trn.amount)}</TableCell>
           </TableRow>
         ))}
