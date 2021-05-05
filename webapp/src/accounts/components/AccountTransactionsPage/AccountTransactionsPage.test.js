@@ -67,7 +67,7 @@ test('should display modify-account dialog if initial route matches', async () =
 });
 
 test('should prompt to confirm deletion of account', async () => {
-  const { mockAxios, queryClient } = render();
+  const { history, mockAxios, queryClient } = render();
   const invalidateQueries = jest.spyOn(queryClient, 'invalidateQueries');
   mockAxios.onDelete('/api/accounts/7').reply(204);
 
@@ -100,6 +100,8 @@ test('should prompt to confirm deletion of account', async () => {
   await waitFor(() => expect(mockAxios.history.delete).toHaveLength(1));
   expect(mockAxios.history.delete[0].url).toBe('/api/accounts/7');
   expect(invalidateQueries).toHaveBeenCalledWith(['account-categories', { ledger: '2' }]);
+
+  await waitFor(() => expect(history.location.pathname).toBe('/accounts'));
 });
 
 // TODO implement these tests

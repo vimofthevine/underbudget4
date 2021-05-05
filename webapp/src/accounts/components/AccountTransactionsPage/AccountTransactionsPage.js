@@ -9,6 +9,7 @@ import FullAppPage from '../../../common/components/FullAppPage';
 import useConfirmation from '../../../common/hooks/useConfirmation';
 import useMobile from '../../../common/hooks/useMobile';
 import useNavigateKeepingSearch from '../../../common/hooks/useNavigateKeepingSearch';
+import * as routes from '../../../common/utils/routes';
 import useFormatMoney from '../../../ledgers/hooks/useFormatMoney';
 import TransactionHistory from '../../../transactions/components/TransactionHistory';
 import useFetchAccountTransactions from '../../../transactions/hooks/useFetchAccountTransactions';
@@ -23,7 +24,9 @@ const AccountTransactionsPage = () => {
   const mobile = useMobile();
   const navigate = useNavigateKeepingSearch();
 
-  const { mutate: deleteAccount } = useDeleteAccount();
+  const { mutate: deleteAccount } = useDeleteAccount({
+    onSuccess: () => navigate({ pathname: routes.ACCOUNTS, search: '' }),
+  });
 
   const { id } = useParams();
   const { data } = useFetchAccount({ id });
