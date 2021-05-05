@@ -73,24 +73,24 @@ const getListItems = () => {
   const items = {};
 
   const buttons = screen.queryAllByRole('button');
-  expect(buttons).toHaveLength(14);
+  expect(buttons).toHaveLength(10);
 
   let index = 0;
-  const verifyNextButtons = (id, text) => {
+  const verifyNextButtons = (id, text, hasOverflow) => {
     expect(buttons[index]).toHaveTextContent(text);
     expect(buttons[index]).toBeVisible();
     items[id] = {
       button: buttons[index],
-      overflow: buttons[index + 1],
+      overflow: hasOverflow ? buttons[index + 1] : null,
     };
-    index += 2;
+    index += hasOverflow ? 2 : 1;
   };
 
-  verifyNextButtons('category1', 'Category 1');
+  verifyNextButtons('category1', 'Category 1', true);
   verifyNextButtons('account1', 'Account 1');
   verifyNextButtons('account2', 'Account 2');
-  verifyNextButtons('category2', 'Category 2');
-  verifyNextButtons('category3', 'Category 3');
+  verifyNextButtons('category2', 'Category 2', true);
+  verifyNextButtons('category3', 'Category 3', true);
   verifyNextButtons('account3', 'Account 3');
   verifyNextButtons('account4', 'Account 4');
 
@@ -184,17 +184,5 @@ test('should navigate to route to modify category', async () => {
   userEvent.click(items.category3.overflow);
   userEvent.click(screen.getByRole('menuitem', { name: /modify account category/i }));
   await waitFor(() => expect(history.location.pathname).toBe('/accounts/modify-category/3'));
-  expect(history.location.search).toBe('?show-archived=true');
-});
-
-test('should navigate to route to modify account', async () => {
-  const { history } = render(threeCategories, 200, { route: '/accounts?show-archived=true' });
-  await waitFor(() => expect(screen.getByText('Category 1')).toBeInTheDocument());
-
-  const items = getListItems();
-
-  userEvent.click(items.account4.overflow);
-  userEvent.click(screen.getByRole('menuitem', { name: /modify account/i }));
-  await waitFor(() => expect(history.location.pathname).toBe('/accounts/modify/4'));
   expect(history.location.search).toBe('?show-archived=true');
 });
