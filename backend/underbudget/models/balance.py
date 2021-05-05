@@ -20,15 +20,17 @@ class AccountBalanceModel:
     ) -> int:
         """ Gets the balance of an account as of a particular date. """
         result = (
-            db.session.query(func.sum(AccountTransactionModel.amount).label("balance"))
+            db.session.query(
+                func.sum(AccountTransactionModel.amount).label("balance"), func.count()
+            )
             .join(TransactionModel)
             .filter(AccountTransactionModel.account_id == account_id)
             .filter(TransactionModel.recorded_date <= date)
             .first()
         )
         if result:
-            return result[0]
-        return 0
+            return {"balance": result[0], "total": result[1]}
+        return {"balance": 0, "total": 0}
 
 
 class EnvelopeBalanceModel:
@@ -41,12 +43,14 @@ class EnvelopeBalanceModel:
     ) -> int:
         """ Gets the balance of an envelope as of a particular date. """
         result = (
-            db.session.query(func.sum(EnvelopeTransactionModel.amount).label("balance"))
+            db.session.query(
+                func.sum(EnvelopeTransactionModel.amount).label("balance"), func.count()
+            )
             .join(TransactionModel)
             .filter(EnvelopeTransactionModel.envelope_id == envelope_id)
             .filter(TransactionModel.recorded_date <= date)
             .first()
         )
         if result:
-            return result[0]
-        return 0
+            return {"balance": result[0], "total": result[1]}
+        return {"balance": 0, "total": 0}
