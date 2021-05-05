@@ -175,46 +175,6 @@ test('should prompt to confirm deletion of category', async () => {
   expect(invalidateQueries).toHaveBeenCalledWith(['account-categories', { ledger: '2' }]);
 });
 
-test('should prompt to confirm deletion of account', async () => {
-  const { mockAxios, queryClient } = render(threeCategories);
-  const invalidateQueries = jest.spyOn(queryClient, 'invalidateQueries');
-  mockAxios.onDelete('/api/accounts/2').reply(204);
-
-  await waitFor(() => expect(screen.getByText('Category 1')).toBeInTheDocument());
-
-  const items = getListItems();
-
-  // TODO test that account with transactions cannot be deleted
-
-  // Reject cancellation
-  userEvent.click(items.account2.overflow);
-  userEvent.click(screen.getByRole('menuitem', { name: /delete account/i }));
-  await waitFor(() =>
-    expect(screen.getByRole('heading', { name: /confirm/i })).toBeInTheDocument(),
-  );
-  userEvent.click(screen.getByRole('button', { name: /cancel/i }));
-
-  await waitFor(() =>
-    expect(screen.queryByRole('heading', { name: /confirm/i })).not.toBeInTheDocument(),
-  );
-  expect(mockAxios.history.delete).toHaveLength(0);
-
-  // Confirm cancellation
-  userEvent.click(items.account2.overflow);
-  userEvent.click(screen.getByRole('menuitem', { name: /delete account/i }));
-  await waitFor(() =>
-    expect(screen.getByRole('heading', { name: /confirm/i })).toBeInTheDocument(),
-  );
-  userEvent.click(screen.getByRole('button', { name: /ok/i }));
-
-  await waitFor(() =>
-    expect(screen.queryByRole('heading', { name: /confirm/i })).not.toBeInTheDocument(),
-  );
-  await waitFor(() => expect(mockAxios.history.delete).toHaveLength(1));
-  expect(mockAxios.history.delete[0].url).toBe('/api/accounts/2');
-  expect(invalidateQueries).toHaveBeenCalledWith(['account-categories', { ledger: '2' }]);
-});
-
 test('should navigate to route to modify category', async () => {
   const { history } = render(threeCategories, 200, { route: '/accounts?show-archived=true' });
   await waitFor(() => expect(screen.getByText('Category 1')).toBeInTheDocument());

@@ -11,7 +11,10 @@ import AccountForm from '../AccountForm';
 const ModifyAccountDialog = ({ onExitNavigateTo }) => {
   const navigate = useNavigateKeepingSearch();
   const { id } = useParams();
-  const { data, isLoading } = useFetchAccount({ id }, { onError: () => navigate(onExitNavigateTo) });
+  const { data, isLoading } = useFetchAccount(
+    { id },
+    { onError: () => navigate(onExitNavigateTo) },
+  );
   const category = {
     ...AccountForm.initialValues,
     ...data,

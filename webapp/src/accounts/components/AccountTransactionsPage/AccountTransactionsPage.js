@@ -3,26 +3,44 @@ import ArchiveIcon from '@material-ui/icons/Archive';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useParams } from 'react-router-dom';
 
 import FullAppPage from '../../../common/components/FullAppPage';
+import useConfirmation from '../../../common/hooks/useConfirmation';
 import useMobile from '../../../common/hooks/useMobile';
 import useNavigateKeepingSearch from '../../../common/hooks/useNavigateKeepingSearch';
 import useFormatMoney from '../../../ledgers/hooks/useFormatMoney';
 import TransactionHistory from '../../../transactions/components/TransactionHistory';
 import useFetchAccountTransactions from '../../../transactions/hooks/useFetchAccountTransactions';
+import useDeleteAccount from '../../hooks/useDeleteAccount';
 import useFetchAccount from '../../hooks/useFetchAccount';
 import useFetchAccountBalance from '../../hooks/useFetchAccountBalance';
 import ModifyAccountDialog from '../ModifyAccountDialog';
 
 const AccountTransactionsPage = () => {
-  const mobile = useMobile();
+  const confirm = useConfirmation();
   const formatMoney = useFormatMoney();
+  const mobile = useMobile();
   const navigate = useNavigateKeepingSearch();
+
+  const { mutate: deleteAccount } = useDeleteAccount();
+
   const { id } = useParams();
   const { data } = useFetchAccount({ id });
   const { data: balanceData } = useFetchAccountBalance({ id });
+
+  const handleDelete = React.useCallback(
+    () =>
+      confirm({
+        message: [
+          `Delete account ${data && data.name}?`,
+          'This action is permanent and cannot be undone.',
+        ],
+      }).then(() => {
+        deleteAccount(id);
+      }),
+    [data, id],
+  );
 
   const primaryActions = [
     {
@@ -42,12 +60,14 @@ const AccountTransactionsPage = () => {
   const secondaryActions = [
     {
       'aria-label': 'Delete account',
+      disabled: balanceData && balanceData.total > 0,
       icon: <DeleteIcon />,
-      onClick: () => navigate('delete'),
+      onClick: handleDelete,
       text: 'Delete',
     },
     {
       'aria-label': 'Archive account',
+      disabled: true,
       icon: <ArchiveIcon />,
       onClick: () => navigate('archive'),
       text: 'Archive',
