@@ -81,7 +81,7 @@ class DemoView(MethodView):
         now = date.today()
         # Start num +1 months ago so the last month is completely in the past
         start = now
-        for i in range(num_months):
+        for _ in range(num_months):
             start = start - timedelta(days=start.day)
         start = start.replace(day=1)
         months = []

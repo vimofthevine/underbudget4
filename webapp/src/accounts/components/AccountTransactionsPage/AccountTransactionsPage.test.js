@@ -71,7 +71,9 @@ test('should prompt to confirm deletion of account', async () => {
   const invalidateQueries = jest.spyOn(queryClient, 'invalidateQueries');
   mockAxios.onDelete('/api/accounts/7').reply(204);
 
-  await waitFor(() => expect(screen.getByRole('heading')).toHaveTextContent('My Account Name | $86,753.09'));
+  await waitFor(() =>
+    expect(screen.getByRole('heading')).toHaveTextContent('My Account Name | $86,753.09'),
+  );
 
   // Reject cancellation
   userEvent.click(screen.getByRole('button', { name: /open actions menu/i }));
