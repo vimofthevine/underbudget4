@@ -3,13 +3,13 @@ import Alert from '@material-ui/lab/Alert';
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import TablePagination from '../../../common/components/TablePagination';
 import useErrorMessage from '../../../common/hooks/useErrorMessage';
 import useMobile from '../../../common/hooks/useMobile';
 import { ACCOUNTS } from '../../../common/utils/routes';
 import scrollToTop from '../../../common/utils/scrollToTop';
 import useFetchLedgers from '../../hooks/useFetchLedgers';
 import setSelectedLedger from '../../utils/setSelectedLedger';
-import LedgerPagination from '../LedgerPagination';
 import LedgersTable from '../LedgersTable';
 
 const LedgersListing = () => {
@@ -44,7 +44,9 @@ const LedgersListing = () => {
       <LedgersTable mobile={mobile} ledgers={ledgers} onSelect={handleSelect} />
       {(isLoading || isFetching) && <LinearProgress />}
       {isError && <Alert severity='error'>{errorMessage}</Alert>}
-      {count > pagination.size && <LedgerPagination count={count} />}
+      {count > pagination.size && (
+        <TablePagination count={count} labelRowsPerPage='Ledgers per page' />
+      )}
     </>
   );
 };

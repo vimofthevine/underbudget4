@@ -33,7 +33,7 @@ class AccountBalancesView(MethodView):
         """ Gets balance for an account """
         AccountModel.query.get_or_404(account_id)
         request_date = args.get("date", date.today())
-        return {"balance": AccountBalanceModel.get_balance(account_id, request_date)}
+        return AccountBalanceModel.get_balance(account_id, request_date)
 
 
 class EnvelopeBalancesView(MethodView):
@@ -55,4 +55,4 @@ class EnvelopeBalancesView(MethodView):
         """ Gets balance for an envelope """
         EnvelopeModel.query.get_or_404(envelope_id)
         request_date = args.get("date", date.today())
-        return {"balance": EnvelopeBalanceModel.get_balance(envelope_id, request_date)}
+        return EnvelopeBalanceModel.get_balance(envelope_id, request_date)

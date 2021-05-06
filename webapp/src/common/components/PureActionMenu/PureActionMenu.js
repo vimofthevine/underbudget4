@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
@@ -30,6 +31,7 @@ const PureActionMenu = ({ actions, anchor, onClose }) => (
           action.onClick();
         }}
       >
+        {action.icon && <ListItemIcon>{action.icon}</ListItemIcon>}
         {action.text}
       </MenuItem>
     ))}

@@ -47,7 +47,7 @@ const LedgersPage = () => {
 
   const createDemo = {
     'aria-label': 'Create demo',
-    icon: <AddCircleIcon />,
+    icon: <AddIcon />,
     onClick: () => navigate('create-demo'),
     text: 'Create demo',
   };

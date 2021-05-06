@@ -6,7 +6,7 @@ import { useQuery } from 'react-query';
 import useErrorMessage from '../../common/hooks/useErrorMessage';
 import useSelectedLedger from '../../ledgers/hooks/useSelectedLedger';
 
-export default function useEnvelopes() {
+export default function useEnvelopes({ sorted = true } = {}) {
   const ledger = useSelectedLedger();
 
   const createErrorMessage = useErrorMessage({ request: 'Unable to retrieve envelopes' });
@@ -20,16 +20,18 @@ export default function useEnvelopes() {
     { enabled: !!ledger },
   );
 
-  const categories = React.useMemo(
-    () =>
-      !data
-        ? []
-        : sortBy(data.categories, ['name']).map((c) => ({
-            ...c,
-            envelopes: sortBy(c.envelopes, ['name']),
-          })),
-    [data],
-  );
+  const categories = React.useMemo(() => {
+    if (!data) {
+      return [];
+    }
+    if (!sorted) {
+      return data.categories;
+    }
+    return sortBy(data.categories, ['name']).map((c) => ({
+      ...c,
+      envelopes: sortBy(c.envelopes, ['name']),
+    }));
+  }, [data, sorted]);
 
   return {
     categories,

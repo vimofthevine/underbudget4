@@ -1,12 +1,12 @@
-import TablePagination from '@material-ui/core/TablePagination';
+import MuiTablePagination from '@material-ui/core/TablePagination';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import useMobile from '../../../common/hooks/useMobile';
+import useMobile from '../../hooks/useMobile';
 
-const LedgerPagination = ({ count }) => {
-  const [searchParams, setSearchParams] = useSearchParams({ page: 1, size: 10 });
+const TablePagination = ({ count, defaultSize, labelRowsPerPage }) => {
+  const [searchParams, setSearchParams] = useSearchParams({ page: 1, size: defaultSize });
   const mobile = useMobile();
 
   const page = parseInt(searchParams.get('page'), 10);
@@ -25,10 +25,10 @@ const LedgerPagination = ({ count }) => {
     });
 
   return (
-    <TablePagination
+    <MuiTablePagination
       component='div'
       count={count}
-      labelRowsPerPage={mobile ? null : 'Ledgers per page'}
+      labelRowsPerPage={mobile ? null : labelRowsPerPage}
       onChangePage={handleChangePage}
       onChangeRowsPerPage={handleChangeRowsPerPage}
       page={page - 1} // zero-based
@@ -37,8 +37,14 @@ const LedgerPagination = ({ count }) => {
   );
 };
 
-LedgerPagination.propTypes = {
+TablePagination.propTypes = {
   count: PropTypes.number.isRequired,
+  defaultSize: PropTypes.number,
+  labelRowsPerPage: PropTypes.string.isRequired,
 };
 
-export default LedgerPagination;
+TablePagination.defaultProps = {
+  defaultSize: 10,
+};
+
+export default TablePagination;

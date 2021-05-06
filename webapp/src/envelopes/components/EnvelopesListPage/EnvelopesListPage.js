@@ -9,7 +9,6 @@ import CreateEnvelopeCategoryDialog from '../CreateEnvelopeCategoryDialog';
 import CreateEnvelopeDialog from '../CreateEnvelopeDialog';
 import EnvelopesList from '../EnvelopesList';
 import ModifyEnvelopeCategoryDialog from '../ModifyEnvelopeCategoryDialog';
-import ModifyEnvelopeDialog from '../ModifyEnvelopeDialog';
 
 const EnvelopesListPage = () => {
   const navigate = useNavigateKeepingSearch();
@@ -36,7 +35,6 @@ const EnvelopesListPage = () => {
         <Route path='create-category' element={<CreateEnvelopeCategoryDialog />} />
         <Route path='modify-category/:id' element={<ModifyEnvelopeCategoryDialog />} />
         <Route path='create' element={<CreateEnvelopeDialog />} />
-        <Route path='modify/:id' element={<ModifyEnvelopeDialog />} />
       </Routes>
     </FullAppPage>
   );

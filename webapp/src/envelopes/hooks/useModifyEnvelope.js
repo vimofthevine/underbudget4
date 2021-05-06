@@ -1,4 +1,5 @@
 import axios from 'axios';
+import toString from 'lodash/toString';
 import useErrorMessage from '../../common/hooks/useErrorMessage';
 import useMutation from '../../common/hooks/useMutation';
 import useSelectedLedger from '../../ledgers/hooks/useSelectedLedger';
@@ -10,7 +11,7 @@ export default (opts) => {
     {
       createErrorMessage: useErrorMessage({ request: 'Unable to modify envelope' }),
       refetchQueries: (_, { id }) => [
-        ['envelope', id],
+        ['envelope', toString(id)],
         ['envelope-categories', { ledger }],
       ],
       ...opts,

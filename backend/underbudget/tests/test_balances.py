@@ -112,6 +112,7 @@ class BalanceTestCase(BaseTestCase):
         resp = self.client.get(f"/api/accounts/{ids['acct_id_1']}/balance")
         assert resp.status_code == 200
         assert resp.json.get("balance") == 18000
+        assert resp.json.get("total") == 24
 
         # Explicit date, no transactions on date
         resp = self.client.get(
@@ -119,6 +120,7 @@ class BalanceTestCase(BaseTestCase):
         )
         assert resp.status_code == 200
         assert resp.json.get("balance") == 13500
+        assert resp.json.get("total") == 18
 
         # Explicit date, one transaction on date
         resp = self.client.get(
@@ -126,6 +128,7 @@ class BalanceTestCase(BaseTestCase):
         )
         assert resp.status_code == 200
         assert resp.json.get("balance") == 18000
+        assert resp.json.get("total") == 14
 
         # Explicit date, multiple transactions on date
         resp = self.client.get(
@@ -133,6 +136,7 @@ class BalanceTestCase(BaseTestCase):
         )
         assert resp.status_code == 200
         assert resp.json.get("balance") == 20000
+        assert resp.json.get("total") == 12
 
     def test_envelope_balance(self):
         ids = self.create_transaction_history()
@@ -142,6 +146,7 @@ class BalanceTestCase(BaseTestCase):
         resp = self.client.get(f"/api/envelopes/{ids['env_id_1']}/balance")
         assert resp.status_code == 200
         assert resp.json.get("balance") == 29000
+        assert resp.json.get("total") == 24
 
         # Explicit date, no transactions on date
         resp = self.client.get(
@@ -149,6 +154,7 @@ class BalanceTestCase(BaseTestCase):
         )
         assert resp.status_code == 200
         assert resp.json.get("balance") == 18000
+        assert resp.json.get("total") == 14
 
         # Explicit date, one transaction on date
         resp = self.client.get(
@@ -156,6 +162,7 @@ class BalanceTestCase(BaseTestCase):
         )
         assert resp.status_code == 200
         assert resp.json.get("balance") == 14500
+        assert resp.json.get("total") == 7
 
         # Explicit date, multiple transactions on date
         resp = self.client.get(
@@ -163,6 +170,7 @@ class BalanceTestCase(BaseTestCase):
         )
         assert resp.status_code == 200
         assert resp.json.get("balance") == 13500
+        assert resp.json.get("total") == 18
 
     def test_invalid_dates(self):
         ids = self.create_transaction_history()
