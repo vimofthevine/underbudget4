@@ -100,6 +100,7 @@ test('should close and refresh query when successful modify', async () => {
     institution: 'My Bank Name',
     accountNumber: '',
   });
+  expect(invalidateQueries).toHaveBeenCalledWith(['account', '3']);
   expect(invalidateQueries).toHaveBeenCalledWith([
     'account-categories',
     {

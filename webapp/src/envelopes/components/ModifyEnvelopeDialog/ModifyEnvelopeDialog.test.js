@@ -97,6 +97,7 @@ test('should close and refresh query when successful modify', async () => {
     categoryId: 2,
     name: 'my envelope name',
   });
+  expect(invalidateQueries).toHaveBeenCalledWith(['envelope', '3']);
   expect(invalidateQueries).toHaveBeenCalledWith([
     'envelope-categories',
     {
