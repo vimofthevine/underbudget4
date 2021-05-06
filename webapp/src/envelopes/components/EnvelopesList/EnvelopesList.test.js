@@ -73,24 +73,24 @@ const getListItems = () => {
   const items = {};
 
   const buttons = screen.queryAllByRole('button');
-  expect(buttons).toHaveLength(14);
+  expect(buttons).toHaveLength(10);
 
   let index = 0;
-  const verifyNextButtons = (id, text) => {
+  const verifyNextButtons = (id, text, hasOverflow = false) => {
     expect(buttons[index]).toHaveTextContent(text);
     expect(buttons[index]).toBeVisible();
     items[id] = {
       button: buttons[index],
-      overflow: buttons[index + 1],
+      overflow: hasOverflow ? buttons[index + 1] : null,
     };
-    index += 2;
+    index += hasOverflow ? 2 : 1;
   };
 
-  verifyNextButtons('category1', 'Category 1');
+  verifyNextButtons('category1', 'Category 1', true);
   verifyNextButtons('envelope1', 'Envelope 1');
   verifyNextButtons('envelope2', 'Envelope 2');
-  verifyNextButtons('category2', 'Category 2');
-  verifyNextButtons('category3', 'Category 3');
+  verifyNextButtons('category2', 'Category 2', true);
+  verifyNextButtons('category3', 'Category 3', true);
   verifyNextButtons('envelope3', 'Envelope 3');
   verifyNextButtons('envelope4', 'Envelope 4');
 
@@ -175,46 +175,6 @@ test('should prompt to confirm deletion of category', async () => {
   expect(invalidateQueries).toHaveBeenCalledWith(['envelope-categories', { ledger: '2' }]);
 });
 
-test('should prompt to confirm deletion of envelope', async () => {
-  const { mockAxios, queryClient } = render(threeCategories);
-  const invalidateQueries = jest.spyOn(queryClient, 'invalidateQueries');
-  mockAxios.onDelete('/api/envelopes/2').reply(204);
-
-  await waitFor(() => expect(screen.getByText('Category 1')).toBeInTheDocument());
-
-  const items = getListItems();
-
-  // TODO test that envelope with transactions cannot be deleted
-
-  // Reject cancellation
-  userEvent.click(items.envelope2.overflow);
-  userEvent.click(screen.getByRole('menuitem', { name: /delete envelope/i }));
-  await waitFor(() =>
-    expect(screen.getByRole('heading', { name: /confirm/i })).toBeInTheDocument(),
-  );
-  userEvent.click(screen.getByRole('button', { name: /cancel/i }));
-
-  await waitFor(() =>
-    expect(screen.queryByRole('heading', { name: /confirm/i })).not.toBeInTheDocument(),
-  );
-  expect(mockAxios.history.delete).toHaveLength(0);
-
-  // Confirm cancellation
-  userEvent.click(items.envelope2.overflow);
-  userEvent.click(screen.getByRole('menuitem', { name: /delete envelope/i }));
-  await waitFor(() =>
-    expect(screen.getByRole('heading', { name: /confirm/i })).toBeInTheDocument(),
-  );
-  userEvent.click(screen.getByRole('button', { name: /ok/i }));
-
-  await waitFor(() =>
-    expect(screen.queryByRole('heading', { name: /confirm/i })).not.toBeInTheDocument(),
-  );
-  await waitFor(() => expect(mockAxios.history.delete).toHaveLength(1));
-  expect(mockAxios.history.delete[0].url).toBe('/api/envelopes/2');
-  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-categories', { ledger: '2' }]);
-});
-
 test('should navigate to route to modify category', async () => {
   const { history } = render(threeCategories, 200, { route: '/envelopes?show-archived=true' });
   await waitFor(() => expect(screen.getByText('Category 1')).toBeInTheDocument());
@@ -224,17 +184,5 @@ test('should navigate to route to modify category', async () => {
   userEvent.click(items.category3.overflow);
   userEvent.click(screen.getByRole('menuitem', { name: /modify envelope category/i }));
   await waitFor(() => expect(history.location.pathname).toBe('/envelopes/modify-category/3'));
-  expect(history.location.search).toBe('?show-archived=true');
-});
-
-test('should navigate to route to modify envelope', async () => {
-  const { history } = render(threeCategories, 200, { route: '/envelopes?show-archived=true' });
-  await waitFor(() => expect(screen.getByText('Category 1')).toBeInTheDocument());
-
-  const items = getListItems();
-
-  userEvent.click(items.envelope4.overflow);
-  userEvent.click(screen.getByRole('menuitem', { name: /modify envelope/i }));
-  await waitFor(() => expect(history.location.pathname).toBe('/envelopes/modify/4'));
   expect(history.location.search).toBe('?show-archived=true');
 });

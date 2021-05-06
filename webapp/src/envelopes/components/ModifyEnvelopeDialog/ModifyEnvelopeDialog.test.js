@@ -29,10 +29,10 @@ const render = (envelope, code = 200) => {
     ...renderWithRouter(
       <QueryClientProvider client={queryClient}>
         <Routes>
-          <Route path='/envelopes/modify/:id' element={<ModifyEnvelopeDialog />} />
+          <Route path='/envelopes/:id/modify' element={<ModifyEnvelopeDialog />} />
         </Routes>
       </QueryClientProvider>,
-      { route: `/envelopes/modify/${envelope.id}` },
+      { route: `/envelopes/${envelope.id}/modify` },
     ),
     mockAxios,
     queryClient,
@@ -47,7 +47,7 @@ test('should close dialog when unable to fetch envelope', async () => {
   await waitFor(() =>
     expect(screen.queryByRole('heading', { name: /modify envelope/i })).not.toBeInTheDocument(),
   );
-  await waitFor(() => expect(history.location.pathname).toBe('/envelopes/'));
+  await waitFor(() => expect(history.location.pathname).toBe('/envelopes/3'));
 });
 
 test('should prevent submission when required fields are missing', async () => {

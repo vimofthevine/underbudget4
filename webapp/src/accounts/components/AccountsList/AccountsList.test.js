@@ -76,7 +76,7 @@ const getListItems = () => {
   expect(buttons).toHaveLength(10);
 
   let index = 0;
-  const verifyNextButtons = (id, text, hasOverflow) => {
+  const verifyNextButtons = (id, text, hasOverflow = false) => {
     expect(buttons[index]).toHaveTextContent(text);
     expect(buttons[index]).toBeVisible();
     items[id] = {

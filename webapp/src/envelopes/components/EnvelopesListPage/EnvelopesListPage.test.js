@@ -59,14 +59,6 @@ test('should display create-category dialog if initial route matches', async () 
   expect(screen.queryByRole('heading', { name: /create category/i })).not.toBeInTheDocument();
 });
 
-test('should display modify-envelope dialog if initial route matches', async () => {
-  const { history } = render({ route: '/envelopes/modify/1' });
-  expect(screen.getByRole('heading', { name: /modify envelope/i })).toBeInTheDocument();
-
-  await waitFor(() => expect(history.location.pathname).toBe('/envelopes/'));
-  expect(screen.queryByRole('heading', { name: /modify envelope/i })).not.toBeInTheDocument();
-});
-
 test('should display modify-category dialog if initial route matches', async () => {
   const { history } = render({ route: '/envelopes/modify-category/1' });
   expect(screen.getByRole('heading', { name: /modify category/i })).toBeInTheDocument();
