@@ -16,6 +16,7 @@ export default {
 
       const mockAxios = new MockAdapter(axios, { delayResponse });
 
+      mockAxios.onGet('/api/ledgers/2').reply(200, { currency: 840 });
       mockAxios.onGet('/api/ledgers/2/account-categories').reply(code, {
         categories: [
           {
@@ -66,12 +67,15 @@ GetError.parameters = {
 export const SimpleTransaction = Template.bind({});
 SimpleTransaction.parameters = {
   transaction: {
+    recordedDate: '2021-05-07',
+    type: 'income',
+    payee: 'Vendor',
     accountTransactions: [
       {
         id: 2,
         accountId: 2,
         memo: '',
-        amount: -1450,
+        amount: 1450,
       },
     ],
     envelopeTransactions: [
@@ -79,7 +83,7 @@ SimpleTransaction.parameters = {
         id: 5,
         envelopeId: 2,
         memo: '',
-        amount: -1450,
+        amount: 1450,
       },
     ],
   },
@@ -88,6 +92,9 @@ SimpleTransaction.parameters = {
 export const SplitTransaction = Template.bind({});
 SplitTransaction.parameters = {
   transaction: {
+    recordedDate: '2021-05-07',
+    type: 'expense',
+    payee: 'Vendor',
     accountTransactions: [
       {
         id: 2,
@@ -117,17 +124,22 @@ SplitTransaction.parameters = {
 export const AccountTransfer = Template.bind({});
 AccountTransfer.parameters = {
   transaction: {
+    recordedDate: '2021-05-07',
+    type: 'transfer',
+    payee: 'Transfer',
     accountTransactions: [
       {
         id: 2,
         accountId: 2,
         memo: '',
+        cleared: false,
         amount: 3500,
       },
       {
         id: 3,
         accountId: 1,
         memo: '',
+        cleared: true,
         amount: -3500,
       },
     ],
@@ -138,6 +150,9 @@ AccountTransfer.parameters = {
 export const EnvelopeTransfer = Template.bind({});
 EnvelopeTransfer.parameters = {
   transaction: {
+    recordedDate: '2021-05-07',
+    type: 'allocation',
+    payee: 'Budget',
     accountTransactions: [],
     envelopeTransactions: [
       {
