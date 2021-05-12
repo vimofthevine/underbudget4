@@ -3,7 +3,7 @@ import React from 'react';
 import useEnvelopes from './useEnvelopes';
 
 export default () => {
-  const { categories } = useEnvelopes({ sorted: false });
+  const { categories = [] } = useEnvelopes({ sorted: false });
   return React.useCallback(
     (id) => {
       for (let i = 0; i < categories.length; i += 1) {

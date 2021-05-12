@@ -6,8 +6,8 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
-import Typography from '@material-ui/core/Typography';
 import CheckIcon from '@material-ui/icons/Check';
+import Alert from '@material-ui/lab/Alert';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -27,7 +27,7 @@ const TransactionDetailsList = ({ id }) => {
   }
 
   if (!data) {
-    return <Typography variant='body1'>Unable to retrieve transaction details</Typography>;
+    return <Alert severity='error'>Unable to retrieve transaction details</Alert>;
   }
 
   return (
@@ -64,7 +64,7 @@ const TransactionDetailsList = ({ id }) => {
 };
 
 TransactionDetailsList.propTypes = {
-  id: PropTypes.number.isRequired,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 };
 
 export default TransactionDetailsList;

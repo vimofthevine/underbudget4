@@ -3,7 +3,7 @@ import React from 'react';
 import useAccounts from './useAccounts';
 
 export default () => {
-  const { categories } = useAccounts({ sorted: false });
+  const { categories = [] } = useAccounts({ sorted: false });
   return React.useCallback(
     (id) => {
       for (let i = 0; i < categories.length; i += 1) {
