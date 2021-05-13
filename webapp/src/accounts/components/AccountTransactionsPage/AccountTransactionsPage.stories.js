@@ -45,7 +45,9 @@ export default {
           total: 12,
         });
         mockAxios.onGet(/\/api\/transactions\/\d+/).reply(200, {
-          accountTransactions: [{ id: 2, accountId: 2, memo: '', amount: -1450 }],
+          recordedDate: '2021-05-13',
+          payee: 'Vendor Name',
+          accountTransactions: [{ id: 2, accountId: 2, memo: '', cleared: true, amount: -1450 }],
           envelopeTransactions: [{ id: 5, envelopeId: 2, memo: '', amount: -1450 }],
         });
       } else {

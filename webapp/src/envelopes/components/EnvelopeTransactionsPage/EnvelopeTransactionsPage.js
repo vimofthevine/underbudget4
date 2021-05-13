@@ -11,6 +11,7 @@ import useMobile from '../../../common/hooks/useMobile';
 import useNavigateKeepingSearch from '../../../common/hooks/useNavigateKeepingSearch';
 import * as routes from '../../../common/utils/routes';
 import useFormatMoney from '../../../ledgers/hooks/useFormatMoney';
+import TransactionDetailsDialog from '../../../transactions/components/TransactionDetailsDialog';
 import TransactionHistory from '../../../transactions/components/TransactionHistory';
 import useFetchEnvelopeTransactions from '../../../transactions/hooks/useFetchEnvelopeTransactions';
 import useDeleteEnvelope from '../../hooks/useDeleteEnvelope';
@@ -92,6 +93,10 @@ const EnvelopeTransactionsPage = () => {
       <TransactionHistory useFetchTransactions={useFetchEnvelopeTransactions} />
       <Routes>
         <Route path='modify' element={<ModifyEnvelopeDialog />} />
+        <Route
+          path='transaction/:transactionId/*'
+          element={<TransactionDetailsDialog onExitNavigateTo='../..' />}
+        />
       </Routes>
     </FullAppPage>
   );
