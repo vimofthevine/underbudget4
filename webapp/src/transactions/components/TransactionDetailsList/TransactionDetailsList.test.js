@@ -1,4 +1,4 @@
-import { configure, screen, waitFor, within } from '@testing-library/react';
+import { configure, screen, waitFor } from '@testing-library/react';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
@@ -82,40 +82,6 @@ const render = (transaction, code = 200) => {
   };
 };
 
-const verifyHeader = (row) => {
-  const cells = within(row).getAllByRole('columnheader');
-  expect(cells).toHaveLength(4);
-  expect(cells[0]).toHaveTextContent('Name');
-  expect(cells[1]).toHaveTextContent('Memo');
-  expect(cells[2]).toHaveTextContent('Cleared');
-  expect(cells[3]).toHaveTextContent('Amount');
-};
-
-const verifyIsAccountsRow = (row) => {
-  const cells = within(row).getAllByRole('cell');
-  expect(cells).toHaveLength(1);
-  expect(cells[0]).toHaveTextContent('Accounts');
-};
-
-const verifyTransactionRow = (row, name, memo, isCleared, amount) => {
-  const cells = within(row).getAllByRole('cell');
-  expect(cells).toHaveLength(4);
-  expect(cells[0]).toHaveTextContent(name);
-  expect(cells[1]).toHaveTextContent(memo);
-  if (isCleared) {
-    expect(cells[2]).not.toBeEmptyDOMElement();
-  } else {
-    expect(cells[2]).toBeEmptyDOMElement();
-  }
-  expect(cells[3]).toHaveTextContent(amount);
-};
-
-const verifyIsEnvelopesRow = (row) => {
-  const cells = within(row).getAllByRole('cell');
-  expect(cells).toHaveLength(1);
-  expect(cells[0]).toHaveTextContent('Envelopes');
-};
-
 test('should display error message if unable to fetch transaction', async () => {
   render({}, 404);
   expect(screen.getByRole('progressbar')).toBeInTheDocument();
@@ -138,10 +104,10 @@ test('should display income transaction', async () => {
   const items = screen.queryAllByRole('listitem');
   expect(items).toHaveLength(5);
   expect(items[0]).toHaveTextContent('Vendor Name2021-05-10');
-  expect(items[1]).toHaveTextContent('Accounts')
-  expect(items[2]).toHaveTextContent('Category 1:Account 2$14.50')
-  expect(items[3]).toHaveTextContent('Envelopes')
-  expect(items[4]).toHaveTextContent('Category 2:Envelope 3$14.50')
+  expect(items[1]).toHaveTextContent('Accounts');
+  expect(items[2]).toHaveTextContent('Category 1:Account 2$14.50');
+  expect(items[3]).toHaveTextContent('Envelopes');
+  expect(items[4]).toHaveTextContent('Category 2:Envelope 3$14.50');
 });
 
 test('should display simple expense transaction', async () => {
