@@ -38,6 +38,13 @@ const render = ({ route = '/account/7', width = '800px' } = {}) => {
       },
     ],
   });
+  mockAxios.onGet('/api/transactions/42').reply(200, {
+    payee: '',
+    recordedDate: '',
+    type: '',
+    accountTransactions: [],
+    envelopeTransactions: [],
+  });
 
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
@@ -57,6 +64,15 @@ const render = ({ route = '/account/7', width = '800px' } = {}) => {
 
 // TODO implement these tests
 // test('should display create-transaction dialog if initial route matches', async () => {});
+
+test('should display transaction details dialog if initial route matches', async () => {
+  const { history } = render({ route: '/account/1/transaction/42' });
+  expect(screen.getByRole('heading', { name: /details/i })).toBeInTheDocument();
+
+  userEvent.click(screen.getByRole('button', { name: /close/i }));
+  await waitFor(() => expect(history.location.pathname).toBe('/account/1'));
+  expect(screen.queryByRole('heading', { name: /details/i })).not.toBeInTheDocument();
+});
 
 test('should display modify-account dialog if initial route matches', async () => {
   const { history } = render({ route: '/account/1/modify' });

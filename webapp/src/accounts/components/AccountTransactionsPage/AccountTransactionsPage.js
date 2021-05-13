@@ -11,6 +11,7 @@ import useMobile from '../../../common/hooks/useMobile';
 import useNavigateKeepingSearch from '../../../common/hooks/useNavigateKeepingSearch';
 import * as routes from '../../../common/utils/routes';
 import useFormatMoney from '../../../ledgers/hooks/useFormatMoney';
+import TransactionDetailsDialog from '../../../transactions/components/TransactionDetailsDialog';
 import TransactionHistory from '../../../transactions/components/TransactionHistory';
 import useFetchAccountTransactions from '../../../transactions/hooks/useFetchAccountTransactions';
 import useDeleteAccount from '../../hooks/useDeleteAccount';
@@ -92,6 +93,10 @@ const AccountTransactionsPage = () => {
       <TransactionHistory hasCleared useFetchTransactions={useFetchAccountTransactions} />
       <Routes>
         <Route path='modify' element={<ModifyAccountDialog />} />
+        <Route
+          path='transaction/:transactionId/*'
+          element={<TransactionDetailsDialog onExitNavigateTo='../..' />}
+        />
       </Routes>
     </FullAppPage>
   );
