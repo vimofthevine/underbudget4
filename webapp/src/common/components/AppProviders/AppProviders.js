@@ -1,3 +1,5 @@
+import MomentUtils from '@date-io/moment';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -6,11 +8,13 @@ import { SelectionContextProvider } from '../../contexts/selection';
 import { SnackbarContextProvider } from '../../contexts/snackbar';
 
 const AppProviders = ({ children }) => (
-  <ConfirmationContextProvider>
-    <SnackbarContextProvider>
-      <SelectionContextProvider>{children}</SelectionContextProvider>
-    </SnackbarContextProvider>
-  </ConfirmationContextProvider>
+  <MuiPickersUtilsProvider utils={MomentUtils}>
+    <ConfirmationContextProvider>
+      <SnackbarContextProvider>
+        <SelectionContextProvider>{children}</SelectionContextProvider>
+      </SnackbarContextProvider>
+    </ConfirmationContextProvider>
+  </MuiPickersUtilsProvider>
 );
 
 AppProviders.propTypes = {
