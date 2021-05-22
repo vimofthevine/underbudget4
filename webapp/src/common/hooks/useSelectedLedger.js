@@ -1,9 +1,9 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import useMountEffect from '../../common/hooks/useMountEffect';
-import { LEDGERS } from '../../common/utils/routes';
+import useMountEffect from './useMountEffect';
 import getSelectedLedger from '../utils/getSelectedLedger';
+import { LEDGERS } from '../utils/routes';
 
 export default function useSelectedLedger() {
   const location = useLocation();

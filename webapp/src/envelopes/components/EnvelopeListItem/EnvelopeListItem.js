@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { useNavigate } from 'react-router';
 
-import { envelopeRoute } from '../../../common/utils/routes';
-import useFormatMoney from '../../../ledgers/hooks/useFormatMoney';
+import useFormatMoney from 'common/hooks/useFormatMoney';
+import { envelopeRoute } from 'common/utils/routes';
 import useFetchEnvelopeBalance from '../../hooks/useFetchEnvelopeBalance';
 import EnvelopePropTypes from '../../utils/envelope-prop-types';
 

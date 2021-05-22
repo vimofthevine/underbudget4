@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import TablePagination from '../../../common/components/TablePagination';
-import useErrorMessage from '../../../common/hooks/useErrorMessage';
-import useMobile from '../../../common/hooks/useMobile';
-import scrollToTop from '../../../common/utils/scrollToTop';
-import useFormatMoney from '../../../ledgers/hooks/useFormatMoney';
+import TablePagination from 'common/components/TablePagination';
+import useErrorMessage from 'common/hooks/useErrorMessage';
+import useFormatMoney from 'common/hooks/useFormatMoney';
+import useMobile from 'common/hooks/useMobile';
+import scrollToTop from 'common/utils/scrollToTop';
 import FullTransactionsTable from '../FullTransactionsTable';
 import MobileTransactionsTable from '../MobileTransactionsTable';
 

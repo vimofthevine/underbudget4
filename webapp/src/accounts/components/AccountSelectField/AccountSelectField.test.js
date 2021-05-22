@@ -7,7 +7,7 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { MemoryRouter } from 'react-router-dom';
 
-import setSelectedLedger from 'ledgers/utils/setSelectedLedger';
+import setSelectedLedger from 'common/utils/setSelectedLedger';
 import AccountSelectField from './AccountSelectField';
 
 const render = ({ initialValues = {}, ...formikProps } = {}) => {

@@ -3,8 +3,8 @@ import sortBy from 'lodash/sortBy';
 import React from 'react';
 import { useQuery } from 'react-query';
 
-import useErrorMessage from '../../common/hooks/useErrorMessage';
-import useSelectedLedger from '../../ledgers/hooks/useSelectedLedger';
+import useErrorMessage from 'common/hooks/useErrorMessage';
+import useSelectedLedger from 'common/hooks/useSelectedLedger';
 
 export default function useEnvelopes({ sorted = true } = {}) {
   const ledger = useSelectedLedger();

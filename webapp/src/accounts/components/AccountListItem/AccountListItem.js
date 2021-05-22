@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { useNavigate } from 'react-router';
 
-import { accountRoute } from '../../../common/utils/routes';
-import useFormatMoney from '../../../ledgers/hooks/useFormatMoney';
+import useFormatMoney from 'common/hooks/useFormatMoney';
+import { accountRoute } from 'common/utils/routes';
 import useFetchAccountBalance from '../../hooks/useFetchAccountBalance';
 import AccountPropTypes from '../../utils/account-prop-types';
 

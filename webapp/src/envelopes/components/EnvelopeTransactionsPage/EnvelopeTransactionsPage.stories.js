@@ -3,9 +3,9 @@ import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-import AppProviders from '../../../common/components/AppProviders';
-import setSelectedLedger from '../../../ledgers/utils/setSelectedLedger';
-import * as TransactionStories from '../../../transactions/components/FullTransactionsTable/FullTransactionsTable.stories';
+import AppProviders from 'common/components/AppProviders';
+import setSelectedLedger from 'common/utils/setSelectedLedger';
+import * as TransactionStories from 'transactions/components/FullTransactionsTable/FullTransactionsTable.stories';
 import EnvelopeTransactionsPage from './EnvelopeTransactionsPage';
 
 export default {

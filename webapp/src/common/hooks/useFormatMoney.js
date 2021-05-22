@@ -1,8 +1,10 @@
 import currencyCodes from 'currency-codes';
 import React from 'react';
 
-import useFetchLedger from './useFetchLedger';
 import useSelectedLedger from './useSelectedLedger';
+// This is a violation of my desired import structure, but doing this
+// is better than having useFormatMoney in ledgers or useFetchLedger in common
+import useFetchLedger from 'ledgers/hooks/useFetchLedger';
 
 export default () => {
   const id = useSelectedLedger();

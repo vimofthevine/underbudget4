@@ -1,8 +1,9 @@
 import axios from 'axios';
 import toString from 'lodash/toString';
-import useErrorMessage from '../../common/hooks/useErrorMessage';
-import useMutation from '../../common/hooks/useMutation';
-import useSelectedLedger from '../../ledgers/hooks/useSelectedLedger';
+
+import useErrorMessage from 'common/hooks/useErrorMessage';
+import useMutation from 'common/hooks/useMutation';
+import useSelectedLedger from 'common/hooks/useSelectedLedger';
 
 export default (opts) => {
   const ledger = useSelectedLedger();

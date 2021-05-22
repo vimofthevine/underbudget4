@@ -2,8 +2,8 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 
-import AppProviders from '../../../common/components/AppProviders';
-import setSelectedLedger from '../../../ledgers/utils/setSelectedLedger';
+import AppProviders from 'common/components/AppProviders';
+import setSelectedLedger from 'common/utils/setSelectedLedger';
 import AccountsListPage from './AccountsListPage';
 
 const createAccount = (catId, acctId) => ({
