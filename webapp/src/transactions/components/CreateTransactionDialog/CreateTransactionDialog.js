@@ -10,8 +10,10 @@ const CreateTransactionDialog = () => {
       actionText='Create'
       FormComponent={TransactionForm}
       initialValues={TransactionForm.initialValues}
+      maxWidth='lg'
       onSubmit={mutate}
       title='Create Transaction'
+      validate={TransactionForm.validate}
       validationSchema={TransactionForm.validationSchema}
     />
   );
