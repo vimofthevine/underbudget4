@@ -13,6 +13,7 @@
     "clsx": "^1.1.1",
     "css-mediaquery": "^0.1.2",
     "currency-codes": "^2.1.0",
+    "currency-symbol-map": "^5.0.1",
     "formik": "^2.2.6",
     "formik-material-ui": "^3.0.1",
     "formik-material-ui-pickers": "0.0.12",
