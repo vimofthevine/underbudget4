@@ -76,6 +76,14 @@ test('should display initial value when currency uses alternate number of digits
 test('input value is properly scaled', async () => {
   const { handleSubmit, textbox } = render({ initialValue: 8675309 });
   await waitFor(() => expect(textbox).toHaveValue('$86,753.09'));
+  // I had a lot of difficulty trying to use userEvent.type to enter a
+  // value into the textbox. It is most likely some kind of issue because
+  // the textbox value is re-formatted after every change, and the caret
+  // position is probably affected and that messes things up...
+  // So this approach (clear then paste) at least lets me test how the
+  // field stores the value into formik state--which is the only part
+  // I _really_ need to test (we'd assume that react-number-format will
+  // correct work with a real user/browser).
   userEvent.clear(textbox);
   await waitFor(() => expect(textbox).toHaveValue(''));
   userEvent.paste(textbox, '1234.56');
