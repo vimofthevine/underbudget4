@@ -88,16 +88,16 @@ const FormDialog = ({
     });
 
   return (
-    <Dialog
-      fullScreen={mobile}
-      fullWidth={fullWidth}
-      maxWidth={maxWidth}
-      open={isOpen}
-      onClose={handleClose}
-      onExited={handleExited}
-      TransitionComponent={mobile ? Transition : undefined}
-    >
-      <Formik onSubmit={handleSubmit} {...props}>
+    <Formik onSubmit={handleSubmit} {...props}>
+      <Dialog
+        fullScreen={mobile}
+        fullWidth={fullWidth}
+        maxWidth={maxWidth}
+        open={isOpen}
+        onClose={handleClose}
+        onExited={handleExited}
+        TransitionComponent={mobile ? Transition : undefined}
+      >
         <Form>
           <Dirty onChange={handleDirty} />
 
@@ -124,8 +124,8 @@ const FormDialog = ({
             </DialogActions>
           )}
         </Form>
-      </Formik>
-    </Dialog>
+      </Dialog>
+    </Formik>
   );
 };
 
