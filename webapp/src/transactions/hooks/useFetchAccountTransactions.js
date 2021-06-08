@@ -9,7 +9,7 @@ export default ({ defaultSize = 25, id }) => {
 
   return {
     ...useQuery(
-      ['account-transactions', { id, page, size }],
+      ['account-transactions', id, { page, size }],
       async () => {
         const { data } = await axios.get(
           `/api/accounts/${id}/transactions?page=${page}&size=${size}`,
