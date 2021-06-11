@@ -14,7 +14,7 @@ export default function useEnvelopeAmountSideEffect(index) {
       if (Number.isInteger(value)) {
         if (accountTransactions.length === 1 && envelopeTransactions.length === 1) {
           setFieldValue('accountTransactions[0].amount', value);
-        } else if (accountTransactions.length === 2 && envelopeTransactions.length === 0) {
+        } else if (accountTransactions.length === 0 && envelopeTransactions.length === 2) {
           setFieldValue(`envelopeTransactions[${otherEnvelope[index]}].amount`, -value);
         }
       }

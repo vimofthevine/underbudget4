@@ -47,6 +47,7 @@ const TransactionForm = () => {
         >
           <InputLabel id='transaction-type-label'>Type</InputLabel>
           <Field
+            aria-label='transaction type'
             autoFocus
             component={Select}
             id='transaction-type'
@@ -158,7 +159,7 @@ TransactionForm.validationSchema = yup.object().shape({
       return schema.min(1);
     }),
   payee: yup.string().required('Required'),
-  recordedDate: yup.date().required('Required'),
+  recordedDate: yup.date().typeError('Required').required('Required'),
   type: yup.string().oneOf(transactionTypes).required('Required'),
 });
 

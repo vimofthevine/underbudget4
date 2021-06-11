@@ -1,10 +1,11 @@
 import React from 'react';
 
 import FormDialog from 'common/components/FormDialog';
+import useCreateTransaction from '../../hooks/useCreateTransaction';
 import TransactionForm from '../TransactionForm';
 
 const CreateTransactionDialog = () => {
-  const mutate = (values) => console.log(values);
+  const { mutate } = useCreateTransaction();
   return (
     <FormDialog
       actionText='Create'

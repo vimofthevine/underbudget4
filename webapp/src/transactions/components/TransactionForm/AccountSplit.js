@@ -59,11 +59,14 @@ const AccountSplit = ({ disableRemove, index, onRemove }) => (
         title='Is cleared?'
         type='checkbox'
       />
-      <Tooltip title='Delete'>
-        <IconButton disabled={disableRemove} onClick={onRemove} style={{ marginLeft: 'auto' }}>
-          <DeleteIcon />
-        </IconButton>
-      </Tooltip>
+      <IconButton
+        aria-label='Delete account split'
+        disabled={disableRemove}
+        onClick={onRemove}
+        style={{ marginLeft: 'auto' }}
+      >
+        <DeleteIcon />
+      </IconButton>
     </Grid>
   </>
 );

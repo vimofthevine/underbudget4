@@ -50,12 +50,15 @@ const EnvelopeSplit = ({ disableRemove, index, onRemove }) => (
         variant='outlined'
       />
     </Grid>
-    <Grid container item md={1} sm={6} xs={12}>
-      <Tooltip title='Delete'>
-        <IconButton disabled={disableRemove} onClick={onRemove} style={{ marginLeft: 'auto' }}>
-          <DeleteIcon />
-        </IconButton>
-      </Tooltip>
+    <Grid item md={1} sm={6} xs={12}>
+      <IconButton
+        aria-label='Delete envelope split'
+        disabled={disableRemove}
+        onClick={onRemove}
+        style={{ marginLeft: 'auto' }}
+      >
+        <DeleteIcon />
+      </IconButton>
     </Grid>
   </>
 );
