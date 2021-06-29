@@ -1,4 +1,5 @@
 import axios from 'axios';
+import toString from 'lodash/toString';
 import moment from 'moment';
 
 import useErrorMessage from 'common/hooks/useErrorMessage';
@@ -20,12 +21,12 @@ export default (opts) => {
       refetchQueries: (_, { accountTransactions, envelopeTransactions }) => {
         const queries = [];
         accountTransactions.forEach((trn) => {
-          queries.push(['account-balance', trn.accountId]);
-          queries.push(['account-transactions', trn.accountId]);
+          queries.push(['account-balance', toString(trn.accountId)]);
+          queries.push(['account-transactions', toString(trn.accountId)]);
         });
         envelopeTransactions.forEach((trn) => {
-          queries.push(['envelope-balance', trn.envelopeId]);
-          queries.push(['envelope-transactions', trn.envelopeId]);
+          queries.push(['envelope-balance', toString(trn.envelopeId)]);
+          queries.push(['envelope-transactions', toString(trn.envelopeId)]);
         });
         return queries;
       },
