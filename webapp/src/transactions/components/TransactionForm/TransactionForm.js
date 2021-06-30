@@ -48,7 +48,6 @@ const TransactionForm = () => {
           <InputLabel id='transaction-type-label'>Type</InputLabel>
           <Field
             aria-label='transaction type'
-            autoFocus
             component={Select}
             id='transaction-type'
             label='Type'
@@ -65,6 +64,7 @@ const TransactionForm = () => {
       </Grid>
       <Grid item sm={4} xs={12}>
         <Field
+          autoFocus
           component={TextField}
           fullWidth
           id='payee'

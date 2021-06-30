@@ -19,6 +19,7 @@ const MoneyInputField = (props) => {
       numberInputProps={{
         decimalScale: digits,
         fixedDecimalScale: true,
+        onFocus: (e) => e.target.select(),
         prefix: isValid ? symbol : null,
         thousandSeparator: true,
       }}
