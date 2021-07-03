@@ -1,12 +1,11 @@
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { makeStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { useNavigate } from 'react-router';
 
-import { envelopeRoute } from '../../../common/utils/routes';
-import useFormatMoney from '../../../ledgers/hooks/useFormatMoney';
+import useFormatMoney from 'common/hooks/useFormatMoney';
+import { envelopeRoute } from 'common/utils/routes';
 import useFetchEnvelopeBalance from '../../hooks/useFetchEnvelopeBalance';
 import EnvelopePropTypes from '../../utils/envelope-prop-types';
 
@@ -16,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const EnvelopeListItem = ({ envelope, dense }) => {
+const EnvelopeListItem = ({ envelope }) => {
   const classes = useStyles();
   const navigate = useNavigate();
   const handleClick = () => navigate(envelopeRoute(envelope.id));
@@ -34,7 +33,7 @@ const EnvelopeListItem = ({ envelope, dense }) => {
   }, [data, isLoading, formatMoney]);
 
   return (
-    <ListItem button className={classes.item} dense={dense} onClick={handleClick}>
+    <ListItem button className={classes.item} onClick={handleClick}>
       <ListItemText inset primary={envelope.name} secondary={balance} />
     </ListItem>
   );
@@ -42,7 +41,6 @@ const EnvelopeListItem = ({ envelope, dense }) => {
 
 EnvelopeListItem.propTypes = {
   envelope: EnvelopePropTypes.isRequired,
-  dense: PropTypes.bool.isRequired,
 };
 
 export default EnvelopeListItem;

@@ -11,9 +11,9 @@ import Alert from '@material-ui/lab/Alert';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import useAccountName from '../../../accounts/hooks/useAccountName';
-import useEnvelopeName from '../../../envelopes/hooks/useEnvelopeName';
-import useFormatMoney from '../../../ledgers/hooks/useFormatMoney';
+import useFormatMoney from 'common/hooks/useFormatMoney';
+import useAccountName from 'accounts/hooks/useAccountName';
+import useEnvelopeName from 'envelopes/hooks/useEnvelopeName';
 import useFetchTransaction from '../../hooks/useFetchTransaction';
 
 const TransactionDetailsList = ({ id }) => {

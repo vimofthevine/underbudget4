@@ -4,7 +4,7 @@ import MockAdapter from 'axios-mock-adapter';
 import { Field, Form, Formik } from 'formik';
 import React from 'react';
 
-import setSelectedLedger from '../../../ledgers/utils/setSelectedLedger';
+import setSelectedLedger from 'common/utils/setSelectedLedger';
 import AccountCategorySelectField from './AccountCategorySelectField';
 
 export default {

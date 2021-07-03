@@ -7,9 +7,9 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Route, Routes } from 'react-router-dom';
 
-import setSelectedLedger from '../../../ledgers/utils/setSelectedLedger';
-import createMediaQuery from '../../../tests/createMediaQuery';
-import renderWithRouter from '../../../tests/renderWithRouter';
+import setSelectedLedger from 'common/utils/setSelectedLedger';
+import createMediaQuery from 'tests/createMediaQuery';
+import renderWithRouter from 'tests/renderWithRouter';
 import useFetchAccountTransactions from '../../hooks/useFetchAccountTransactions';
 import TransactionHistory from './TransactionHistory';
 

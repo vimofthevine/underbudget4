@@ -37,7 +37,9 @@ const FormDialog = ({
   disableFullScreen,
   formProps,
   FormComponent,
+  fullWidth,
   isLoading,
+  maxWidth,
   onExitNavigateTo,
   onSubmit,
   title,
@@ -86,14 +88,16 @@ const FormDialog = ({
     });
 
   return (
-    <Dialog
-      fullScreen={mobile}
-      open={isOpen}
-      onClose={handleClose}
-      onExited={handleExited}
-      TransitionComponent={mobile ? Transition : undefined}
-    >
-      <Formik onSubmit={handleSubmit} {...props}>
+    <Formik onSubmit={handleSubmit} {...props}>
+      <Dialog
+        fullScreen={mobile}
+        fullWidth={fullWidth}
+        maxWidth={maxWidth}
+        open={isOpen}
+        onClose={handleClose}
+        onExited={handleExited}
+        TransitionComponent={mobile ? Transition : undefined}
+      >
         <Form>
           <Dirty onChange={handleDirty} />
 
@@ -120,8 +124,8 @@ const FormDialog = ({
             </DialogActions>
           )}
         </Form>
-      </Formik>
-    </Dialog>
+      </Dialog>
+    </Formik>
   );
 };
 
@@ -132,7 +136,9 @@ FormDialog.propTypes = {
   disableFullScreen: PropTypes.bool,
   formProps: PropTypes.shape({}),
   FormComponent: PropTypes.elementType.isRequired,
+  fullWidth: PropTypes.bool,
   isLoading: PropTypes.bool,
+  maxWidth: PropTypes.oneOf(['lg', 'md', 'sm', 'xl', 'xs', false]),
   onExitNavigateTo: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
@@ -143,7 +149,9 @@ FormDialog.defaultProps = {
   cancelText: 'Cancel',
   disableFullScreen: false,
   formProps: null,
+  fullWidth: false,
   isLoading: false,
+  maxWidth: 'sm',
   onExitNavigateTo: '../',
 };
 

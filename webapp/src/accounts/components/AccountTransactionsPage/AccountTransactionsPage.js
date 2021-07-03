@@ -5,15 +5,16 @@ import EditIcon from '@material-ui/icons/Edit';
 import React from 'react';
 import { Routes, Route, useParams } from 'react-router-dom';
 
-import FullAppPage from '../../../common/components/FullAppPage';
-import useConfirmation from '../../../common/hooks/useConfirmation';
-import useMobile from '../../../common/hooks/useMobile';
-import useNavigateKeepingSearch from '../../../common/hooks/useNavigateKeepingSearch';
-import * as routes from '../../../common/utils/routes';
-import useFormatMoney from '../../../ledgers/hooks/useFormatMoney';
-import TransactionDetailsDialog from '../../../transactions/components/TransactionDetailsDialog';
-import TransactionHistory from '../../../transactions/components/TransactionHistory';
-import useFetchAccountTransactions from '../../../transactions/hooks/useFetchAccountTransactions';
+import FullAppPage from 'common/components/FullAppPage';
+import useConfirmation from 'common/hooks/useConfirmation';
+import useFormatMoney from 'common/hooks/useFormatMoney';
+import useMobile from 'common/hooks/useMobile';
+import useNavigateKeepingSearch from 'common/hooks/useNavigateKeepingSearch';
+import * as routes from 'common/utils/routes';
+import CreateTransactionDialog from 'transactions/components/CreateTransactionDialog';
+import TransactionDetailsDialog from 'transactions/components/TransactionDetailsDialog';
+import TransactionHistory from 'transactions/components/TransactionHistory';
+import useFetchAccountTransactions from 'transactions/hooks/useFetchAccountTransactions';
 import useDeleteAccount from '../../hooks/useDeleteAccount';
 import useFetchAccount from '../../hooks/useFetchAccount';
 import useFetchAccountBalance from '../../hooks/useFetchAccountBalance';
@@ -93,6 +94,7 @@ const AccountTransactionsPage = () => {
       <TransactionHistory hasCleared useFetchTransactions={useFetchAccountTransactions} />
       <Routes>
         <Route path='modify' element={<ModifyAccountDialog />} />
+        <Route path='create-transaction' element={<CreateTransactionDialog />} />
         <Route
           path='transaction/:transactionId/*'
           element={<TransactionDetailsDialog onExitNavigateTo='../..' />}

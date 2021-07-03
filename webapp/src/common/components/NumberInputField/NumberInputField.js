@@ -25,9 +25,21 @@ NumberInput.propTypes = {
   onChange: PropTypes.func.isRequired,
 };
 
-const NumberInputField = ({ numberInputProps, ...props }) => (
+const NumberInputField = ({
+  field: { onChange, value, ...field },
+  fromValue,
+  numberInputProps,
+  toValue,
+  ...props
+}) => (
   <TextField
     {...props}
+    field={{
+      ...field,
+      onChange: ({ target: { name: targetName, value: targetValue } }) =>
+        onChange({ target: { name: targetName, value: toValue(targetValue) } }),
+      value: fromValue(value),
+    }}
     InputProps={{
       inputComponent: NumberInput,
       inputProps: {
@@ -38,11 +50,19 @@ const NumberInputField = ({ numberInputProps, ...props }) => (
 );
 
 NumberInputField.propTypes = {
+  field: PropTypes.shape({
+    onChange: PropTypes.func.isRequired,
+    value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  }).isRequired,
+  fromValue: PropTypes.func,
   numberInputProps: PropTypes.shape({}),
+  toValue: PropTypes.func,
 };
 
 NumberInputField.defaultProps = {
+  fromValue: (v) => v,
   numberInputProps: {},
+  toValue: (v) => v,
 };
 
 export default NumberInputField;

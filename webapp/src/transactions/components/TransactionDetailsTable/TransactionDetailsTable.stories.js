@@ -2,7 +2,7 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 
-import setSelectedLedger from '../../../ledgers/utils/setSelectedLedger';
+import setSelectedLedger from 'common/utils/setSelectedLedger';
 import TransactionDetailsTable from './TransactionDetailsTable';
 
 export default {

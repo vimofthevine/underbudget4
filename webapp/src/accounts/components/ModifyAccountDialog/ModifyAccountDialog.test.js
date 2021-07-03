@@ -56,6 +56,7 @@ test('should prevent submission when required fields are missing', async () => {
   await waitFor(() => expect(screen.getByLabelText(/^name/i)).toHaveValue('An account'));
 
   userEvent.clear(screen.getByLabelText(/^name/i));
+  userEvent.tab();
 
   const saveButton = screen.getByRole('button', { name: /save/i });
   userEvent.click(saveButton);
@@ -68,8 +69,11 @@ test('should show error message when request error', async () => {
   mockAxios.onPut('/api/accounts/3').reply(400);
 
   await waitFor(() => expect(screen.getByLabelText(/^name/i)).toHaveValue('An account'));
+  userEvent.type(screen.getByLabelText(/^name/i), ' ');
 
+  await waitFor(() => expect(screen.getByRole('button', { name: /save/i })).toBeEnabled());
   userEvent.click(screen.getByRole('button', { name: /save/i }));
+
   await waitFor(() => expect(screen.getByText(/unable to modify account/i)).toBeInTheDocument());
 });
 
@@ -89,6 +93,8 @@ test('should close and refresh query when successful modify', async () => {
   userEvent.click(screen.getByRole('button', { name: /open/i }));
   userEvent.click(screen.getByRole('option', { name: 'Category 2' }));
   userEvent.type(screen.getByLabelText(/institution name/i), 'My Bank Name');
+
+  await waitFor(() => expect(screen.getByRole('button', { name: /save/i })).toBeEnabled());
   userEvent.click(screen.getByRole('button', { name: /save/i }));
 
   await waitFor(() =>

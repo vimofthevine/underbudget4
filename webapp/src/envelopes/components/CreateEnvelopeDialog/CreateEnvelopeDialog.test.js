@@ -44,11 +44,10 @@ test('should prevent submission when required fields are missing', async () => {
   expect(screen.getByRole('heading', { name: /create envelope/i })).toBeInTheDocument();
   await waitFor(() => expect(mock.history.get.length).toBe(1));
 
-  const createButton = screen.getByRole('button', { name: /create/i });
-  userEvent.click(createButton);
+  userEvent.tab();
 
-  await waitFor(() => expect(screen.getAllByText(/required/i)).toHaveLength(2));
-  expect(createButton).toBeDisabled();
+  await waitFor(() => expect(screen.getAllByText(/required/i)).toHaveLength(1));
+  expect(screen.getByRole('button', { name: /create/i })).toBeDisabled();
 });
 
 test('should show error message when request error', async () => {
@@ -61,6 +60,8 @@ test('should show error message when request error', async () => {
   userEvent.type(screen.getByLabelText(/^name/i), 'my envelope name');
   userEvent.click(screen.getByRole('button', { name: /open/i }));
   userEvent.click(screen.getByRole('option', { name: 'Category 2' }));
+
+  await waitFor(() => expect(screen.getByRole('button', { name: /create/i })).toBeEnabled());
   userEvent.click(screen.getByRole('button', { name: /create/i }));
 
   await waitFor(() => expect(screen.getByText(/unable to create envelope/i)).toBeInTheDocument());
@@ -77,6 +78,8 @@ test('should close and refresh query when successful create', async () => {
   userEvent.type(screen.getByLabelText(/^name/i), 'my envelope name');
   userEvent.click(screen.getByRole('button', { name: /open/i }));
   userEvent.click(screen.getByRole('option', { name: 'Category 2' }));
+
+  await waitFor(() => expect(screen.getByRole('button', { name: /create/i })).toBeEnabled());
   userEvent.click(screen.getByRole('button', { name: /create/i }));
 
   await waitFor(() =>

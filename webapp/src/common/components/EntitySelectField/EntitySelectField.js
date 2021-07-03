@@ -13,7 +13,7 @@ const EntitySelectField = ({
   entities,
   helperText,
   field: { onBlur, name, value },
-  form: { errors, isSubmitting, setFieldValue, touched },
+  form: { errors, isSubmitting, setFieldValue, touched, validateForm },
   ...props
 }) => {
   const errorText = getIn(errors, name);
@@ -29,6 +29,8 @@ const EntitySelectField = ({
       setFieldValue(name, v ? v.id : value);
     }
   };
+
+  React.useEffect(validateForm, [value]);
 
   return (
     <Autocomplete
@@ -74,6 +76,7 @@ EntitySelectField.propTypes = {
     isSubmitting: PropTypes.bool,
     setFieldValue: PropTypes.func.isRequired,
     touched: PropTypes.shape({}),
+    validateForm: PropTypes.func.isRequired,
   }).isRequired,
   helperText: PropTypes.string,
 };

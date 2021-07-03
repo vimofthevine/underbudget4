@@ -9,7 +9,7 @@ export default ({ defaultSize = 25, id }) => {
 
   return {
     ...useQuery(
-      ['envelope-transactions', { id, page, size }],
+      ['envelope-transactions', id, { page, size }],
       async () => {
         const { data } = await axios.get(
           `/api/envelopes/${id}/transactions?page=${page}&size=${size}`,

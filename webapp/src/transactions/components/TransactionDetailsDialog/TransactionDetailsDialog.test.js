@@ -6,8 +6,8 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Routes, Route } from 'react-router-dom';
 
-import setSelectedLedger from '../../../ledgers/utils/setSelectedLedger';
-import renderWithRouter from '../../../tests/renderWithRouter';
+import setSelectedLedger from 'common/utils/setSelectedLedger';
+import renderWithRouter from 'tests/renderWithRouter';
 import TransactionDetailsDialog from './TransactionDetailsDialog';
 
 const render = () => {

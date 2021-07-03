@@ -4,8 +4,8 @@ import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-import setSelectedLedger from '../../../ledgers/utils/setSelectedLedger';
-import renderWithRouter from '../../../tests/renderWithRouter';
+import setSelectedLedger from 'common/utils/setSelectedLedger';
+import renderWithRouter from 'tests/renderWithRouter';
 import TransactionDetailsTable from './TransactionDetailsTable';
 
 const formatMoney = (v) =>
