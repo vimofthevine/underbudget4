@@ -56,6 +56,7 @@ test('should prevent submission when required fields are missing', async () => {
   await waitFor(() => expect(screen.getByLabelText(/^name/i)).toHaveValue('An envelope'));
 
   userEvent.clear(screen.getByLabelText(/^name/i));
+  userEvent.tab();
 
   const saveButton = screen.getByRole('button', { name: /save/i });
   userEvent.click(saveButton);
@@ -68,8 +69,11 @@ test('should show error message when request error', async () => {
   mockAxios.onPut('/api/envelopes/3').reply(400);
 
   await waitFor(() => expect(screen.getByLabelText(/^name/i)).toHaveValue('An envelope'));
+  userEvent.type(screen.getByLabelText(/^name/i), ' ');
 
+  await waitFor(() => expect(screen.getByRole('button', { name: /save/i })).toBeEnabled());
   userEvent.click(screen.getByRole('button', { name: /save/i }));
+
   await waitFor(() => expect(screen.getByText(/unable to modify envelope/i)).toBeInTheDocument());
 });
 
@@ -88,6 +92,8 @@ test('should close and refresh query when successful modify', async () => {
   userEvent.type(screen.getByLabelText(/^name/i), '{selectall}my envelope name');
   userEvent.click(screen.getByRole('button', { name: /open/i }));
   userEvent.click(screen.getByRole('option', { name: 'Category 2' }));
+
+  await waitFor(() => expect(screen.getByRole('button', { name: /save/i })).toBeEnabled());
   userEvent.click(screen.getByRole('button', { name: /save/i }));
 
   await waitFor(() =>
