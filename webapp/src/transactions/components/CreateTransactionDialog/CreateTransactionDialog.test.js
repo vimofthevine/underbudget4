@@ -78,9 +78,7 @@ test('should initialize to empty transaction', async () => {
 
   expect(screen.getByRole('textbox', { name: /payee/i })).toHaveDisplayValue('');
 
-  // setupTests.js uses MockDate to set it to 2021-06-24, but for some reason the
-  // date picker thinks today is the 23rd
-  expect(screen.getByRole('textbox', { name: /date/i })).toHaveDisplayValue('2021-06-23');
+  expect(screen.getByRole('textbox', { name: /date/i })).toHaveDisplayValue('2021-06-24');
 
   expect(screen.getByRole('textbox', { name: /account/i })).toHaveDisplayValue('');
 
@@ -127,7 +125,7 @@ test('should create income transaction', async () => {
   expect(JSON.parse(mock.history.post[0].data)).toEqual({
     type: 'income',
     payee: 'payday',
-    recordedDate: '2021-06-23',
+    recordedDate: '2021-06-24',
     accountTransactions: [
       {
         accountId: 2,
@@ -245,7 +243,7 @@ test('should create multi-split expense transaction', async () => {
   expect(JSON.parse(mock.history.post[0].data)).toEqual({
     type: 'expense',
     payee: 'online order',
-    recordedDate: '2021-06-23',
+    recordedDate: '2021-06-24',
     accountTransactions: [
       {
         accountId: 2,
@@ -323,7 +321,7 @@ test('should create transfer transaction', async () => {
   expect(JSON.parse(mock.history.post[0].data)).toEqual({
     type: 'transfer',
     payee: 'pay credit card',
-    recordedDate: '2021-06-23',
+    recordedDate: '2021-06-24',
     accountTransactions: [
       {
         accountId: 3,
@@ -387,7 +385,7 @@ test('should create allocation transaction', async () => {
   expect(JSON.parse(mock.history.post[0].data)).toEqual({
     type: 'allocation',
     payee: 'refill envelope',
-    recordedDate: '2021-06-23',
+    recordedDate: '2021-06-24',
     accountTransactions: [],
     envelopeTransactions: [
       {
