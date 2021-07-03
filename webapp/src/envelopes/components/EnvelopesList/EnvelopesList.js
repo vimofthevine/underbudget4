@@ -20,9 +20,9 @@ const EnvelopesList = () => {
   return (
     <>
       {status === 'success' && (
-        <List className={classes.list} disablePadding>
+        <List className={classes.list} dense disablePadding>
           {categories.map((cat) => (
-            <EnvelopeCategoryListItem category={cat} dense key={cat.id} />
+            <EnvelopeCategoryListItem category={cat} key={cat.id} />
           ))}
         </List>
       )}

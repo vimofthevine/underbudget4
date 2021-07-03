@@ -6,19 +6,18 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import PropTypes from 'prop-types';
 import React from 'react';
 
 import AccountCategoryPropTypes from '../../utils/account-category-prop-types';
 import AccountCategoryActionsButton from '../AccountCategoryActionsButton';
 import AccountListItem from '../AccountListItem';
 
-const AccountCategoryListItem = ({ category, dense }) => {
+const AccountCategoryListItem = ({ category }) => {
   const [open, setOpen] = React.useState(true);
   const handleToggle = () => setOpen((old) => !old);
   return (
     <>
-      <ListItem button dense={dense} onClick={handleToggle}>
+      <ListItem button onClick={handleToggle}>
         <ListItemIcon>{open ? <ExpandLessIcon /> : <ExpandMoreIcon />}</ListItemIcon>
         <ListItemText primary={category.name} />
         <ListItemSecondaryAction>
@@ -26,9 +25,9 @@ const AccountCategoryListItem = ({ category, dense }) => {
         </ListItemSecondaryAction>
       </ListItem>
       <Collapse in={open}>
-        <List component='div' disablePadding>
+        <List component='div' dense disablePadding>
           {category.accounts.map((account) => (
-            <AccountListItem account={account} dense={dense} key={account.id} />
+            <AccountListItem account={account} key={account.id} />
           ))}
         </List>
       </Collapse>
@@ -38,7 +37,6 @@ const AccountCategoryListItem = ({ category, dense }) => {
 
 AccountCategoryListItem.propTypes = {
   category: AccountCategoryPropTypes.isRequired,
-  dense: PropTypes.bool.isRequired,
 };
 
 export default AccountCategoryListItem;

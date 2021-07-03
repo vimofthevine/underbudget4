@@ -20,9 +20,9 @@ const AccountsList = () => {
   return (
     <>
       {status === 'success' && (
-        <List className={classes.list} disablePadding>
+        <List className={classes.list} dense disablePadding>
           {categories.map((cat) => (
-            <AccountCategoryListItem category={cat} dense key={cat.id} />
+            <AccountCategoryListItem category={cat} key={cat.id} />
           ))}
         </List>
       )}
