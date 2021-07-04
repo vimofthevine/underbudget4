@@ -31,7 +31,10 @@ class TransactionType(enum.Enum):
     ) -> Optional["TransactionType"]:
         """ Creates a transaction type for the given value, if not none """
         if val:
-            return cls[val]
+            try:
+                return cls[val]
+            except:
+                raise BadRequest(f"Invalid transaction type: {val}")
         return None
 
     @classmethod

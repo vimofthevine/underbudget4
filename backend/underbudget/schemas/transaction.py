@@ -4,9 +4,6 @@ from marshmallow import Schema, fields, validate
 from underbudget.models.transaction import TransactionType
 
 
-allowed_types = [name for name, _ in TransactionType.__members__.items()]
-
-
 class AccountTransactionSchema(Schema):
     """ Account transaction schema """
 
@@ -42,8 +39,10 @@ class TransactionSchema(Schema):
     """ Transaction schema """
 
     id = fields.Integer(dump_only=True)
-    transaction_type = fields.String(
-        data_key="type", validate=validate.OneOf(allowed_types)
+    transaction_type = fields.Function(
+        lambda obj: obj.transaction_type.name,
+        deserialize=TransactionType.parse,
+        data_key="type",
     )
     recorded_date = fields.Date(data_key="recordedDate", required=True)
     payee = fields.String(required=True, validate=validate.Length(min=1))
