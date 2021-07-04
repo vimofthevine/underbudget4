@@ -12,6 +12,7 @@ import useMobile from 'common/hooks/useMobile';
 import useNavigateKeepingSearch from 'common/hooks/useNavigateKeepingSearch';
 import * as routes from 'common/utils/routes';
 import CreateTransactionDialog from 'transactions/components/CreateTransactionDialog';
+import ModifyTransactionDialog from 'transactions/components/ModifyTransactionDialog';
 import TransactionDetailsDialog from 'transactions/components/TransactionDetailsDialog';
 import TransactionHistory from 'transactions/components/TransactionHistory';
 import useFetchAccountTransactions from 'transactions/hooks/useFetchAccountTransactions';
@@ -95,6 +96,10 @@ const AccountTransactionsPage = () => {
       <Routes>
         <Route path='modify' element={<ModifyAccountDialog />} />
         <Route path='create-transaction' element={<CreateTransactionDialog />} />
+        <Route
+          path='modify-transaction/:transactionId/*'
+          element={<ModifyTransactionDialog onExitNavigateTo='../..' />}
+        />
         <Route
           path='transaction/:transactionId/*'
           element={<TransactionDetailsDialog onExitNavigateTo='../..' />}
