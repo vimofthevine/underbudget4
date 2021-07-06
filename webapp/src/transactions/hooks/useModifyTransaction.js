@@ -46,7 +46,7 @@ export default (opts) => {
           'envelopeId',
         );
 
-        const queries = [];
+        const queries = [['transaction', toString(updated.id)]];
         accountTransactions.forEach((trn) => {
           queries.push(['account-balance', toString(trn.accountId)]);
           queries.push(['account-transactions', toString(trn.accountId)]);
