@@ -33,8 +33,8 @@ class TransactionType(enum.Enum):
         if val:
             try:
                 return cls[val]
-            except:
-                raise BadRequest(f"Invalid transaction type: {val}")
+            except Exception as err:
+                raise BadRequest(f"Invalid transaction type: {val}") from err
         return None
 
     @classmethod

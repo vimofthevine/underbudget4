@@ -14,7 +14,6 @@ from underbudget.models.transaction import (
     AccountTransactionModel,
     EnvelopeTransactionModel,
     TransactionModel,
-    TransactionType,
 )
 import underbudget.schemas.transaction as schema
 
