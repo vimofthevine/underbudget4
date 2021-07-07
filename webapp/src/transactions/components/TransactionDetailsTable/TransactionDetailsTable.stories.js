@@ -1,8 +1,7 @@
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 
 import setSelectedLedger from 'common/utils/setSelectedLedger';
+import setupMockApi from 'tests/setupMockApi';
 import TransactionDetailsTable from './TransactionDetailsTable';
 
 export default {
@@ -10,43 +9,11 @@ export default {
   component: TransactionDetailsTable,
   decorators: [
     (story, { parameters } = {}) => {
-      const { transaction = {}, delayResponse = 1000, code = 200 } = parameters;
+      const { transaction = {}, code = 200 } = parameters;
 
       setSelectedLedger('2');
 
-      const mockAxios = new MockAdapter(axios, { delayResponse });
-
-      mockAxios.onGet('/api/ledgers/2').reply(200, { currency: 840 });
-      mockAxios.onGet('/api/ledgers/2/account-categories').reply(code, {
-        categories: [
-          {
-            id: 1,
-            name: 'Banks',
-            accounts: [{ id: 1, name: 'Checking' }],
-          },
-          {
-            id: 2,
-            name: 'Credit Cards',
-            accounts: [{ id: 2, name: 'Visa' }],
-          },
-        ],
-      });
-
-      mockAxios.onGet('/api/ledgers/2/envelope-categories').reply(code, {
-        categories: [
-          {
-            id: 1,
-            name: 'Food',
-            envelopes: [{ id: 1, name: 'Dining' }],
-          },
-          {
-            id: 2,
-            name: 'Luxury',
-            envelopes: [{ id: 2, name: 'Clothes' }],
-          },
-        ],
-      });
-
+      const mockAxios = setupMockApi(parameters);
       mockAxios.onGet('/api/transactions/7').reply(code, transaction);
 
       return story();

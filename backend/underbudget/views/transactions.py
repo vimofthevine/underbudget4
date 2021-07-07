@@ -14,7 +14,6 @@ from underbudget.models.transaction import (
     AccountTransactionModel,
     EnvelopeTransactionModel,
     TransactionModel,
-    TransactionType,
 )
 import underbudget.schemas.transaction as schema
 
@@ -58,7 +57,7 @@ class TransactionsView(MethodView):
         now = datetime.now()
         new_transaction = TransactionModel(
             ledger_id=ledger_id,
-            transaction_type=TransactionType.parse(args.get("transaction_type")),
+            transaction_type=args.get("transaction_type"),
             recorded_date=args["recorded_date"],
             payee=args["payee"],
             created=now,
@@ -82,9 +81,7 @@ class TransactionsView(MethodView):
         transaction = TransactionModel.query.get_or_404(transaction_id)
 
         with db.session.no_autoflush:
-            transaction.transaction_type = TransactionType.parse(
-                args.get("transaction_type")
-            )
+            transaction.transaction_type = args.get("transaction_type")
             transaction.recorded_date = args["recorded_date"]
             transaction.payee = args["payee"]
 
