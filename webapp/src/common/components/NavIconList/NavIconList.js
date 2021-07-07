@@ -6,7 +6,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import AccountIcon from '@material-ui/icons/AccountBalance';
 import BookIcon from '@material-ui/icons/Book';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import LogoutIcon from '@material-ui/icons/ExitToApp';
+import LogoutIcon from '@material-ui/icons/Lock';
 import ReportIcon from '@material-ui/icons/InsertChart';
 import EnvelopeIcon from '@material-ui/icons/Mail';
 import IncomeIcon from '@material-ui/icons/MonetizationOn';
