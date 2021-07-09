@@ -29,6 +29,7 @@ const Template = (args) => (
 export const PermanentClosed = Template.bind({});
 PermanentClosed.args = {
   onClose: action('close drawer'),
+  onOpen: action('open drawer'),
   open: false,
   variant: 'permanent',
 };
