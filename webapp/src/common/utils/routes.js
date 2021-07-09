@@ -7,6 +7,7 @@ export const ENVELOPES = '/envelopes';
 export const INCOMES = '/incomes';
 export const EXPENSES = '/expenses';
 export const REPORTS = '/reports';
+export const LOGOUT = '/authelia/logout';
 
 export const accountRoute = (id) => `${ACCOUNT}/${id}`;
 export const envelopeRoute = (id) => `${ENVELOPE}/${id}`;

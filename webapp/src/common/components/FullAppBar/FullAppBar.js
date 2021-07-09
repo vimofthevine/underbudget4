@@ -74,6 +74,7 @@ const FullAppBar = ({ primaryActions, secondaryActions, selectionActions, title 
       {overflowMenu}
       <PureDrawer
         onClose={toggleDrawer}
+        onOpen={toggleDrawer}
         open={drawerOpen}
         variant={mobile ? 'temporary' : 'permanent'}
       >
