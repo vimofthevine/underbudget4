@@ -1,42 +1,14 @@
 import { configure, fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import setSelectedLedger from 'common/utils/setSelectedLedger';
 import renderWithRouter from 'tests/renderWithRouter';
+import setupMockApi from 'tests/setupMockApi';
 import CreateTransactionDialog from './CreateTransactionDialog';
 
-const accountCategories = {
-  categories: [
-    {
-      id: 1,
-      name: 'Accounts',
-      accounts: [
-        { id: 2, name: 'Account 1' },
-        { id: 3, name: 'Account 2' },
-      ],
-    },
-  ],
-};
-
-const envelopeCategories = {
-  categories: [
-    {
-      id: 4,
-      name: 'Envelopes',
-      envelopes: [
-        { id: 5, name: 'Envelope 1' },
-        { id: 6, name: 'Envelope 2' },
-        { id: 7, name: 'Envelope 3' },
-      ],
-    },
-  ],
-};
-
-const render = () => {
+const render = (props = null) => {
   configure({ defaultHidden: true });
 
   setSelectedLedger('2');
@@ -50,15 +22,12 @@ const render = () => {
   });
   const invalidateQueries = jest.spyOn(queryClient, 'invalidateQueries');
 
-  const mock = new MockAdapter(axios);
-  mock.onGet('/api/ledgers/2').reply(200, { currency: 840 });
-  mock.onGet('/api/ledgers/2/account-categories').reply(200, accountCategories);
-  mock.onGet('/api/ledgers/2/envelope-categories').reply(200, envelopeCategories);
+  const mock = setupMockApi({ delayResponse: 0 });
 
   return {
     ...renderWithRouter(
       <QueryClientProvider client={queryClient}>
-        <CreateTransactionDialog />
+        <CreateTransactionDialog {...props} />
       </QueryClientProvider>,
     ),
     invalidateQueries,
@@ -99,6 +68,22 @@ test('should initialize to empty transaction', async () => {
   expect(screen.getByRole('button', { name: /create/i })).toBeDisabled();
 });
 
+test('should initialize with account', async () => {
+  const { mock } = render({ initialAccountId: 4 });
+  await waitFor(() => expect(mock.history.get.length).toBe(3));
+  expect(screen.getByRole('textbox', { name: /account/i })).toHaveDisplayValue(
+    'Category 3:Account 4',
+  );
+});
+
+test('should initialize with envelope', async () => {
+  const { mock } = render({ initialEnvelopeId: 3 });
+  await waitFor(() => expect(mock.history.get.length).toBe(3));
+  expect(screen.getByRole('textbox', { name: /envelope/i })).toHaveDisplayValue(
+    'Category 2:Envelope 3',
+  );
+});
+
 test('should create income transaction', async () => {
   const { invalidateQueries, mock } = render();
   mock.onPost('/api/ledgers/2/transactions').reply(201);
@@ -113,8 +98,8 @@ test('should create income transaction', async () => {
   expect(amounts[1]).toHaveDisplayValue('$12.34');
 
   userEvent.type(screen.getByRole('textbox', { name: /payee/i }), 'payday');
-  userEvent.type(screen.getByRole('textbox', { name: /account/i }), 'Accounts:Account 1');
-  userEvent.type(screen.getByRole('textbox', { name: /envelope/i }), 'Envelopes:Envelope 1');
+  userEvent.type(screen.getByRole('textbox', { name: /account/i }), 'Category 1:Account 2');
+  userEvent.type(screen.getByRole('textbox', { name: /envelope/i }), 'Category 2:Envelope 3');
   userEvent.tab();
 
   const create = screen.getByRole('button', { name: /create/i });
@@ -136,7 +121,7 @@ test('should create income transaction', async () => {
     ],
     envelopeTransactions: [
       {
-        envelopeId: 5,
+        envelopeId: 3,
         memo: '',
         amount: 1234,
       },
@@ -145,8 +130,8 @@ test('should create income transaction', async () => {
   expect(invalidateQueries).toHaveBeenCalledTimes(4);
   expect(invalidateQueries).toHaveBeenCalledWith(['account-balance', '2']);
   expect(invalidateQueries).toHaveBeenCalledWith(['account-transactions', '2']);
-  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-balance', '5']);
-  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-transactions', '5']);
+  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-balance', '3']);
+  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-transactions', '3']);
   await waitFor(() =>
     expect(screen.queryByRole('heading', { name: /create transaction/i })).not.toBeInTheDocument(),
   );
@@ -169,9 +154,9 @@ test('should create expense transaction', async () => {
   fireEvent.change(screen.getByRole('textbox', { name: /date/i }), {
     target: { value: '2021-06-07' },
   });
-  userEvent.type(screen.getByRole('textbox', { name: /account/i }), 'Accounts:Account 2');
+  userEvent.type(screen.getByRole('textbox', { name: /account/i }), 'Category 3:Account 3');
   userEvent.click(screen.getByRole('checkbox'));
-  userEvent.type(screen.getByRole('textbox', { name: /envelope/i }), 'Envelopes:Envelope 2');
+  userEvent.type(screen.getByRole('textbox', { name: /envelope/i }), 'Category 1:Envelope 1');
   userEvent.type(screen.getAllByRole('textbox', { name: /memo/i })[1], 'food for party');
   userEvent.tab();
 
@@ -194,7 +179,7 @@ test('should create expense transaction', async () => {
     ],
     envelopeTransactions: [
       {
-        envelopeId: 6,
+        envelopeId: 1,
         memo: 'food for party',
         amount: -1234,
       },
@@ -203,8 +188,8 @@ test('should create expense transaction', async () => {
   expect(invalidateQueries).toHaveBeenCalledTimes(4);
   expect(invalidateQueries).toHaveBeenCalledWith(['account-balance', '3']);
   expect(invalidateQueries).toHaveBeenCalledWith(['account-transactions', '3']);
-  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-balance', '6']);
-  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-transactions', '6']);
+  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-balance', '1']);
+  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-transactions', '1']);
   await waitFor(() =>
     expect(screen.queryByRole('heading', { name: /create transaction/i })).not.toBeInTheDocument(),
   );
@@ -226,13 +211,13 @@ test('should create multi-split expense transaction', async () => {
   fireEvent.change(amounts[3], { target: { value: '-$75.00' } });
 
   userEvent.type(screen.getByRole('textbox', { name: /payee/i }), 'online order');
-  userEvent.type(screen.getByRole('textbox', { name: /account/i }), 'Accounts:Account 1');
+  userEvent.type(screen.getByRole('textbox', { name: /account/i }), 'Category 1:Account 1');
 
   const envelopes = screen.getAllByRole('textbox', { name: /envelope/i });
   expect(envelopes).toHaveLength(3);
-  userEvent.type(envelopes[0], 'Envelopes:Envelope 1');
-  userEvent.type(envelopes[1], 'Envelopes:Envelope 2');
-  userEvent.type(envelopes[2], 'Envelopes:Envelope 3');
+  userEvent.type(envelopes[0], 'Category 1:Envelope 1');
+  userEvent.type(envelopes[1], 'Category 2:Envelope 2');
+  userEvent.type(envelopes[2], 'Category 2:Envelope 3');
   userEvent.tab();
 
   const create = screen.getByRole('button', { name: /create/i });
@@ -246,7 +231,7 @@ test('should create multi-split expense transaction', async () => {
     recordedDate: '2021-06-24',
     accountTransactions: [
       {
-        accountId: 2,
+        accountId: 1,
         memo: '',
         cleared: false,
         amount: -10000,
@@ -254,31 +239,31 @@ test('should create multi-split expense transaction', async () => {
     ],
     envelopeTransactions: [
       {
-        envelopeId: 5,
+        envelopeId: 1,
         memo: '',
         amount: -1234,
       },
       {
-        envelopeId: 6,
+        envelopeId: 2,
         memo: '',
         amount: -1266,
       },
       {
-        envelopeId: 7,
+        envelopeId: 3,
         memo: '',
         amount: -7500,
       },
     ],
   });
   expect(invalidateQueries).toHaveBeenCalledTimes(8);
-  expect(invalidateQueries).toHaveBeenCalledWith(['account-balance', '2']);
-  expect(invalidateQueries).toHaveBeenCalledWith(['account-transactions', '2']);
-  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-balance', '5']);
-  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-transactions', '5']);
-  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-balance', '6']);
-  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-transactions', '6']);
-  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-balance', '7']);
-  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-transactions', '7']);
+  expect(invalidateQueries).toHaveBeenCalledWith(['account-balance', '1']);
+  expect(invalidateQueries).toHaveBeenCalledWith(['account-transactions', '1']);
+  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-balance', '1']);
+  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-transactions', '1']);
+  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-balance', '2']);
+  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-transactions', '2']);
+  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-balance', '3']);
+  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-transactions', '3']);
   await waitFor(() =>
     expect(screen.queryByRole('heading', { name: /create transaction/i })).not.toBeInTheDocument(),
   );
@@ -305,8 +290,8 @@ test('should create transfer transaction', async () => {
   userEvent.type(screen.getByRole('textbox', { name: /payee/i }), 'pay credit card');
 
   const accounts = screen.getAllByRole('textbox', { name: /account/i });
-  userEvent.type(accounts[0], 'Accounts:Account 2');
-  userEvent.type(accounts[1], 'Accounts:Account 1');
+  userEvent.type(accounts[0], 'Category 3:Account 3');
+  userEvent.type(accounts[1], 'Category 1:Account 2');
 
   userEvent.click(screen.getAllByRole('checkbox')[1]);
 
@@ -371,8 +356,8 @@ test('should create allocation transaction', async () => {
   userEvent.type(screen.getByRole('textbox', { name: /payee/i }), 'refill envelope');
 
   const envelopes = screen.getAllByRole('textbox', { name: /envelope/i });
-  userEvent.type(envelopes[1], 'Envelopes:Envelope 2');
-  userEvent.type(envelopes[0], 'Envelopes:Envelope 1');
+  userEvent.type(envelopes[1], 'Category 2:Envelope 2');
+  userEvent.type(envelopes[0], 'Category 1:Envelope 1');
 
   userEvent.type(screen.getAllByRole('textbox', { name: /memo/i })[1], 'memo omem');
   userEvent.tab();
@@ -389,22 +374,22 @@ test('should create allocation transaction', async () => {
     accountTransactions: [],
     envelopeTransactions: [
       {
-        envelopeId: 5,
+        envelopeId: 1,
         memo: '',
         amount: 4321,
       },
       {
-        envelopeId: 6,
+        envelopeId: 2,
         memo: 'memo omem',
         amount: -4321,
       },
     ],
   });
   expect(invalidateQueries).toHaveBeenCalledTimes(4);
-  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-balance', '5']);
-  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-transactions', '5']);
-  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-balance', '6']);
-  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-transactions', '6']);
+  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-balance', '1']);
+  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-transactions', '1']);
+  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-balance', '2']);
+  expect(invalidateQueries).toHaveBeenCalledWith(['envelope-transactions', '2']);
   await waitFor(() =>
     expect(screen.queryByRole('heading', { name: /create transaction/i })).not.toBeInTheDocument(),
   );

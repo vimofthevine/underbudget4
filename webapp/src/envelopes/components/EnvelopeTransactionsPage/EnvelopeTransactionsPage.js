@@ -95,7 +95,10 @@ const EnvelopeTransactionsPage = () => {
       <TransactionHistory useFetchTransactions={useFetchEnvelopeTransactions} />
       <Routes>
         <Route path='modify' element={<ModifyEnvelopeDialog />} />
-        <Route path='create-transaction' element={<CreateTransactionDialog />} />
+        <Route
+          path='create-transaction'
+          element={<CreateTransactionDialog initialEnvelopeId={parseInt(id, 10)} />}
+        />
         <Route
           path='modify-transaction/:transactionId/*'
           element={<ModifyTransactionDialog onExitNavigateTo='../..' />}
