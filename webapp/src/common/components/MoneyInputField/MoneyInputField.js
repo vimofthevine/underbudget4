@@ -12,7 +12,7 @@ const MoneyInputField = (props) => {
   } = useSelectedLedgerCurrency();
   const symbol = React.useMemo(() => getSymbolFromCurrency(code), [code]);
   const fromValue = (v) => v / 10 ** digits;
-  const toValue = (v) => v * 10 ** digits;
+  const toValue = (v) => Math.round(v * 10 ** digits);
   return (
     <NumberInputField
       fromValue={fromValue}

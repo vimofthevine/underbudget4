@@ -95,7 +95,10 @@ const AccountTransactionsPage = () => {
       <TransactionHistory hasCleared useFetchTransactions={useFetchAccountTransactions} />
       <Routes>
         <Route path='modify' element={<ModifyAccountDialog />} />
-        <Route path='create-transaction' element={<CreateTransactionDialog />} />
+        <Route
+          path='create-transaction'
+          element={<CreateTransactionDialog initialAccountId={parseInt(id, 10)} />}
+        />
         <Route
           path='modify-transaction/:transactionId/*'
           element={<ModifyTransactionDialog onExitNavigateTo='../..' />}
