@@ -14,6 +14,7 @@ import React from 'react';
 import useFormatMoney from 'common/hooks/useFormatMoney';
 import useAccountName from 'accounts/hooks/useAccountName';
 import useEnvelopeName from 'envelopes/hooks/useEnvelopeName';
+import TransactionIcon from '../TransactionIcon';
 import useFetchTransaction from '../../hooks/useFetchTransaction';
 
 const TransactionDetailsList = ({ id }) => {
@@ -33,6 +34,9 @@ const TransactionDetailsList = ({ id }) => {
   return (
     <List dense>
       <ListItem>
+        <ListItemIcon>
+          <TransactionIcon type={data.type} />
+        </ListItemIcon>
         <ListItemText primary={data.payee} secondary={data.recordedDate} />
       </ListItem>
       <Divider />

@@ -16,10 +16,12 @@ import React from 'react';
 import useNavigateKeepingSearch from '../../../common/hooks/useNavigateKeepingSearch';
 import HistoryTransactionPropTypes from '../../utils/history-transaction-prop-types';
 import TransactionDetailsTable from '../TransactionDetailsTable';
+import TransactionIcon from '../TransactionIcon';
 
 const FullTableHead = ({ hasCleared }) => (
   <TableHead>
     <TableRow>
+      <TableCell style={{ width: '0.5em' }} />
       <TableCell style={{ width: '9em' }}>Date</TableCell>
       <TableCell>Payee</TableCell>
       <TableCell>Memo</TableCell>
@@ -45,6 +47,9 @@ const FullTableRow = ({ formatMoney, hasCleared, transaction }) => {
   return (
     <>
       <TableRow hover onClick={handleClick} style={{ cursor: 'pointer' }}>
+        <TableCell padding='checkbox'>
+          <TransactionIcon type={transaction.type} />
+        </TableCell>
         <TableCell>{transaction.recordedDate}</TableCell>
         <TableCell>{transaction.payee}</TableCell>
         <TableCell>{transaction.memo}</TableCell>
