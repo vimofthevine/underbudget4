@@ -83,6 +83,14 @@ class BaseTestCase(unittest.TestCase):
         assert resp.status_code == 201
         return json.loads(resp.data).get("id")
 
+    def create_budget(self, ledger_id, name="Budget", periods=12):
+        """ Creates a budget """
+        resp = self.client.post(
+            f"/api/ledgers/{ledger_id}/budgets", json={"name": name, "periods": periods}
+        )
+        assert resp.status_code == 201
+        return resp.json.get("id")
+
     def _test_crud_methods_against_non_existent_resource(self, base_url, payload):
         """
         Tests that the GET/PUT/DELETE methods against a resource return 404 against invalid IDs
@@ -126,3 +134,26 @@ class BaseTestCase(unittest.TestCase):
         body = json.loads(self.client.get(f"{base_url}/{resource_id}").data)
         assert body.get("created") == created
         assert body.get("lastUpdated") != "2021-01-02T01:34:34+0000"
+
+    def _test_resource_is_modifiable(
+        self, post_url, base_url, post_payload, put_payload
+    ):
+        """ Tests that the resource can be modified """
+        resp = self.client.post(post_url, json=post_payload)
+        assert resp.status_code == 201
+        resource_id = json.loads(resp.data).get("id")
+
+        resp = self.client.get(f"{base_url}/{resource_id}")
+        assert resp.status_code == 200
+        for key, value in post_payload.items():
+            assert resp.json.get(key, f"{key}-undefined") == value
+
+        assert (
+            self.client.put(f"{base_url}/{resource_id}", json=put_payload).status_code
+            == 200
+        )
+
+        resp = self.client.get(f"{base_url}/{resource_id}")
+        assert resp.status_code == 200
+        for key, value in put_payload.items():
+            assert resp.json.get(key, f"{key}-undefined") == value
