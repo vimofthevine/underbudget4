@@ -145,8 +145,8 @@ class BudgetsTestCase(BaseTestCase):
     @parameterized.expand(
         [
             ("Year", 2021),
-            ("Year", ""),
-            ("Year", None),
+            ("year", ""),
+            ("year", None),
         ]
     )
     def test_active_budget_requires_valid_year(self, key, value):
@@ -217,9 +217,7 @@ class BudgetsTestCase(BaseTestCase):
         ledger_id = self.create_ledger()
         budget_id = self.create_budget(ledger_id)
         self.create_active_budget(ledger_id, budget_id)
-        assert(
-            self.client.delete(f"/api/budgets/{budget_id}")
-        ).status_code == 409
+        assert (self.client.delete(f"/api/budgets/{budget_id}")).status_code == 409
 
     def test_fetch_all_active_budgets(self):
         ledger_id = self.create_ledger()
@@ -251,3 +249,82 @@ class BudgetsTestCase(BaseTestCase):
         assert resp.json.get("budgetId") == budget_id
         assert resp.json.get("name") == "Budget 1"
         assert resp.json.get("year") == 2021
+
+    @parameterized.expand([("not-an-id",), (999,)])
+    def test_periodic_income_requires_valid_budget(self, budget_id=None):
+        resp = self.client.post(
+            f"/api/budgets/{budget_id}/periodic-incomes",
+            json={"name": "Income", "amount": 100},
+        )
+        assert resp.status_code == 404
+
+    @parameterized.expand(
+        [
+            ("Name", "Test Income"),
+            ("name", ""),
+            ("name", None),
+        ]
+    )
+    def test_periodic_income_requires_valid_name(self, key, value):
+        budget_id = self.create_budget(self.create_ledger())
+        resp = self.client.post(
+            f"/api/budgets/{budget_id}/periodic-incomes",
+            json={key: value, "amount": 100},
+        )
+        assert resp.status_code == 400
+
+    @parameterized.expand(
+        [
+            ("Amount", 100),
+            ("amount", ""),
+            ("amount", None),
+            ("amount", -2),
+            ("amount", 0),
+        ]
+    )
+    def test_periodic_income_requires_valid_amount(self, key, value):
+        budget_id = self.create_budget(self.create_ledger())
+        resp = self.client.post(
+            f"/api/budgets/{budget_id}/periodic-incomes",
+            json={"name": "Income", key: value},
+        )
+        assert resp.status_code == 400
+
+    def test_periodic_income_not_found(self):
+        self._test_crud_methods_against_non_existent_resource(
+            "/api/budget-periodic-incomes",
+            {"name": "Income", "amount": 100},
+        )
+
+    def test_periodic_income_is_audited(self):
+        budget_id = self.create_budget(self.create_ledger())
+        self._test_resource_is_audited(
+            f"/api/budgets/{budget_id}/periodic-incomes",
+            "/api/budget-periodic-incomes",
+            {"name": "Income", "amount": 100},
+        )
+
+    def test_periodic_income_modification(self):
+        budget_id = self.create_budget(self.create_ledger())
+        self._test_resource_is_modifiable(
+            f"/api/budgets/{budget_id}/periodic-incomes",
+            "/api/budget-periodic-incomes",
+            {"name": "Original Income", "amount": 100},
+            {"name": "Modified Income", "amount": 200},
+        )
+
+    def test_periodic_income_deletion(self):
+        budget_id = self.create_budget(self.create_ledger())
+        income_id = self.create_periodic_income(budget_id, 100)
+        assert (
+            self.client.get(f"/api/budget-periodic-incomes/{income_id}").status_code
+            == 200
+        )
+        assert (
+            self.client.delete(f"/api/budget-periodic-incomes/{income_id}").status_code
+            == 204
+        )
+        assert (
+            self.client.get(f"/api/budget-periodic-incomes/{income_id}").status_code
+            == 404
+        )

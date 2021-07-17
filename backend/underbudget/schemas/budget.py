@@ -26,12 +26,12 @@ class ActiveBudgetSchema(Schema):
     last_updated = fields.DateTime(data_key="lastUpdated", dump_only=True)
 
 
-class ExpectedIncomeSchema(Schema):
-    """ Budget expected income schema """
+class PeriodicIncomeSchema(Schema):
+    """ Budget periodic income schema """
 
     id = fields.Integer(dump_only=True)
-    name = fields.String(required=True)
-    amount = fields.Integer(required=True)
+    name = fields.String(required=True, validate=validate.Length(min=1))
+    amount = fields.Integer(required=True, validate=validate.Range(min=1))
     created = fields.DateTime(dump_only=True)
     last_updated = fields.DateTime(data_key="lastUpdated", dump_only=True)
 
@@ -41,8 +41,8 @@ class PeriodicExpenseSchema(Schema):
 
     id = fields.Integer(dump_only=True)
     envelope_id = fields.Integer(data_key="envelopeId", required=True)
-    name = fields.String(required=True)
-    amount = fields.Integer(required=True)
+    name = fields.String(required=True, validate=validate.Length(min=1))
+    amount = fields.Integer(required=True, validate=validate.Range(min=1))
     created = fields.DateTime(dump_only=True)
     last_updated = fields.DateTime(data_key="lastUpdated", dump_only=True)
 
@@ -51,8 +51,8 @@ class AnnualExpenseDetailSchema(Schema):
     """ Budget annual expense detail schema """
 
     id = fields.Integer()
-    name = fields.String(required=True)
-    amount = fields.Integer(required=True)
+    name = fields.String(required=True, validate=validate.Length(min=1))
+    amount = fields.Integer(required=True, validate=validate.Range(min=1))
 
 
 class AnnualExpenseSchema(Schema):
@@ -60,8 +60,8 @@ class AnnualExpenseSchema(Schema):
 
     id = fields.Integer(dump_only=True)
     envelope_id = fields.Integer(data_key="envelopeId", required=True)
-    name = fields.String(required=True)
-    amount = fields.Integer(required=True)
+    name = fields.String(required=True, validate=validate.Length(min=1))
+    amount = fields.Integer(required=True, validate=validate.Range(min=1))
     details = fields.List(
         fields.Nested(AnnualExpenseDetailSchema),
         missing=[],

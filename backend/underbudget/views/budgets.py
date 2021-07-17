@@ -11,9 +11,9 @@ from underbudget.models.budget import (
     ActiveBudgetModel,
     BudgetAnnualExpense,
     BudgetAnnualExpenseDetail,
-    BudgetExpectedIncome,
     BudgetModel,
     BudgetPeriodicExpense,
+    BudgetPeriodicIncomeModel,
 )
 from underbudget.models.envelope import EnvelopeCategoryModel, EnvelopeModel
 from underbudget.models.ledger import LedgerModel
@@ -22,12 +22,14 @@ import underbudget.schemas.budget as schema
 
 budget_schema = schema.BudgetSchema()
 active_budget_schema = schema.ActiveBudgetSchema()
+periodic_income_schema = schema.PeriodicIncomeSchema()
 
 
 def register(app: Flask):
     """ Registers all views """
     BudgetsView.register(app)
     ActiveBudgetsView.register(app)
+    PeriodicIncomesView.register(app)
 
 
 class BudgetsView(MethodView):
@@ -198,4 +200,83 @@ class ActiveBudgetsView(MethodView):
         """ Deletes a specific active budget """
         active_budget = ActiveBudgetModel.query.get_or_404(active_budget_id)
         active_budget.delete()
+        return {}, 204
+
+
+class PeriodicIncomesView(MethodView):
+    """ Periodic income REST resource view """
+
+    @classmethod
+    def register(cls, app: Flask):
+        """ Registers routes for this view """
+        view = cls.as_view("periodic_incomes")
+        app.add_url_rule(
+            "/api/budgets/<int:budget_id>/periodic-incomes",
+            defaults={"income_id": None},
+            view_func=view,
+            methods=["GET"],
+        )
+        app.add_url_rule(
+            "/api/budgets/<int:budget_id>/periodic-incomes",
+            view_func=view,
+            methods=["POST"],
+        )
+        app.add_url_rule(
+            "/api/budget-periodic-incomes/<int:income_id>",
+            defaults={"budget_id": None},
+            view_func=view,
+            methods=["GET"],
+        )
+        app.add_url_rule(
+            "/api/budget-periodic-incomes/<int:income_id>",
+            view_func=view,
+            methods=["PUT", "DELETE"],
+        )
+
+    @staticmethod
+    def get(budget_id: Optional[int], income_id: Optional[int]):
+        """ Gets a specific periodic income or all incomes in the specified budget """
+        if income_id:
+            return periodic_income_schema.dump(BudgetPeriodicIncomeModel.query.get_or_404(income_id))
+        if budget_id:
+            return {
+                "incomes": periodic_income_schema.dump(
+                    BudgetPeriodicIncomeModel.find_by_budget_id(budget_id), many=True
+                )
+            }
+        return ({}, 404)
+
+    @staticmethod
+    @use_args(periodic_income_schema)
+    def post(args: Dict[str, Any], budget_id: int):
+        """ Creates a new periodic income """
+        BudgetModel.query.get_or_404(budget_id)
+        now = datetime.now()
+
+        new_income = BudgetPeriodicIncomeModel(
+            budget_id=budget_id,
+            name=args["name"],
+            amount=args["amount"],
+            created=now,
+            last_updated=now,
+        )
+        new_income.save()
+        return {"id": int(new_income.id)}, 201
+
+    @staticmethod
+    @use_args(periodic_income_schema)
+    def put(args: Dict[str, Any], income_id: int):
+        """ Modifies a specific periodic income """
+        income = BudgetPeriodicIncomeModel.query.get_or_404(income_id)
+        income.name = args["name"]
+        income.amount = args["amount"]
+        income.last_updated = datetime.now()
+        income.save()
+        return {}, 200
+
+    @staticmethod
+    def delete(income_id: int):
+        """ Deletes a specific periodic income """
+        income = BudgetPeriodicIncomeModel.query.get_or_404(income_id)
+        income.delete()
         return {}, 204

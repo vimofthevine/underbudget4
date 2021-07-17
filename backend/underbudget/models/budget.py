@@ -89,15 +89,20 @@ class ActiveBudgetModel(db.Model, AuditModel, CrudModel):
 LedgerModel.active_budgets = db.relationship("ActiveBudgetModel", cascade="delete")
 
 
-class BudgetExpectedIncome(db.Model, AuditModel, CrudModel):
-    """ Budget expected income model """
+class BudgetPeriodicIncomeModel(db.Model, AuditModel, CrudModel):
+    """ Budget periodic income model """
 
-    __tablename__ = "budget_expected_income"
+    __tablename__ = "budget_periodic_income"
 
     id = db.Column(db.Integer, primary_key=True)
     budget_id = db.Column(db.Integer, db.ForeignKey("budget.id"), nullable=False)
     name = db.Column(db.String(128), nullable=False)
     amount = db.Column(db.Integer, nullable=False)
+
+    @classmethod
+    def find_by_budget_id(cls, budget_id: int) -> List["BudgetPeriodicIncomeModel"]:
+        """ Queries for periodic incomes under the given budget ID """
+        return cls.query.filter_by(budget_id=budget_id).all()
 
 
 class BudgetPeriodicExpense(db.Model, AuditModel, CrudModel):
