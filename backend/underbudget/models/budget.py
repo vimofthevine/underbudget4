@@ -29,7 +29,7 @@ class BudgetModel(db.Model, AuditModel, CrudModel):
         super().delete()
 
 
-LedgerModel.budgets = db.relationship("BudgetModel", cascade="delete")
+LedgerModel.budgets = db.relationship("BudgetModel", cascade="delete", lazy="select")
 
 
 class ActiveBudgetModel(db.Model, AuditModel, CrudModel):
@@ -86,8 +86,12 @@ class ActiveBudgetModel(db.Model, AuditModel, CrudModel):
         return cls.query.filter_by(ledger_id=ledger_id).filter_by(year=year).first()
 
 
-LedgerModel.active_budgets = db.relationship("ActiveBudgetModel", cascade="delete")
-BudgetModel.active_budgets = db.relationship("ActiveBudgetModel", cascade="delete")
+LedgerModel.active_budgets = db.relationship(
+    "ActiveBudgetModel", cascade="delete", lazy="select"
+)
+BudgetModel.active_budgets = db.relationship(
+    "ActiveBudgetModel", cascade="delete", lazy="select"
+)
 
 
 class BudgetPeriodicIncomeModel(db.Model, AuditModel, CrudModel):
@@ -107,7 +111,7 @@ class BudgetPeriodicIncomeModel(db.Model, AuditModel, CrudModel):
 
 
 BudgetModel.periodic_incomes = db.relationship(
-    "BudgetPeriodicIncomeModel", cascade="delete"
+    "BudgetPeriodicIncomeModel", cascade="delete", lazy="select"
 )
 
 
@@ -129,7 +133,7 @@ class BudgetPeriodicExpenseModel(db.Model, AuditModel, CrudModel):
 
 
 BudgetModel.periodic_expenses = db.relationship(
-    "BudgetPeriodicExpenseModel", cascade="delete"
+    "BudgetPeriodicExpenseModel", cascade="delete", lazy="select"
 )
 
 

@@ -129,7 +129,9 @@ class TransactionModel(db.Model, AuditModel, CrudModel):
         # All checks OK
 
 
-LedgerModel.transactions = db.relationship("TransactionModel", cascade="delete")
+LedgerModel.transactions = db.relationship(
+    "TransactionModel", cascade="delete", lazy="select"
+)
 
 
 class AccountTransactionModel(db.Model):
