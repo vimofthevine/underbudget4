@@ -40,7 +40,7 @@ def create_app(app_config=config.BaseConfig) -> Flask:
     transactions.EnvelopeTransactionsView.register(app)
     balances.AccountBalancesView.register(app)
     balances.EnvelopeBalancesView.register(app)
-    budgets.BudgetsView.register(app)
+    budgets.register(app)
     demo.DemoView.register(app)
 
     # pylint: disable=unused-variable

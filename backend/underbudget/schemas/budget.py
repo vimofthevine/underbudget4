@@ -20,8 +20,10 @@ class ActiveBudgetSchema(Schema):
 
     id = fields.Integer(dump_only=True)
     budget_id = fields.Integer(data_key="budgetId", required=True)
-    budget_name = fields.String(dump_only=True, data_key="budgetName")
+    name = fields.String(dump_only=True)
     year = fields.Integer(required=True)
+    created = fields.DateTime(dump_only=True)
+    last_updated = fields.DateTime(data_key="lastUpdated", dump_only=True)
 
 
 class ExpectedIncomeSchema(Schema):
@@ -30,6 +32,8 @@ class ExpectedIncomeSchema(Schema):
     id = fields.Integer(dump_only=True)
     name = fields.String(required=True)
     amount = fields.Integer(required=True)
+    created = fields.DateTime(dump_only=True)
+    last_updated = fields.DateTime(data_key="lastUpdated", dump_only=True)
 
 
 class PeriodicExpenseSchema(Schema):
@@ -39,6 +43,8 @@ class PeriodicExpenseSchema(Schema):
     envelope_id = fields.Integer(data_key="envelopeId", required=True)
     name = fields.String(required=True)
     amount = fields.Integer(required=True)
+    created = fields.DateTime(dump_only=True)
+    last_updated = fields.DateTime(data_key="lastUpdated", dump_only=True)
 
 
 class AnnualExpenseDetailSchema(Schema):
@@ -60,3 +66,5 @@ class AnnualExpenseSchema(Schema):
         fields.Nested(AnnualExpenseDetailSchema),
         missing=[],
     )
+    created = fields.DateTime(dump_only=True)
+    last_updated = fields.DateTime(data_key="lastUpdated", dump_only=True)
