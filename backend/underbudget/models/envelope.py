@@ -46,6 +46,7 @@ class EnvelopeModel(db.Model, AuditModel, CrudModel):
     )
     transactions = db.relationship("EnvelopeTransactionModel", lazy="select")
     periodic_expenses = db.relationship("BudgetPeriodicExpenseModel", lazy="select")
+    annual_expenses = db.relationship("BudgetAnnualExpenseModel", lazy="select")
 
     name = db.Column(db.String(128), nullable=False)
     archived = db.Column(db.Boolean, nullable=False)
@@ -57,4 +58,6 @@ class EnvelopeModel(db.Model, AuditModel, CrudModel):
             raise Conflict("Envelope is referenced by transactions")
         if len(self.periodic_expenses) > 0:
             raise Conflict("Envelope is referenced by budgeted periodic expenses")
+        if len(self.annual_expenses) > 0:
+            raise Conflict("Envelope is referenced by budgeted annual expenses")
         super().delete()

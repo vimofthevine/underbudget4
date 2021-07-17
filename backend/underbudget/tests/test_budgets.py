@@ -5,6 +5,7 @@ from parameterized import parameterized
 from underbudget.tests.base import BaseTestCase
 
 
+# pylint: disable=too-many-public-methods
 class BudgetsTestCase(BaseTestCase):
     """ Integration tests for budget APIs """
 
@@ -525,20 +526,377 @@ class BudgetsTestCase(BaseTestCase):
             m.value for m in parse("expenses[*].amount").find(resp.json)
         ]
 
-    def test_ledger_deletion_cascades_to_budget(self):
+    @parameterized.expand([("not-an-id",), (999,)])
+    def test_annual_expense_requires_valid_budget(self, budget_id=None):
+        ledger_id = self.create_ledger()
+        env_cat_id = self.create_envelope_category(ledger_id)
+        envelope_id = self.create_envelope(env_cat_id)
+        resp = self.client.post(
+            f"/api/budgets/{budget_id}/annual-expenses",
+            json={"envelopeId": envelope_id, "name": "Expense", "amount": 100},
+        )
+        assert resp.status_code == 404
+
+    @parameterized.expand(
+        [
+            (400, "EnvelopeId", "auto"),
+            (400, "envelopeId", None),
+            (400, "envelopeId", ""),
+            (404, "envelopeId", 0),
+            (404, "envelopeId", -1),
+            (404, "envelopeId", 999),
+            (400, "envelopeId", "other"),
+            (201, "envelopeId", "auto"),
+        ]
+    )
+    def test_annual_expense_requires_valid_envelope_id(self, code, key, value):
         ledger_id = self.create_ledger()
         env_cat_id = self.create_envelope_category(ledger_id)
         envelope_id = self.create_envelope(env_cat_id)
         budget_id = self.create_budget(ledger_id)
+
+        other_ledger_id = self.create_ledger()
+        other_env_cat_id = self.create_envelope_category(other_ledger_id)
+        other_envelope_id = self.create_envelope(other_env_cat_id)
+
+        if value == "auto":
+            value = envelope_id
+        elif value == "other":
+            value = other_envelope_id
+
+        resp = self.client.post(
+            f"/api/budgets/{budget_id}/annual-expenses",
+            json={key: value, "name": "Expense", "amount": 100},
+        )
+        assert resp.status_code == code
+
+    @parameterized.expand(
+        [
+            ("Name", "Test Expense"),
+            ("name", ""),
+            ("name", None),
+        ]
+    )
+    def test_annual_expense_requires_valid_name(self, key, value):
+        ledger_id = self.create_ledger()
+        env_cat_id = self.create_envelope_category(ledger_id)
+        envelope_id = self.create_envelope(env_cat_id)
+        budget_id = self.create_budget(ledger_id)
+        resp = self.client.post(
+            f"/api/budgets/{budget_id}/annual-expenses",
+            json={"envelopeId": envelope_id, key: value, "amount": 100},
+        )
+        assert resp.status_code == 400
+
+    @parameterized.expand(
+        [
+            ("Amount", 100),
+            ("amount", ""),
+            ("amount", None),
+            ("amount", -2),
+            ("amount", 0),
+        ]
+    )
+    def test_annual_expense_requires_valid_amount(self, key, value):
+        ledger_id = self.create_ledger()
+        env_cat_id = self.create_envelope_category(ledger_id)
+        envelope_id = self.create_envelope(env_cat_id)
+        budget_id = self.create_budget(ledger_id)
+        resp = self.client.post(
+            f"/api/budgets/{budget_id}/annual-expenses",
+            json={"envelopeId": envelope_id, "name": "Expense", key: value},
+        )
+        assert resp.status_code == 400
+
+    @parameterized.expand(
+        [
+            ("Name", "Test Expense"),
+            ("name", None),
+        ]
+    )
+    def test_annual_expense_details_require_valid_name(self, key, value):
+        ledger_id = self.create_ledger()
+        env_cat_id = self.create_envelope_category(ledger_id)
+        envelope_id = self.create_envelope(env_cat_id)
+        budget_id = self.create_budget(ledger_id, periods=2)
+        resp = self.client.post(
+            f"/api/budgets/{budget_id}/annual-expenses",
+            json={
+                "envelopeId": envelope_id,
+                "name": "Expense",
+                "amount": 0,
+                "details": [
+                    {key: value, "amount": 50},
+                    {key: value, "amount": 55},
+                ],
+            },
+        )
+        assert resp.status_code == 400
+
+    @parameterized.expand(
+        [
+            ("Amount", 100),
+            ("amount", ""),
+            ("amount", None),
+            ("amount", -2),
+            ("amount", 0),
+        ]
+    )
+    def test_annual_expense_details_require_valid_amount(self, key, value):
+        ledger_id = self.create_ledger()
+        env_cat_id = self.create_envelope_category(ledger_id)
+        envelope_id = self.create_envelope(env_cat_id)
+        budget_id = self.create_budget(ledger_id, periods=2)
+        resp = self.client.post(
+            f"/api/budgets/{budget_id}/annual-expenses",
+            json={
+                "envelopeId": envelope_id,
+                "name": "Expense",
+                "amount": 0,
+                "details": [
+                    {"name": "foo", key: value},
+                    {"name": "bar", key: value},
+                ],
+            },
+        )
+        assert resp.status_code == 400
+
+    def test_annual_expense_details_require_valid_periods(self):
+        ledger_id = self.create_ledger()
+        env_cat_id = self.create_envelope_category(ledger_id)
+        envelope_id = self.create_envelope(env_cat_id)
+        budget_id = self.create_budget(ledger_id, periods=2)
+        resp = self.client.post(
+            f"/api/budgets/{budget_id}/annual-expenses",
+            json={
+                "envelopeId": envelope_id,
+                "name": "Expense",
+                "amount": 0,
+                "details": [
+                    {"name": "bar", "amount": 100},
+                ],
+            },
+        )
+        assert resp.status_code == 400
+
+        resp = self.client.post(
+            f"/api/budgets/{budget_id}/annual-expenses",
+            json={
+                "envelopeId": envelope_id,
+                "name": "Expense",
+                "amount": 0,
+                "details": [
+                    {"name": "foo", "amount": 100},
+                    {"name": "bar", "amount": 200},
+                ],
+            },
+        )
+        assert resp.status_code == 201
+        expense_id = resp.json.get("id")
+
+        resp = self.client.get(f"/api/budget-annual-expenses/{expense_id}")
+        assert resp.status_code == 200
+        assert len(resp.json.get("details", [])) == 2
+        assert resp.json["details"][0]["name"] == "foo"
+        assert resp.json["details"][0]["amount"] == 100
+        assert resp.json["details"][1]["name"] == "bar"
+        assert resp.json["details"][1]["amount"] == 200
+
+        resp = self.client.put(
+            f"/api/budget-annual-expenses/{expense_id}",
+            json={
+                "envelopeId": envelope_id,
+                "name": "Expense",
+                "amount": 0,
+                "details": [
+                    {"name": "bar", "amount": 100},
+                ],
+            },
+        )
+        assert resp.status_code == 400
+
+        resp = self.client.put(
+            f"/api/budget-annual-expenses/{expense_id}",
+            json={
+                "envelopeId": envelope_id,
+                "name": "Expense",
+                "amount": 0,
+                "details": [
+                    {"name": "", "amount": 75},
+                    {"name": "second", "amount": 85},
+                ],
+            },
+        )
+        assert resp.status_code == 200
+
+        resp = self.client.get(f"/api/budget-annual-expenses/{expense_id}")
+        assert resp.status_code == 200
+        assert len(resp.json.get("details", [])) == 2
+        assert resp.json["details"][0]["name"] == ""
+        assert resp.json["details"][0]["amount"] == 75
+        assert resp.json["details"][1]["name"] == "second"
+        assert resp.json["details"][1]["amount"] == 85
+
+    def test_annual_expense_not_found(self):
+        ledger_id = self.create_ledger()
+        env_cat_id = self.create_envelope_category(ledger_id)
+        envelope_id = self.create_envelope(env_cat_id)
+        self._test_crud_methods_against_non_existent_resource(
+            "/api/budget-annual-expenses",
+            {"envelopeId": envelope_id, "name": "Expense", "amount": 100},
+        )
+
+    def test_annual_expense_is_audited(self):
+        ledger_id = self.create_ledger()
+        env_cat_id = self.create_envelope_category(ledger_id)
+        envelope_id = self.create_envelope(env_cat_id)
+        budget_id = self.create_budget(ledger_id)
+        self._test_resource_is_audited(
+            f"/api/budgets/{budget_id}/annual-expenses",
+            "/api/budget-annual-expenses",
+            {"envelopeId": envelope_id, "name": "Expense", "amount": 100},
+        )
+
+    def test_annual_expense_modification(self):
+        ledger_id = self.create_ledger()
+        env_cat_id = self.create_envelope_category(ledger_id)
+        envelope_1_id = self.create_envelope(env_cat_id)
+        envelope_2_id = self.create_envelope(env_cat_id)
+        budget_id = self.create_budget(ledger_id)
+        self._test_resource_is_modifiable(
+            f"/api/budgets/{budget_id}/annual-expenses",
+            "/api/budget-annual-expenses",
+            {"envelopeId": envelope_1_id, "name": "Original Expense", "amount": 100},
+            {"envelopeId": envelope_2_id, "name": "Modified Expense", "amount": 200},
+        )
+
+    def test_prevent_changing_periods_after_annual_details_exist(self):
+        ledger_id = self.create_ledger()
+        env_cat_id = self.create_envelope_category(ledger_id)
+        envelope_id = self.create_envelope(env_cat_id)
+        budget_id = self.create_budget(ledger_id, periods=2)
+        self.create_annual_expense(budget_id, envelope_id, amount=100)
+
+        assert (
+            self.client.put(
+                f"/api/budgets/{budget_id}", json={"name": "Name", "periods": 3}
+            ).status_code
+            == 200
+        )
+
+        self.create_annual_expense(budget_id, envelope_id, details=[10, 10, 10])
+
+        assert (
+            self.client.put(
+                f"/api/budgets/{budget_id}", json={"name": "Name", "periods": 4}
+            ).status_code
+            == 400
+        )
+        assert (
+            self.client.put(
+                f"/api/budgets/{budget_id}", json={"name": "New Name", "periods": 3}
+            ).status_code
+            == 200
+        )
+
+    def test_annual_expense_deletion(self):
+        ledger_id = self.create_ledger()
+        env_cat_id = self.create_envelope_category(ledger_id)
+        envelope_id = self.create_envelope(env_cat_id)
+        budget_id = self.create_budget(ledger_id, periods=2)
+        expense_id = self.create_annual_expense(budget_id, envelope_id, amount=100)
+        assert (
+            self.client.get(f"/api/budget-annual-expenses/{expense_id}").status_code
+            == 200
+        )
+        assert (
+            self.client.delete(f"/api/budget-annual-expenses/{expense_id}").status_code
+            == 204
+        )
+        assert (
+            self.client.get(f"/api/budget-annual-expenses/{expense_id}").status_code
+            == 404
+        )
+
+        expense_id = self.create_annual_expense(
+            budget_id, envelope_id, details=[10, 10]
+        )
+        assert (
+            self.client.get(f"/api/budget-annual-expenses/{expense_id}").status_code
+            == 200
+        )
+        assert (
+            self.client.delete(f"/api/budget-annual-expenses/{expense_id}").status_code
+            == 204
+        )
+        assert (
+            self.client.get(f"/api/budget-annual-expenses/{expense_id}").status_code
+            == 404
+        )
+
+    def test_prevent_deletion_of_envelope_with_annual_expenses(self):
+        ledger_id = self.create_ledger()
+        env_cat_id = self.create_envelope_category(ledger_id)
+        envelope_id = self.create_envelope(env_cat_id)
+        budget_id = self.create_budget(ledger_id)
+        self.create_annual_expense(budget_id, envelope_id, amount=100)
+
+        assert self.client.delete(f"/api/envelopes/{envelope_id}").status_code == 409
+
+    def test_fetch_all_annual_expenses(self):
+        ledger_id = self.create_ledger()
+        env_cat_id = self.create_envelope_category(ledger_id)
+        envelope_1_id = self.create_envelope(env_cat_id)
+        envelope_2_id = self.create_envelope(env_cat_id)
+        budget_id = self.create_budget(ledger_id, periods=2)
+        expense_1_id = self.create_annual_expense(
+            budget_id, envelope_2_id, name="Expense 1", amount=100
+        )
+        expense_2_id = self.create_annual_expense(
+            budget_id, envelope_1_id, name="Expense 2", details=[75, 85]
+        )
+
+        resp = self.client.get(f"/api/budgets/{budget_id}/annual-expenses")
+        assert resp.status_code == 200
+
+        assert [expense_1_id, expense_2_id] == [
+            m.value for m in parse("expenses[*].id").find(resp.json)
+        ]
+        assert [envelope_2_id, envelope_1_id] == [
+            m.value for m in parse("expenses[*].envelopeId").find(resp.json)
+        ]
+        assert ["Expense 1", "Expense 2"] == [
+            m.value for m in parse("expenses[*].name").find(resp.json)
+        ]
+        assert [100, 160] == [
+            m.value for m in parse("expenses[*].amount").find(resp.json)
+        ]
+        assert [75, 85] == [
+            m.value for m in parse("expenses[1].details[*].amount").find(resp.json)
+        ]
+
+    def test_ledger_deletion_cascades_to_budget(self):
+        ledger_id = self.create_ledger()
+        env_cat_id = self.create_envelope_category(ledger_id)
+        envelope_id = self.create_envelope(env_cat_id)
+        budget_id = self.create_budget(ledger_id, periods=3)
         active_id = self.create_active_budget(ledger_id, budget_id)
         income_id = self.create_periodic_income(budget_id, 100)
-        expense_id = self.create_periodic_expense(budget_id, envelope_id, 100)
+        periodic_expense_id = self.create_periodic_expense(budget_id, envelope_id, 100)
+        annual_expense_1_id = self.create_annual_expense(
+            budget_id, envelope_id, amount=100
+        )
+        annual_expense_2_id = self.create_annual_expense(
+            budget_id, envelope_id, details=[75, 85, 95]
+        )
 
         resources = [
             f"/api/budgets/{budget_id}",
             f"/api/active-budgets/{active_id}",
             f"/api/budget-periodic-incomes/{income_id}",
-            f"/api/budget-periodic-expenses/{expense_id}",
+            f"/api/budget-periodic-expenses/{periodic_expense_id}",
+            f"/api/budget-annual-expenses/{annual_expense_1_id}",
+            f"/api/budget-annual-expenses/{annual_expense_2_id}",
         ]
 
         for resource in resources:

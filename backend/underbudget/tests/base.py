@@ -104,6 +104,7 @@ class BaseTestCase(unittest.TestCase):
         return resp.json.get("id")
 
     def create_periodic_income(self, budget_id, amount, name="Income"):
+        """ Creates a budgeted periodic income """
         resp = self.client.post(
             f"/api/budgets/{budget_id}/periodic-incomes",
             json={"name": name, "amount": amount},
@@ -111,10 +112,32 @@ class BaseTestCase(unittest.TestCase):
         assert resp.status_code == 201
         return resp.json.get("id")
 
-    def create_periodic_expense(self, budget_id, envelope_id, amount, name="Income"):
+    def create_periodic_expense(self, budget_id, envelope_id, amount, name="Expense"):
+        """ Creates a budgeted periodic expense """
         resp = self.client.post(
             f"/api/budgets/{budget_id}/periodic-expenses",
             json={"envelopeId": envelope_id, "name": name, "amount": amount},
+        )
+        assert resp.status_code == 201
+        return resp.json.get("id")
+
+    # pylint: disable=too-many-arguments
+    def create_annual_expense(
+        self, budget_id, envelope_id, amount=0, details=None, name="Expense"
+    ):
+        """ Creates a budgeted annual expense """
+        expense_details = []
+        if details:
+            for detail_amount in details:
+                expense_details.append({"name": "", "amount": detail_amount})
+        resp = self.client.post(
+            f"/api/budgets/{budget_id}/annual-expenses",
+            json={
+                "envelopeId": envelope_id,
+                "name": name,
+                "amount": amount,
+                "details": expense_details,
+            },
         )
         assert resp.status_code == 201
         return resp.json.get("id")

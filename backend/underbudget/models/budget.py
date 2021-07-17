@@ -137,7 +137,7 @@ BudgetModel.periodic_expenses = db.relationship(
 )
 
 
-class BudgetAnnualExpense(db.Model, AuditModel, CrudModel):
+class BudgetAnnualExpenseModel(db.Model, AuditModel, CrudModel):
     """ Budget annual expense model """
 
     __tablename__ = "budget_annual_expense"
@@ -147,9 +147,24 @@ class BudgetAnnualExpense(db.Model, AuditModel, CrudModel):
     envelope_id = db.Column(db.Integer, db.ForeignKey("envelope.id"), nullable=False)
     name = db.Column(db.String(128), nullable=False)
     amount = db.Column(db.Integer, nullable=False)
+    details = db.relationship(
+        "BudgetAnnualExpenseDetailModel",
+        cascade="delete",
+        order_by="asc(BudgetAnnualExpenseDetailModel.period)",
+    )
+
+    @classmethod
+    def find_by_budget_id(cls, budget_id: int) -> List["BudgetAnnualExpenseModel"]:
+        """ Queries for annual expenses under the given budget ID """
+        return cls.query.filter_by(budget_id=budget_id).all()
 
 
-class BudgetAnnualExpenseDetail(db.Model):
+BudgetModel.annual_expenses = db.relationship(
+    "BudgetAnnualExpenseModel", cascade="delete", lazy="select"
+)
+
+
+class BudgetAnnualExpenseDetailModel(db.Model):
     """ Budget annual expense detail model """
 
     __tablename__ = "budget_annual_expense_detail"

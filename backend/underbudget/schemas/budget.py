@@ -51,8 +51,8 @@ class AnnualExpenseDetailSchema(Schema):
     """ Budget annual expense detail schema """
 
     id = fields.Integer()
-    name = fields.String(required=True, validate=validate.Length(min=1))
-    amount = fields.Integer(required=True, validate=validate.Range(min=1))
+    name = fields.String(required=True)
+    amount = fields.Integer(required=True, validate=validate.Range(min=0))
 
 
 class AnnualExpenseSchema(Schema):
@@ -61,7 +61,7 @@ class AnnualExpenseSchema(Schema):
     id = fields.Integer(dump_only=True)
     envelope_id = fields.Integer(data_key="envelopeId", required=True)
     name = fields.String(required=True, validate=validate.Length(min=1))
-    amount = fields.Integer(required=True, validate=validate.Range(min=1))
+    amount = fields.Integer(required=True, validate=validate.Range(min=0))
     details = fields.List(
         fields.Nested(AnnualExpenseDetailSchema),
         missing=[],

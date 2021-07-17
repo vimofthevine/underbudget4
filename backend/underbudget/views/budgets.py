@@ -3,14 +3,14 @@ from datetime import datetime
 from typing import Any, Dict, Optional
 from flask import Flask
 from flask.views import MethodView
-from werkzeug.exceptions import BadRequest, NotFound
+from werkzeug.exceptions import BadRequest
 
 from underbudget.common.decorators import use_args
 from underbudget.database import db
 from underbudget.models.budget import (
     ActiveBudgetModel,
-    BudgetAnnualExpense,
-    BudgetAnnualExpenseDetail,
+    BudgetAnnualExpenseModel,
+    BudgetAnnualExpenseDetailModel,
     BudgetModel,
     BudgetPeriodicExpenseModel,
     BudgetPeriodicIncomeModel,
@@ -24,6 +24,7 @@ budget_schema = schema.BudgetSchema()
 active_budget_schema = schema.ActiveBudgetSchema()
 periodic_income_schema = schema.PeriodicIncomeSchema()
 periodic_expense_schema = schema.PeriodicExpenseSchema()
+annual_expense_schema = schema.AnnualExpenseSchema()
 
 
 def register(app: Flask):
@@ -32,6 +33,7 @@ def register(app: Flask):
     ActiveBudgetsView.register(app)
     PeriodicIncomesView.register(app)
     PeriodicExpensesView.register(app)
+    AnnualExpensesView.register(app)
 
 
 class BudgetsView(MethodView):
@@ -99,6 +101,12 @@ class BudgetsView(MethodView):
     def put(args: Dict[str, Any], budget_id: int):
         """ Modifies a specific budget """
         budget = BudgetModel.query.get_or_404(budget_id)
+
+        if budget.periods != args["periods"]:
+            for annual_expense in budget.annual_expenses:
+                if len(annual_expense.details) > 0:
+                    raise BadRequest("Cannot change number of periods in budget")
+
         budget.name = args["name"]
         budget.periods = args["periods"]
         budget.last_updated = datetime.now()
@@ -239,7 +247,9 @@ class PeriodicIncomesView(MethodView):
     def get(budget_id: Optional[int], income_id: Optional[int]):
         """ Gets a specific periodic income or all incomes in the specified budget """
         if income_id:
-            return periodic_income_schema.dump(BudgetPeriodicIncomeModel.query.get_or_404(income_id))
+            return periodic_income_schema.dump(
+                BudgetPeriodicIncomeModel.query.get_or_404(income_id)
+            )
         if budget_id:
             return {
                 "incomes": periodic_income_schema.dump(
@@ -318,7 +328,9 @@ class PeriodicExpensesView(MethodView):
     def get(budget_id: Optional[int], expense_id: Optional[int]):
         """ Gets a specific periodic expense or all expenses in the specified budget """
         if expense_id:
-            return periodic_expense_schema.dump(BudgetPeriodicExpenseModel.query.get_or_404(expense_id))
+            return periodic_expense_schema.dump(
+                BudgetPeriodicExpenseModel.query.get_or_404(expense_id)
+            )
         if budget_id:
             return {
                 "expenses": periodic_expense_schema.dump(
@@ -375,5 +387,149 @@ class PeriodicExpensesView(MethodView):
     def delete(expense_id: int):
         """ Deletes a specific periodic expense """
         expense = BudgetPeriodicExpenseModel.query.get_or_404(expense_id)
+        expense.delete()
+        return {}, 204
+
+
+class AnnualExpensesView(MethodView):
+    """ Annual expense REST resource view """
+
+    @classmethod
+    def register(cls, app: Flask):
+        """ Registers routes for this view """
+        view = cls.as_view("annual_expenses")
+        app.add_url_rule(
+            "/api/budgets/<int:budget_id>/annual-expenses",
+            defaults={"expense_id": None},
+            view_func=view,
+            methods=["GET"],
+        )
+        app.add_url_rule(
+            "/api/budgets/<int:budget_id>/annual-expenses",
+            view_func=view,
+            methods=["POST"],
+        )
+        app.add_url_rule(
+            "/api/budget-annual-expenses/<int:expense_id>",
+            defaults={"budget_id": None},
+            view_func=view,
+            methods=["GET"],
+        )
+        app.add_url_rule(
+            "/api/budget-annual-expenses/<int:expense_id>",
+            view_func=view,
+            methods=["PUT", "DELETE"],
+        )
+
+    @staticmethod
+    def get(budget_id: Optional[int], expense_id: Optional[int]):
+        """ Gets a specific annual expense or all expenses in the specified budget """
+        if expense_id:
+            return annual_expense_schema.dump(
+                BudgetAnnualExpenseModel.query.get_or_404(expense_id)
+            )
+        if budget_id:
+            return {
+                "expenses": annual_expense_schema.dump(
+                    BudgetAnnualExpenseModel.find_by_budget_id(budget_id), many=True
+                )
+            }
+        return ({}, 404)
+
+    @staticmethod
+    @use_args(annual_expense_schema)
+    def post(args: Dict[str, Any], budget_id: int):
+        """ Creates a new annual expense """
+        now = datetime.now()
+
+        budget = BudgetModel.query.get_or_404(budget_id)
+        envelope = EnvelopeModel.query.get_or_404(args["envelope_id"])
+        category = EnvelopeCategoryModel.query.get_or_404(envelope.category_id)
+
+        if category.ledger_id != budget.ledger_id:
+            raise BadRequest("Envelope is from different ledger")
+
+        if args["details"]:
+            if len(args["details"]) != budget.periods:
+                raise BadRequest("Wrong number of period details")
+
+            amount = 0
+            for detail in args["details"]:
+                amount += detail["amount"]
+        else:
+            amount = args["amount"]
+
+        if amount == 0:
+            raise BadRequest("Amount cannot be zero")
+
+        new_expense = BudgetAnnualExpenseModel(
+            budget_id=budget_id,
+            envelope_id=envelope.id,
+            name=args["name"],
+            amount=amount,
+            created=now,
+            last_updated=now,
+        )
+
+        for period, detail in enumerate(args["details"]):
+            new_detail = BudgetAnnualExpenseDetailModel(
+                name=detail["name"],
+                amount=detail["amount"],
+                period=period,
+            )
+            db.session.add(new_detail)
+            new_expense.details.append(new_detail)
+
+        new_expense.save()
+        return {"id": int(new_expense.id)}, 201
+
+    @staticmethod
+    @use_args(annual_expense_schema)
+    def put(args: Dict[str, Any], expense_id: int):
+        """ Modifies a specific periodic expense """
+        expense = BudgetAnnualExpenseModel.query.get_or_404(expense_id)
+
+        budget = BudgetModel.query.get_or_404(expense.budget_id)
+        envelope = EnvelopeModel.query.get_or_404(args["envelope_id"])
+        category = EnvelopeCategoryModel.query.get_or_404(envelope.category_id)
+
+        if category.ledger_id != budget.ledger_id:
+            raise BadRequest("Envelope is from different ledger")
+
+        if args["details"]:
+            num_new_details = len(args["details"])
+            if num_new_details != budget.periods:
+                raise BadRequest("Wrong number of period details")
+
+            num_old_details = len(expense.details)
+            if num_old_details > 0 and num_old_details != num_new_details:
+                raise BadRequest("Wrong number of period details")
+
+            amount = 0
+            for detail in args["details"]:
+                amount += detail["amount"]
+        else:
+            amount = args["amount"]
+
+        if amount == 0:
+            raise BadRequest("Amount cannot be zero")
+
+        expense.envelope_id = envelope.id
+        expense.name = args["name"]
+        expense.amount = amount
+
+        if args["details"]:
+            for period, detail in enumerate(args["details"]):
+                expense.details[period].name = detail["name"]
+                expense.details[period].amount = detail["amount"]
+
+        expense.last_updated = datetime.now()
+        expense.save()
+        return {}, 200
+
+    @staticmethod
+    def delete(expense_id: int):
+        """ Deletes a specific annual expense """
+        expense = BudgetAnnualExpenseModel.query.get_or_404(expense_id)
         expense.delete()
         return {}, 204
