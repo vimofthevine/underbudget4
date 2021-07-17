@@ -87,6 +87,7 @@ class ActiveBudgetModel(db.Model, AuditModel, CrudModel):
 
 
 LedgerModel.active_budgets = db.relationship("ActiveBudgetModel", cascade="delete")
+BudgetModel.active_budgets = db.relationship("ActiveBudgetModel", cascade="delete")
 
 
 class BudgetPeriodicIncomeModel(db.Model, AuditModel, CrudModel):
@@ -105,7 +106,12 @@ class BudgetPeriodicIncomeModel(db.Model, AuditModel, CrudModel):
         return cls.query.filter_by(budget_id=budget_id).all()
 
 
-class BudgetPeriodicExpense(db.Model, AuditModel, CrudModel):
+BudgetModel.periodic_incomes = db.relationship(
+    "BudgetPeriodicIncomeModel", cascade="delete"
+)
+
+
+class BudgetPeriodicExpenseModel(db.Model, AuditModel, CrudModel):
     """ Budget periodic expense model """
 
     __tablename__ = "budget_periodic_expense"
@@ -115,6 +121,16 @@ class BudgetPeriodicExpense(db.Model, AuditModel, CrudModel):
     envelope_id = db.Column(db.Integer, db.ForeignKey("envelope.id"), nullable=False)
     name = db.Column(db.String(128), nullable=False)
     amount = db.Column(db.Integer, nullable=False)
+
+    @classmethod
+    def find_by_budget_id(cls, budget_id: int) -> List["BudgetPeriodicExpenseModel"]:
+        """ Queries for periodic expenses under the given budget ID """
+        return cls.query.filter_by(budget_id=budget_id).all()
+
+
+BudgetModel.periodic_expenses = db.relationship(
+    "BudgetPeriodicExpenseModel", cascade="delete"
+)
 
 
 class BudgetAnnualExpense(db.Model, AuditModel, CrudModel):

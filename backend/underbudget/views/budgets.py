@@ -12,7 +12,7 @@ from underbudget.models.budget import (
     BudgetAnnualExpense,
     BudgetAnnualExpenseDetail,
     BudgetModel,
-    BudgetPeriodicExpense,
+    BudgetPeriodicExpenseModel,
     BudgetPeriodicIncomeModel,
 )
 from underbudget.models.envelope import EnvelopeCategoryModel, EnvelopeModel
@@ -23,6 +23,7 @@ import underbudget.schemas.budget as schema
 budget_schema = schema.BudgetSchema()
 active_budget_schema = schema.ActiveBudgetSchema()
 periodic_income_schema = schema.PeriodicIncomeSchema()
+periodic_expense_schema = schema.PeriodicExpenseSchema()
 
 
 def register(app: Flask):
@@ -30,6 +31,7 @@ def register(app: Flask):
     BudgetsView.register(app)
     ActiveBudgetsView.register(app)
     PeriodicIncomesView.register(app)
+    PeriodicExpensesView.register(app)
 
 
 class BudgetsView(MethodView):
@@ -279,4 +281,99 @@ class PeriodicIncomesView(MethodView):
         """ Deletes a specific periodic income """
         income = BudgetPeriodicIncomeModel.query.get_or_404(income_id)
         income.delete()
+        return {}, 204
+
+
+class PeriodicExpensesView(MethodView):
+    """ Periodic expense REST resource view """
+
+    @classmethod
+    def register(cls, app: Flask):
+        """ Registers routes for this view """
+        view = cls.as_view("periodic_expenses")
+        app.add_url_rule(
+            "/api/budgets/<int:budget_id>/periodic-expenses",
+            defaults={"expense_id": None},
+            view_func=view,
+            methods=["GET"],
+        )
+        app.add_url_rule(
+            "/api/budgets/<int:budget_id>/periodic-expenses",
+            view_func=view,
+            methods=["POST"],
+        )
+        app.add_url_rule(
+            "/api/budget-periodic-expenses/<int:expense_id>",
+            defaults={"budget_id": None},
+            view_func=view,
+            methods=["GET"],
+        )
+        app.add_url_rule(
+            "/api/budget-periodic-expenses/<int:expense_id>",
+            view_func=view,
+            methods=["PUT", "DELETE"],
+        )
+
+    @staticmethod
+    def get(budget_id: Optional[int], expense_id: Optional[int]):
+        """ Gets a specific periodic expense or all expenses in the specified budget """
+        if expense_id:
+            return periodic_expense_schema.dump(BudgetPeriodicExpenseModel.query.get_or_404(expense_id))
+        if budget_id:
+            return {
+                "expenses": periodic_expense_schema.dump(
+                    BudgetPeriodicExpenseModel.find_by_budget_id(budget_id), many=True
+                )
+            }
+        return ({}, 404)
+
+    @staticmethod
+    @use_args(periodic_expense_schema)
+    def post(args: Dict[str, Any], budget_id: int):
+        """ Creates a new periodic expense """
+        now = datetime.now()
+
+        budget = BudgetModel.query.get_or_404(budget_id)
+        envelope = EnvelopeModel.query.get_or_404(args["envelope_id"])
+        category = EnvelopeCategoryModel.query.get_or_404(envelope.category_id)
+
+        if category.ledger_id != budget.ledger_id:
+            raise BadRequest("Envelope is from different ledger")
+
+        new_expense = BudgetPeriodicExpenseModel(
+            budget_id=budget_id,
+            envelope_id=envelope.id,
+            name=args["name"],
+            amount=args["amount"],
+            created=now,
+            last_updated=now,
+        )
+        new_expense.save()
+        return {"id": int(new_expense.id)}, 201
+
+    @staticmethod
+    @use_args(periodic_expense_schema)
+    def put(args: Dict[str, Any], expense_id: int):
+        """ Modifies a specific periodic expense """
+        expense = BudgetPeriodicExpenseModel.query.get_or_404(expense_id)
+
+        budget = BudgetModel.query.get_or_404(expense.budget_id)
+        envelope = EnvelopeModel.query.get_or_404(args["envelope_id"])
+        category = EnvelopeCategoryModel.query.get_or_404(envelope.category_id)
+
+        if category.ledger_id != budget.ledger_id:
+            raise BadRequest("Envelope is from different ledger")
+
+        expense.envelope_id = envelope.id
+        expense.name = args["name"]
+        expense.amount = args["amount"]
+        expense.last_updated = datetime.now()
+        expense.save()
+        return {}, 200
+
+    @staticmethod
+    def delete(expense_id: int):
+        """ Deletes a specific periodic expense """
+        expense = BudgetPeriodicExpenseModel.query.get_or_404(expense_id)
+        expense.delete()
         return {}, 204

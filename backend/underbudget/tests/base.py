@@ -111,6 +111,14 @@ class BaseTestCase(unittest.TestCase):
         assert resp.status_code == 201
         return resp.json.get("id")
 
+    def create_periodic_expense(self, budget_id, envelope_id, amount, name="Income"):
+        resp = self.client.post(
+            f"/api/budgets/{budget_id}/periodic-expenses",
+            json={"envelopeId": envelope_id, "name": name, "amount": amount},
+        )
+        assert resp.status_code == 201
+        return resp.json.get("id")
+
     def _test_crud_methods_against_non_existent_resource(self, base_url, payload):
         """
         Tests that the GET/PUT/DELETE methods against a resource return 404 against invalid IDs
