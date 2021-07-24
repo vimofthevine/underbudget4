@@ -4,10 +4,11 @@ export const ACCOUNT = '/account';
 export const ACCOUNTS = '/accounts';
 export const ENVELOPE = '/envelope';
 export const ENVELOPES = '/envelopes';
-export const INCOMES = '/incomes';
-export const EXPENSES = '/expenses';
+export const BUDGET = '/budget';
+export const BUDGETS = '/budgets';
 export const REPORTS = '/reports';
 export const LOGOUT = '/authelia/logout';
 
 export const accountRoute = (id) => `${ACCOUNT}/${id}`;
 export const envelopeRoute = (id) => `${ENVELOPE}/${id}`;
+export const budgetRoute = (id) => `${BUDGET}/${id}`;
