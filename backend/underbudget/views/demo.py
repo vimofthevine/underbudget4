@@ -5,7 +5,6 @@ import random
 from typing import Any, Dict
 from flask import Flask
 from flask.views import MethodView
-from sqlalchemy import util
 
 from underbudget.common.decorators import use_args
 from underbudget.database import db

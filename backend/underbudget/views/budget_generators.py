@@ -1,7 +1,7 @@
 """ REST views to generate budgets """
 from datetime import datetime
-from flask import Flask
 from typing import Any, Dict
+from flask import Flask
 from werkzeug.exceptions import BadRequest
 
 from underbudget.common.decorators import use_args
