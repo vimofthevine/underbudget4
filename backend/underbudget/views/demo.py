@@ -9,6 +9,12 @@ from flask.views import MethodView
 from underbudget.common.decorators import use_args
 from underbudget.database import db
 from underbudget.models.account import AccountCategoryModel, AccountModel
+from underbudget.models.budget import (
+    ActiveBudgetModel,
+    BudgetModel,
+    BudgetPeriodicExpenseModel,
+    BudgetPeriodicIncomeModel,
+)
 from underbudget.models.envelope import EnvelopeCategoryModel, EnvelopeModel
 from underbudget.models.ledger import LedgerModel
 from underbudget.models.transaction import (
@@ -46,6 +52,7 @@ class DemoView(MethodView):
             created=start,
             last_updated=start,
         )
+        db.session.add(ledger)
 
         (accounts, envelopes) = self._populate_ledger(ledger, start)
         months = self._create_dates(args["months"])
@@ -73,7 +80,10 @@ class DemoView(MethodView):
             self._create_clothing_transactions(ledger, month, accounts, envelopes)
             self._create_entertainment_transactions(ledger, month, accounts, envelopes)
 
-        ledger.save()
+        db.session.flush()
+        self._create_budget(ledger, envelopes, start, now)
+
+        db.session.commit()
         return {"id": int(ledger.id)}, 201
 
     def _create_dates(self, num_months):
@@ -86,7 +96,7 @@ class DemoView(MethodView):
         start = start.replace(day=1)
         months = []
         num = 0
-        while start < now:
+        for _ in range(num_months):
             months.append(
                 self._generate_dates_for_month(start.year, start.month, num, num_months)
             )
@@ -194,6 +204,66 @@ class DemoView(MethodView):
         db.session.add(envelope)
         category.envelopes.append(envelope)
         return envelope
+
+    @staticmethod
+    def _create_budget(ledger, envelopes, start, stop):
+        budget = BudgetModel(
+            ledger_id=ledger.id,
+            name="Demo Budget",
+            periods=12,
+            created=start,
+            last_updated=start,
+        )
+        db.session.add(budget)
+
+        active = ActiveBudgetModel(
+            ledger_id=ledger.id,
+            year=start.year,
+            created=start,
+            last_updated=start,
+        )
+        db.session.add(active)
+        budget.active_budgets.append(active)
+
+        if start.year != stop.year:
+            active = ActiveBudgetModel(
+                ledger_id=ledger.id,
+                year=stop.year,
+                created=start,
+                last_updated=start,
+            )
+            db.session.add(active)
+            budget.active_budgets.append(active)
+
+        income = BudgetPeriodicIncomeModel(
+            name="Income",
+            amount=216000,
+            created=start,
+            last_updated=start,
+        )
+        db.session.add(income)
+        budget.periodic_incomes.append(income)
+
+        def create_expense(name, amount, envelope=None):
+            expense = BudgetPeriodicExpenseModel(
+                envelope_id=envelopes[envelope or name.lower()].id,
+                name=name,
+                amount=amount,
+                created=start,
+                last_updated=start,
+            )
+            db.session.add(expense)
+            budget.periodic_expenses.append(expense)
+
+        create_expense("Rent", 78322)
+        create_expense("Utilities", 10000)
+        create_expense("Phone", 6500, "utilities")
+        create_expense("Gas", 8000)
+        create_expense("Maintenance", 5000)
+        create_expense("Groceries", 40000)
+        create_expense("Dining", 40000)
+        create_expense("Clothes", 2000)
+        create_expense("Entertainment", 2000)
 
     @staticmethod
     def _create_transaction(

@@ -23,5 +23,8 @@ dev-db-rebuild:
 		'DROP SCHEMA "public" CASCADE; CREATE SCHEMA "public"; GRANT ALL ON SCHEMA public TO postgres; GRANT ALL ON SCHEMA public TO public;'
 	docker exec underbudget-dev-api flask db upgrade
 
+dev-db-migrate:
+	docker exec underbudget-dev-api flask db migrate -m "$(MSG)"
+
 api-test:
 	docker exec underbudget-dev-api pytest $(TEST_ARGS)

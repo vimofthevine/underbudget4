@@ -120,7 +120,7 @@ test('should prompt to confirm deletion of account', async () => {
   expect(invalidateQueries).toHaveBeenCalledWith(['account-categories', { ledger: '2' }]);
 
   await waitFor(() => expect(history.location.pathname).toBe('/accounts'));
-});
+}, 15000);
 
 // TODO implement these tests
 // test('should archive account', async () => {});

@@ -1,4 +1,5 @@
 """ Test case base class """
+from datetime import datetime
 import json
 import unittest
 
@@ -83,6 +84,64 @@ class BaseTestCase(unittest.TestCase):
         assert resp.status_code == 201
         return json.loads(resp.data).get("id")
 
+    def create_budget(self, ledger_id, name="Budget", periods=12):
+        """ Creates a budget """
+        resp = self.client.post(
+            f"/api/ledgers/{ledger_id}/budgets", json={"name": name, "periods": periods}
+        )
+        assert resp.status_code == 201
+        return resp.json.get("id")
+
+    def create_active_budget(self, ledger_id, budget_id, year=None):
+        """ Creates an active budget """
+        if not year:
+            year = datetime.now().year
+        resp = self.client.post(
+            f"/api/ledgers/{ledger_id}/active-budgets",
+            json={"budgetId": budget_id, "year": year},
+        )
+        assert resp.status_code == 201
+        return resp.json.get("id")
+
+    def create_periodic_income(self, budget_id, amount, name="Income"):
+        """ Creates a budgeted periodic income """
+        resp = self.client.post(
+            f"/api/budgets/{budget_id}/periodic-incomes",
+            json={"name": name, "amount": amount},
+        )
+        assert resp.status_code == 201
+        return resp.json.get("id")
+
+    def create_periodic_expense(self, budget_id, envelope_id, amount, name="Expense"):
+        """ Creates a budgeted periodic expense """
+        resp = self.client.post(
+            f"/api/budgets/{budget_id}/periodic-expenses",
+            json={"envelopeId": envelope_id, "name": name, "amount": amount},
+        )
+        assert resp.status_code == 201
+        return resp.json.get("id")
+
+    # pylint: disable=too-many-arguments
+    def create_annual_expense(
+        self, budget_id, envelope_id, amount=0, details=None, name="Expense"
+    ):
+        """ Creates a budgeted annual expense """
+        expense_details = []
+        if details:
+            for detail_amount in details:
+                expense_details.append({"name": "", "amount": detail_amount})
+        resp = self.client.post(
+            f"/api/budgets/{budget_id}/annual-expenses",
+            json={
+                "envelopeId": envelope_id,
+                "name": name,
+                "amount": amount,
+                "details": expense_details,
+            },
+        )
+        assert resp.status_code == 201
+        return resp.json.get("id")
+
     def _test_crud_methods_against_non_existent_resource(self, base_url, payload):
         """
         Tests that the GET/PUT/DELETE methods against a resource return 404 against invalid IDs
@@ -95,12 +154,14 @@ class BaseTestCase(unittest.TestCase):
 
         assert self.client.delete(f"{base_url}/999").status_code == 404
 
-    def _test_resource_is_audited(self, post_url, base_url, payload):
+    def _test_resource_is_audited(
+        self, post_url, base_url, post_payload, put_payload=None
+    ):
         """
         Tests that the created and lastUpdated fields of the resource are populated and updated by
         POST and PUT methods
         """
-        resp = self.client.post(post_url, json=payload)
+        resp = self.client.post(post_url, json=post_payload)
         assert resp.status_code == 201
         resource_id = json.loads(resp.data).get("id")
 
@@ -110,19 +171,45 @@ class BaseTestCase(unittest.TestCase):
         created = body.get("created", "no-created")
         assert created == body.get("lastUpdated", "no-lastUpdated")
 
-        resp = self.client.put(f"{base_url}/{resource_id}", json=payload)
+        if not put_payload:
+            put_payload = post_payload
+
+        resp = self.client.put(f"{base_url}/{resource_id}", json=put_payload)
         assert resp.status_code == 200
 
         body = json.loads(self.client.get(f"{base_url}/{resource_id}").data)
         assert body.get("created") == created
         assert body.get("lastUpdated") != created
 
-        payload["created"] = ("2021-01-02T00:34:34+0000",)
-        payload["lastUpdated"] = ("2021-01-02T01:34:34+0000",)
+        put_payload["created"] = ("2021-01-02T00:34:34+0000",)
+        put_payload["lastUpdated"] = ("2021-01-02T01:34:34+0000",)
 
-        resp = self.client.put(f"{base_url}/{resource_id}", json=payload)
+        resp = self.client.put(f"{base_url}/{resource_id}", json=put_payload)
         assert resp.status_code == 400
 
         body = json.loads(self.client.get(f"{base_url}/{resource_id}").data)
         assert body.get("created") == created
         assert body.get("lastUpdated") != "2021-01-02T01:34:34+0000"
+
+    def _test_resource_is_modifiable(
+        self, post_url, base_url, post_payload, put_payload
+    ):
+        """ Tests that the resource can be modified """
+        resp = self.client.post(post_url, json=post_payload)
+        assert resp.status_code == 201
+        resource_id = json.loads(resp.data).get("id")
+
+        resp = self.client.get(f"{base_url}/{resource_id}")
+        assert resp.status_code == 200
+        for key, value in post_payload.items():
+            assert resp.json.get(key, f"{key}-undefined") == value
+
+        assert (
+            self.client.put(f"{base_url}/{resource_id}", json=put_payload).status_code
+            == 200
+        )
+
+        resp = self.client.get(f"{base_url}/{resource_id}")
+        assert resp.status_code == 200
+        for key, value in put_payload.items():
+            assert resp.json.get(key, f"{key}-undefined") == value
