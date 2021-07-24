@@ -68,3 +68,9 @@ Mobile.args = Desktop.args;
 Mobile.parameters = {
   viewport: { defaultViewport: 'mobile1' },
 };
+
+export const BackNav = Template.bind({});
+BackNav.args = {
+  ...Desktop.args,
+  back: '/previous-url',
+};

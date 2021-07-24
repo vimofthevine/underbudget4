@@ -59,6 +59,13 @@ export const OnePrimaryActionMobile = Template.bind({});
 OnePrimaryActionMobile.args = OnePrimaryAction.args;
 OnePrimaryActionMobile.parameters = mobileParameters;
 
+export const BackNavAction = Template.bind({});
+BackNavAction.args = { back: '/previous-url', primaryActions: [createAction] };
+
+export const BackNavActionMobile = Template.bind({});
+BackNavActionMobile.args = BackNavAction.args;
+BackNavActionMobile.parameters = mobileParameters;
+
 export const TwoPrimaryActions = Template.bind({});
 TwoPrimaryActions.args = { primaryActions: [createAction, editAction] };
 

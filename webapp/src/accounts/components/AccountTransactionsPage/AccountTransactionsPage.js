@@ -21,6 +21,8 @@ import useFetchAccount from '../../hooks/useFetchAccount';
 import useFetchAccountBalance from '../../hooks/useFetchAccountBalance';
 import ModifyAccountDialog from '../ModifyAccountDialog';
 
+const parentRoute = { pathname: routes.ACCOUNTS, search: '' };
+
 const AccountTransactionsPage = () => {
   const confirm = useConfirmation();
   const formatMoney = useFormatMoney();
@@ -28,7 +30,7 @@ const AccountTransactionsPage = () => {
   const navigate = useNavigateKeepingSearch();
 
   const { mutate: deleteAccount } = useDeleteAccount({
-    onSuccess: () => navigate({ pathname: routes.ACCOUNTS, search: '' }),
+    onSuccess: () => navigate(parentRoute),
   });
 
   const { id } = useParams();
@@ -91,7 +93,12 @@ const AccountTransactionsPage = () => {
   }, [data, balanceData, mobile]);
 
   return (
-    <FullAppPage primaryActions={primaryActions} secondaryActions={secondaryActions} title={title}>
+    <FullAppPage
+      back={parentRoute}
+      primaryActions={primaryActions}
+      secondaryActions={secondaryActions}
+      title={title}
+    >
       <TransactionHistory hasCleared useFetchTransactions={useFetchAccountTransactions} />
       <Routes>
         <Route path='modify' element={<ModifyAccountDialog />} />

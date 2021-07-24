@@ -1,3 +1,4 @@
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import CloseIcon from '@material-ui/icons/Close';
 import MenuIcon from '@material-ui/icons/Menu';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -5,6 +6,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import useMobile from '../../hooks/useMobile';
+import useNavigateKeepingSearch from '../../hooks/useNavigateKeepingSearch';
 import useSelection from '../../hooks/useSelection';
 import actionPropsShape from '../../utils/action-props';
 import toList from '../../utils/to-list';
@@ -14,7 +16,7 @@ import PureAppBar from '../PureAppBar';
 import PureDrawer from '../PureDrawer';
 import useDrawerState from './useDrawerState';
 
-const FullAppBar = ({ primaryActions, secondaryActions, selectionActions, title }) => {
+const FullAppBar = ({ back, primaryActions, secondaryActions, selectionActions, title }) => {
   const [drawerOpen, toggleDrawer] = useDrawerState();
 
   const { clear, selected } = useSelection();
@@ -25,20 +27,32 @@ const FullAppBar = ({ primaryActions, secondaryActions, selectionActions, title 
   const handleCloseOverflowMenu = () => setOverflowMenuAnchor(null);
 
   const mobile = useMobile();
+  const navigate = useNavigateKeepingSearch();
 
-  const navActionProps = hasSelection
-    ? {
+  const navActionProps = React.useMemo(() => {
+    if (hasSelection) {
+      return {
         'aria-label': 'clear selection',
         icon: <CloseIcon />,
         onClick: clear,
         text: 'Clear selection',
-      }
-    : {
-        'aria-label': 'open nav drawer',
-        icon: <MenuIcon />,
-        onClick: toggleDrawer,
-        text: 'Toggle nav drawer',
       };
+    }
+    if (back) {
+      return {
+        'aria-label': 'go to previous page',
+        icon: <ArrowBackIcon />,
+        onClick: () => navigate(back),
+        text: 'Go to previous page',
+      };
+    }
+    return {
+      'aria-label': 'open nav drawer',
+      icon: <MenuIcon />,
+      onClick: toggleDrawer,
+      text: 'Toggle nav drawer',
+    };
+  }, [back, clear, hasSelection, navigate, toggleDrawer]);
 
   const appBarTitle = hasSelection ? `${selected.length} Selected` : title;
 
@@ -90,6 +104,13 @@ const actionPropsType = PropTypes.oneOfType([
 ]);
 
 FullAppBar.propTypes = {
+  back: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.shape({
+      pathname: PropTypes.string,
+      search: PropTypes.string,
+    }),
+  ]),
   primaryActions: actionPropsType,
   secondaryActions: actionPropsType,
   selectionActions: actionPropsType,
@@ -97,6 +118,7 @@ FullAppBar.propTypes = {
 };
 
 FullAppBar.defaultProps = {
+  back: null,
   primaryActions: null,
   secondaryActions: null,
   selectionActions: null,
