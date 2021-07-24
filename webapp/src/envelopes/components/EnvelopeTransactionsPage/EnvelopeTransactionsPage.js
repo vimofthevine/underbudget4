@@ -21,6 +21,8 @@ import useFetchEnvelope from '../../hooks/useFetchEnvelope';
 import useFetchEnvelopeBalance from '../../hooks/useFetchEnvelopeBalance';
 import ModifyEnvelopeDialog from '../ModifyEnvelopeDialog';
 
+const parentRoute = { pathname: routes.ENVELOPES, search: '' };
+
 const EnvelopeTransactionsPage = () => {
   const confirm = useConfirmation();
   const formatMoney = useFormatMoney();
@@ -28,7 +30,7 @@ const EnvelopeTransactionsPage = () => {
   const navigate = useNavigateKeepingSearch();
 
   const { mutate: deleteEnvelope } = useDeleteEnvelope({
-    onSuccess: () => navigate({ pathname: routes.ENVELOPES, search: '' }),
+    onSuccess: () => navigate(parentRoute),
   });
 
   const { id } = useParams();
@@ -91,7 +93,12 @@ const EnvelopeTransactionsPage = () => {
   }, [data, balanceData, mobile]);
 
   return (
-    <FullAppPage primaryActions={primaryActions} secondaryActions={secondaryActions} title={title}>
+    <FullAppPage
+      back={parentRoute}
+      primaryActions={primaryActions}
+      secondaryActions={secondaryActions}
+      title={title}
+    >
       <TransactionHistory useFetchTransactions={useFetchEnvelopeTransactions} />
       <Routes>
         <Route path='modify' element={<ModifyEnvelopeDialog />} />

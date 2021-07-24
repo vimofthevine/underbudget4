@@ -10,6 +10,7 @@ import PureAppPage from '../PureAppPage';
 import PureFab from '../PureFab';
 
 const FullAppPage = ({
+  back,
   children,
   primaryActions,
   secondaryActions,
@@ -28,6 +29,7 @@ const FullAppPage = ({
 
   const appBar = (
     <FullAppBar
+      back={back}
       primaryActions={primaryActionProps}
       secondaryActions={secondaryActions}
       selectionActions={selectionActions}
