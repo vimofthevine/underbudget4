@@ -120,7 +120,7 @@ test('should prompt to confirm deletion of envelope', async () => {
   expect(invalidateQueries).toHaveBeenCalledWith(['envelope-categories', { ledger: '2' }]);
 
   await waitFor(() => expect(history.location.pathname).toBe('/envelopes'));
-});
+}, 15000);
 
 // TODO implement these tests
 // test('should archive envelope', async () => {});
