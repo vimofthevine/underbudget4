@@ -23,6 +23,7 @@ def create_app(app_config=config.BaseConfig) -> Flask:
     import underbudget.views.accounts as accounts
     import underbudget.views.balances as balances
     import underbudget.views.budgets as budgets
+    import underbudget.views.budget_generators as budget_generators
     import underbudget.views.budget_queries as budget_queries
     import underbudget.views.demo as demo
     import underbudget.views.envelopes as envelopes
@@ -42,6 +43,7 @@ def create_app(app_config=config.BaseConfig) -> Flask:
     balances.AccountBalancesView.register(app)
     balances.EnvelopeBalancesView.register(app)
     budgets.register(app)
+    budget_generators.register(app)
     budget_queries.register(app)
     demo.DemoView.register(app)
 

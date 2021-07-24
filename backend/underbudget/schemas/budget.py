@@ -68,3 +68,9 @@ class AnnualExpenseSchema(Schema):
     )
     created = fields.DateTime(dump_only=True)
     last_updated = fields.DateTime(data_key="lastUpdated", dump_only=True)
+
+
+class CopyBudgetSchema(Schema):
+    """ Copy-budget request schema """
+
+    orig_id = fields.Integer(required=True, data_key="origId")
