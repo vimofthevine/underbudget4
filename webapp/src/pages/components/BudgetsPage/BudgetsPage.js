@@ -12,6 +12,7 @@ import FullAppPage from 'common/components/FullAppPage';
 import useNavigateKeepingSearch from 'common/hooks/useNavigateKeepingSearch';
 import ActiveBudgetsList from 'budgets/components/ActiveBudgetsList';
 import AllBudgetsList from 'budgets/components/AllBudgetsList';
+import CreateActiveBudgetDialog from 'budgets/components/CreateActiveBudgetDialog';
 import CreateBudgetDialog from 'budgets/components/CreateBudgetDialog';
 
 const BudgetsPage = () => {
@@ -25,7 +26,7 @@ const BudgetsPage = () => {
     {
       'aria-label': 'Set active budget',
       icon: <CheckCircleIcon />,
-      onClick: () => 0,
+      onClick: () => navigate('set-active'),
       text: 'Set active budget',
     },
     {
@@ -59,6 +60,7 @@ const BudgetsPage = () => {
       </TabContext>
       <Routes>
         <Route path='create' element={<CreateBudgetDialog />} />
+        <Route path='set-active' element={<CreateActiveBudgetDialog />} />
       </Routes>
     </FullAppPage>
   );

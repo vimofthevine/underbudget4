@@ -81,6 +81,15 @@ test('should display create-budget dialog if initial route matches', async () =>
   expect(screen.queryByRole('heading', { name: /create budget/i })).not.toBeInTheDocument();
 });
 
+test('should display set-active dialog if initial route matches', async () => {
+  const { history } = render('/budgets/set-active');
+  expect(screen.getByRole('heading', { name: /set active budget/i })).toBeInTheDocument();
+
+  userEvent.click(screen.getByRole('button', { name: /cancel/i }));
+  await waitFor(() => expect(history.location.pathname).toBe('/budgets'));
+  expect(screen.queryByRole('heading', { name: /set active budget/i })).not.toBeInTheDocument();
+});
+
 test('should open create dialogs when using nav bar actions', async () => {
   const { history } = render();
 
@@ -94,4 +103,10 @@ test('should open create dialogs when using nav bar actions', async () => {
     expect(screen.getByRole('heading', { name: /create budget/i })).toBeInTheDocument(),
   );
   expect(history.location.pathname).toBe('/budgets/create');
+
+  userEvent.click(screen.getByRole('button', { name: /set active budget/i }));
+  await waitFor(() =>
+    expect(screen.getByRole('heading', { name: /set active budget/i })).toBeInTheDocument(),
+  );
+  expect(history.location.pathname).toBe('/budgets/set-active');
 });
