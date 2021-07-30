@@ -6,13 +6,17 @@ import TabContext from '@material-ui/lab/TabContext';
 import TabList from '@material-ui/lab/TabList';
 import TabPanel from '@material-ui/lab/TabPanel';
 import React from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Routes, Route, useSearchParams } from 'react-router-dom';
 
 import FullAppPage from 'common/components/FullAppPage';
+import useNavigateKeepingSearch from 'common/hooks/useNavigateKeepingSearch';
 import ActiveBudgetsList from 'budgets/components/ActiveBudgetsList';
 import AllBudgetsList from 'budgets/components/AllBudgetsList';
+import CreateBudgetDialog from 'budgets/components/CreateBudgetDialog';
 
 const BudgetsPage = () => {
+  const navigate = useNavigateKeepingSearch();
+
   const [searchParams, setSearchParams] = useSearchParams({ tab: 'active' });
   const tabValue = searchParams.get('tab');
   const handleChangeTab = (e, tab) => setSearchParams({ tab });
@@ -27,7 +31,7 @@ const BudgetsPage = () => {
     {
       'aria-label': 'Create budget',
       icon: <AddCircleIcon />,
-      onClick: () => 0,
+      onClick: () => navigate('create'),
       text: 'Create budget',
     },
   ];
@@ -53,6 +57,9 @@ const BudgetsPage = () => {
           <AllBudgetsList />
         </TabPanel>
       </TabContext>
+      <Routes>
+        <Route path='create' element={<CreateBudgetDialog />} />
+      </Routes>
     </FullAppPage>
   );
 };
