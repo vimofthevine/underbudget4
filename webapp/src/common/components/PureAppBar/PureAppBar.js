@@ -4,6 +4,7 @@ import MuiAppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -49,9 +50,11 @@ const PureAppBar = ({ actions, navAction, title }) => {
         </Typography>
 
         {iterate(actions, ({ fabIcon, ...action }, last) => (
-          <IconButton color='inherit' edge={last ? 'end' : false} key={action.text} {...action}>
-            {action.icon}
-          </IconButton>
+          <Tooltip enterDelay={750} title={action.text}>
+            <IconButton color='inherit' edge={last ? 'end' : false} key={action.text} {...action}>
+              {action.icon}
+            </IconButton>
+          </Tooltip>
         ))}
       </Toolbar>
     </MuiAppBar>
