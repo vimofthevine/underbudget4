@@ -46,7 +46,7 @@ test('should display create-envelope dialog if initial route matches', async () 
   expect(screen.getByRole('heading', { name: /create envelope/i })).toBeInTheDocument();
 
   userEvent.click(screen.getByRole('button', { name: /cancel/i }));
-  await waitFor(() => expect(history.location.pathname).toBe('/envelopes/'));
+  await waitFor(() => expect(history.location.pathname).toBe('/envelopes'));
   expect(screen.queryByRole('heading', { name: /create envelope/i })).not.toBeInTheDocument();
 });
 
@@ -55,7 +55,7 @@ test('should display create-category dialog if initial route matches', async () 
   expect(screen.getByRole('heading', { name: /create category/i })).toBeInTheDocument();
 
   userEvent.click(screen.getByRole('button', { name: /cancel/i }));
-  await waitFor(() => expect(history.location.pathname).toBe('/envelopes/'));
+  await waitFor(() => expect(history.location.pathname).toBe('/envelopes'));
   expect(screen.queryByRole('heading', { name: /create category/i })).not.toBeInTheDocument();
 });
 
@@ -63,7 +63,7 @@ test('should display modify-category dialog if initial route matches', async () 
   const { history } = render({ route: '/envelopes/modify-category/1' });
   expect(screen.getByRole('heading', { name: /modify category/i })).toBeInTheDocument();
 
-  await waitFor(() => expect(history.location.pathname).toBe('/envelopes/'));
+  await waitFor(() => expect(history.location.pathname).toBe('/envelopes'));
   expect(screen.queryByRole('heading', { name: /modify category/i })).not.toBeInTheDocument();
 });
 

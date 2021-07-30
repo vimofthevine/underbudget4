@@ -12,7 +12,7 @@ const ModifyEnvelopeCategoryDialog = () => {
   const { id } = useParams();
   const { data, isLoading } = useFetchEnvelopeCategory(
     { id },
-    { onError: () => navigate('../../') },
+    { onError: () => navigate('../..') },
   );
   const category = data || EnvelopeCategoryForm.initialValues;
   const { mutate } = useModifyEnvelopeCategory();

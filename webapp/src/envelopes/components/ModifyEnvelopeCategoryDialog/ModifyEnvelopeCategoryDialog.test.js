@@ -41,7 +41,7 @@ test('should close dialog when unable to fetch category', async () => {
   await waitFor(() =>
     expect(screen.queryByRole('heading', { name: /modify category/i })).not.toBeInTheDocument(),
   );
-  await waitFor(() => expect(history.location.pathname).toBe('/envelopes/'));
+  await waitFor(() => expect(history.location.pathname).toBe('/envelopes'));
 });
 
 test('should prevent submission when required fields are missing', async () => {
