@@ -50,8 +50,8 @@ const PureAppBar = ({ actions, navAction, title }) => {
         </Typography>
 
         {iterate(actions, ({ fabIcon, ...action }, last) => (
-          <Tooltip enterDelay={750} title={action.text}>
-            <IconButton color='inherit' edge={last ? 'end' : false} key={action.text} {...action}>
+          <Tooltip enterDelay={750} key={action.text} title={action.text}>
+            <IconButton color='inherit' edge={last ? 'end' : false} {...action}>
               {action.icon}
             </IconButton>
           </Tooltip>
