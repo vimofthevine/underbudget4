@@ -14,6 +14,7 @@ import ActiveBudgetsList from 'budgets/components/ActiveBudgetsList';
 import AllBudgetsList from 'budgets/components/AllBudgetsList';
 import CreateActiveBudgetDialog from 'budgets/components/CreateActiveBudgetDialog';
 import CreateBudgetDialog from 'budgets/components/CreateBudgetDialog';
+import ModifyActiveBudgetDialog from 'budgets/components/ModifyActiveBudgetDialog';
 
 const BudgetsPage = () => {
   const navigate = useNavigateKeepingSearch();
@@ -61,6 +62,7 @@ const BudgetsPage = () => {
       <Routes>
         <Route path='create' element={<CreateBudgetDialog />} />
         <Route path='set-active' element={<CreateActiveBudgetDialog />} />
+        <Route path='modify-active/:id' element={<ModifyActiveBudgetDialog />} />
       </Routes>
     </FullAppPage>
   );

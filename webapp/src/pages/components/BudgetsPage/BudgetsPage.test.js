@@ -90,6 +90,14 @@ test('should display set-active dialog if initial route matches', async () => {
   expect(screen.queryByRole('heading', { name: /set active budget/i })).not.toBeInTheDocument();
 });
 
+test('should display modify-active dialog if initial route matches', async () => {
+  const { history } = render('/budgets/modify-active/4');
+  expect(screen.getByRole('heading', { name: /modify active budget/i })).toBeInTheDocument();
+
+  await waitFor(() => expect(history.location.pathname).toBe('/budgets'));
+  expect(screen.queryByRole('heading', { name: /modify active budget/i })).not.toBeInTheDocument();
+});
+
 test('should open create dialogs when using nav bar actions', async () => {
   const { history } = render();
 
