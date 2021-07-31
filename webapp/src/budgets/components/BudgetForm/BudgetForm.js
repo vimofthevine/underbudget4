@@ -1,3 +1,5 @@
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import { Field } from 'formik';
 import { Select, TextField } from 'formik-material-ui';
@@ -21,20 +23,23 @@ const BudgetForm = () => (
       required
       variant='outlined'
     />
-    <Field
-      aria-label='number of periods per year'
-      component={Select}
-      id='periods'
-      label='Number of Periods Per Year'
-      labelId='periods-label'
-      name='periods'
-    >
-      {periodValues.map((period) => (
-        <MenuItem key={period} value={period}>
-          {periodLabels[period]}
-        </MenuItem>
-      ))}
-    </Field>
+    <FormControl fullWidth required variant='outlined'>
+      <InputLabel id='periods-label'>Periods Per Year</InputLabel>
+      <Field
+        aria-label='periods per year'
+        component={Select}
+        id='periods'
+        label='Periods Per Year'
+        labelId='periods-label'
+        name='periods'
+      >
+        {periodValues.map((period) => (
+          <MenuItem key={period} value={period}>
+            {periodLabels[period]}
+          </MenuItem>
+        ))}
+      </Field>
+    </FormControl>
   </>
 );
 

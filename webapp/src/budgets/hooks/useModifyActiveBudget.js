@@ -7,15 +7,12 @@ import useSelectedLedger from 'common/hooks/useSelectedLedger';
 
 export default (opts) => {
   const ledger = useSelectedLedger();
-  return useMutation(
-    ({ created, id, lastUpdated, year, ...data }) => axios.put(`/api/active-budgets/${id}`, data),
-    {
-      createErrorMessage: useErrorMessage({ request: 'Unable to modify active budget' }),
-      refetchQueries: (_, { id }) => [
-        ['active-budget', toString(id)],
-        ['active-budgets', { ledger }],
-      ],
-      ...opts,
-    },
-  );
+  return useMutation(({ budgetId, id }) => axios.put(`/api/active-budgets/${id}`, { budgetId }), {
+    createErrorMessage: useErrorMessage({ request: 'Unable to modify active budget' }),
+    refetchQueries: (_, { id }) => [
+      ['active-budget', toString(id)],
+      ['active-budgets', { ledger }],
+    ],
+    ...opts,
+  });
 };

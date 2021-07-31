@@ -92,7 +92,7 @@ test('should show error message when request error', async () => {
 });
 
 test('should close and refresh query when successful modify', async () => {
-  const { mockApi, queryClient } = render({ id: 5, budgetId: 2, year: 2020 });
+  const { mockApi, queryClient } = render({ id: 5, budgetId: 2, name: 'Test Budget', year: 2020 });
   mockApi.onPut('/api/active-budgets/5').reply(200);
   const invalidateQueries = jest.spyOn(queryClient, 'invalidateQueries');
 
