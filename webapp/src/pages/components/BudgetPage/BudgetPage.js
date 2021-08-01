@@ -1,14 +1,16 @@
 import EditIcon from '@material-ui/icons/Edit';
 import React from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { Routes, Route, useLocation, useParams } from 'react-router-dom';
 
 import FullAppPage from 'common/components/FullAppPage';
 import useNavigateKeepingSearch from 'common/hooks/useNavigateKeepingSearch';
 import * as routes from 'common/utils/routes';
+import ModifyBudgetDialog from 'budgets/components/ModifyBudgetDialog';
 import useFetchBudget from 'budgets/hooks/useFetchBudget';
 
 const BudgetPage = () => {
-  const { state: { budgetsPageSearch = '' } = {} } = useLocation();
+  const { state } = useLocation();
+  const { budgetsPageSearch = '' } = state || {};
   const navigate = useNavigateKeepingSearch();
 
   const { id } = useParams();
@@ -36,11 +38,12 @@ const BudgetPage = () => {
   }, [data]);
 
   return (
-    <FullAppPage
-      back={parentRoute}
-      primaryActions={primaryActions}
-      title={title}
-    >{`budget ${id}`}</FullAppPage>
+    <FullAppPage back={parentRoute} primaryActions={primaryActions} title={title}>
+      {`budget ${id}`}
+      <Routes>
+        <Route path='modify' element={<ModifyBudgetDialog />} />
+      </Routes>
+    </FullAppPage>
   );
 };
 
