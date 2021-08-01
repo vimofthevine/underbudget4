@@ -7,6 +7,7 @@ import CardHeader from '@material-ui/core/CardHeader';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import useNavigateKeepingSearch from 'common/hooks/useNavigateKeepingSearch';
 import * as routes from 'common/utils/routes';
@@ -19,9 +20,19 @@ const useStyles = makeStyles((theme) => ({
 
 const BudgetCard = ({ budget }) => {
   const classes = useStyles();
+  const { search } = useLocation();
   const navigate = useNavigateKeepingSearch();
 
-  const handleSelect = () => navigate(routes.budgetRoute(budget.budgetId || budget.id));
+  const handleSelect = () =>
+    navigate(
+      {
+        pathname: routes.budgetRoute(budget.budgetId || budget.id),
+        search: '',
+      },
+      {
+        state: { budgetsPageSearch: search },
+      },
+    );
   const handleChange = () => navigate(`modify-active/${budget.id}`);
 
   return (
