@@ -60,7 +60,6 @@ test('should open dialogs when using nav bar actions', async () => {
   );
 
   // Make sure no dialogs open initially
-  expect(screen.queryAllByRole('heading')).toHaveLength(1);
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 
   userEvent.click(screen.getByRole('button', { name: /modify/i }));

@@ -5,6 +5,7 @@ import { Routes, Route, useLocation, useParams } from 'react-router-dom';
 import FullAppPage from 'common/components/FullAppPage';
 import useNavigateKeepingSearch from 'common/hooks/useNavigateKeepingSearch';
 import * as routes from 'common/utils/routes';
+import IncomeSummary from 'budgets/components/IncomeSummary';
 import ModifyBudgetDialog from 'budgets/components/ModifyBudgetDialog';
 import useFetchBudget from 'budgets/hooks/useFetchBudget';
 
@@ -39,7 +40,7 @@ const BudgetPage = () => {
 
   return (
     <FullAppPage back={parentRoute} primaryActions={primaryActions} title={title}>
-      {`budget ${id}`}
+      <IncomeSummary budgetId={id} />
       <Routes>
         <Route path='modify' element={<ModifyBudgetDialog />} />
       </Routes>
