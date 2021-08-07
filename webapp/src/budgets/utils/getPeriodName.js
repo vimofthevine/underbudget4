@@ -27,7 +27,7 @@ export default (period, periods) => {
   if (periods === 24) {
     const month = moment(startOfYear).add(Math.floor(period / 2), 'months');
     const monthName = month.format('MMM');
-    if (period % 2 == 0) {
+    if (period % 2 === 0) {
       return `${monthName} 1 to ${monthName} 15`;
     }
     return `${monthName} 16 to ${monthName} ${month.daysInMonth()}`;

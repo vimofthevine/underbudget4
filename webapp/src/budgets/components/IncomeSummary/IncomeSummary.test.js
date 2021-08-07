@@ -36,6 +36,13 @@ const render = (incomes, code = 200) => {
 test('should show error message when unable to retrieve incomes', async () => {
   render([], 404);
   await waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument());
+  expect(screen.getByText(/unable to retrieve/i)).toBeInTheDocument();
+});
+
+test('should show info message when no incomes exist', async () => {
+  render([], 200);
+  await waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument());
+  expect(screen.getByText(/no incomes/i)).toBeInTheDocument();
 });
 
 test('should show periodic incomes in summary', async () => {
@@ -59,6 +66,6 @@ test('should show periodic incomes in summary', async () => {
 test('should navigate to incomes route on button click', async () => {
   const { history } = render([]);
   await waitFor(() => expect(screen.queryByRole('progressbar')).not.toBeInTheDocument());
-  userEvent.click(screen.getByRole('button'));
+  userEvent.click(screen.getByRole('button', { name: /go to budget incomes/i }));
   expect(history.location.pathname).toBe('/incomes');
 });
