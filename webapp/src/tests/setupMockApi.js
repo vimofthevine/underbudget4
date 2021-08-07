@@ -70,3 +70,9 @@ export default ({
 
   return mockAxios;
 };
+
+export const standardLedgerResponses = [
+  ['/api/ledgers/2', { currency: 840 }],
+  ['/api/ledgers/2/account-categories', accountCategories],
+  ['/api/ledgers/2/envelope-categories', envelopeCategories],
+];

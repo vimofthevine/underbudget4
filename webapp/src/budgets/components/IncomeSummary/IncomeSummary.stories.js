@@ -1,7 +1,6 @@
 import React from 'react';
 
 import setSelectedLedger from 'common/utils/setSelectedLedger';
-// import setupMockApi from 'tests/setupMockApi';
 import IncomeSummary from './IncomeSummary';
 
 export default {
@@ -13,18 +12,6 @@ export default {
       return story();
     },
   ],
-  // decorators: [
-  //   (story) => {
-  //     const mockApi = setupMockApi();
-
-  // const incomes = [
-  //   { id: 2, name: 'My Income', amount: 17755 },
-  //   { id: 3, name: 'Their Income', amount: 13681 },
-  // ];
-
-  //     return story();
-  //   },
-  // ],
   parameters: {
     api: {
       get: [['/api/ledgers/2', { currency: 840 }]],
