@@ -32,12 +32,7 @@ const BudgetPage = () => {
     },
   ];
 
-  const title = React.useMemo(() => {
-    if (!data) {
-      return '...';
-    }
-    return data.name;
-  }, [data]);
+  const title = data ? data.name : '...';
 
   return (
     <FullAppPage back={parentRoute} primaryActions={primaryActions} title={title}>
