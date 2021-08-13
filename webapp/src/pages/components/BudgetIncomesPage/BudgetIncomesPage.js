@@ -1,13 +1,17 @@
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { Routes, Route, useParams } from 'react-router-dom';
 
+import CreatePeriodicIncomeDialog from 'budgets/components/CreatePeriodicIncomeDialog';
+import ModifyPeriodicIncomeDialog from 'budgets/components/ModifyPeriodicIncomeDialog';
 import PeriodicIncomesList from 'budgets/components/PeriodicIncomesList';
 import useFetchBudget from 'budgets/hooks/useFetchBudget';
 import FullAppPage from 'common/components/FullAppPage';
+import useNavigateKeepingSearch from 'common/hooks/useNavigateKeepingSearch';
 import * as routes from 'common/utils/routes';
 
 const BudgetIncomesPage = () => {
+  const navigate = useNavigateKeepingSearch();
   const { id } = useParams();
   const { data } = useFetchBudget({ id });
 
@@ -17,9 +21,9 @@ const BudgetIncomesPage = () => {
 
   const primaryActions = [
     {
-      'aria-label': 'Create periocic income',
+      'aria-label': 'Create periodic income',
       icon: <AddCircleIcon />,
-      onClick: () => 0,
+      onClick: () => navigate('create-periodic'),
       text: 'Create periodic income',
     },
   ];
@@ -29,6 +33,13 @@ const BudgetIncomesPage = () => {
   return (
     <FullAppPage back={parentRoute} primaryActions={primaryActions} title={title}>
       <PeriodicIncomesList budgetId={id} />
+      <Routes>
+        <Route path='create-periodic' element={<CreatePeriodicIncomeDialog budgetId={id} />} />
+        <Route
+          path='modify-periodic/:incomeId'
+          element={<ModifyPeriodicIncomeDialog budgetId={id} />}
+        />
+      </Routes>
     </FullAppPage>
   );
 };
