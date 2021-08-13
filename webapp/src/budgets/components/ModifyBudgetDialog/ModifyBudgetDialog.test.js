@@ -44,7 +44,6 @@ test('should close dialog when unable to fetch budget', async () => {
   await waitFor(() => expect(history.location.pathname).toBe('/budget/8'));
 });
 
-// Can't unselect a budget, so disable this for now (add back in if a clearable field is introduced)
 test('should prevent submission when required fields are missing', async () => {
   render({ id: 8, name: 'Test Budget', periods: 12 });
   await waitFor(() =>

@@ -20,7 +20,7 @@ const CreatePeriodicIncomeDialog = ({ budgetId }) => {
 };
 
 CreatePeriodicIncomeDialog.propTypes = {
-  budgetId: PropTypes.number.isRequired,
+  budgetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 };
 
 export default CreatePeriodicIncomeDialog;
