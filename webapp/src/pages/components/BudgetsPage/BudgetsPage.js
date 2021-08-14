@@ -1,5 +1,6 @@
 import Paper from '@material-ui/core/Paper';
 import Tab from '@material-ui/core/Tab';
+import { makeStyles } from '@material-ui/core/styles';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import TabContext from '@material-ui/lab/TabContext';
@@ -16,7 +17,14 @@ import CreateActiveBudgetDialog from 'budgets/components/CreateActiveBudgetDialo
 import CreateBudgetDialog from 'budgets/components/CreateBudgetDialog';
 import ModifyActiveBudgetDialog from 'budgets/components/ModifyActiveBudgetDialog';
 
+const useStyles = makeStyles({
+  tabPanel: {
+    padding: 0,
+  },
+});
+
 const BudgetsPage = () => {
+  const classes = useStyles();
   const navigate = useNavigateKeepingSearch();
 
   const [searchParams, setSearchParams] = useSearchParams({ tab: 'active' });
@@ -52,10 +60,10 @@ const BudgetsPage = () => {
             <Tab value='all' label='All' />
           </TabList>
         </Paper>
-        <TabPanel value='active'>
+        <TabPanel className={classes.tabPanel} value='active'>
           <ActiveBudgetsList />
         </TabPanel>
-        <TabPanel value='all'>
+        <TabPanel className={classes.tabPanel} value='all'>
           <AllBudgetsList />
         </TabPanel>
       </TabContext>

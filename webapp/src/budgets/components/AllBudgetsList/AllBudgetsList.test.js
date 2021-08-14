@@ -49,16 +49,16 @@ test('should show error message when unable to fetch budgets', async () => {
 
 test('should show all created budgets', async () => {
   const budgets = [
-    { id: 7, name: 'This Year', periods: 12 },
-    { id: 6, name: 'Last Year', periods: 12 },
-    { id: 5, name: 'Old Budget', periods: 52 },
+    { id: 7, name: 'This Year', periods: 12, buttonText: 'This Year Monthly (12)' },
+    { id: 6, name: 'Last Year', periods: 12, buttonText: 'Last Year Monthly (12)' },
+    { id: 5, name: 'Old Budget', periods: 52, buttonText: 'Old Budget Weekly (52)' },
   ];
   render(budgets);
   await waitFor(() => expect(screen.getByRole('progressbar')).toBeInTheDocument());
   await waitFor(() => expect(screen.queryByRole('progressbar')).not.toBeInTheDocument());
 
   budgets.forEach((budget) => {
-    expect(screen.getByRole('button', { name: budget.name })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: budget.buttonText })).toBeInTheDocument();
   });
 });
 
@@ -67,6 +67,6 @@ test('should navigate to budget route when card is clicked', async () => {
   await waitFor(() => expect(screen.getByRole('progressbar')).toBeInTheDocument());
   await waitFor(() => expect(screen.queryByRole('progressbar')).not.toBeInTheDocument());
 
-  userEvent.click(screen.getByRole('button', { name: 'Budget' }));
+  userEvent.click(screen.getByRole('button', { name: 'Budget Monthly (12)' }));
   expect(history.location.pathname).toBe('/budget/2');
 });

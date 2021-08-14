@@ -35,7 +35,7 @@ const IncomeSummary = ({ budgetId }) => {
   return (
     <>
       <Typography className={classes.incomeHeader} component='h2' variant='h6'>
-        Incomes
+        Incomes (per period)
         <IconButton
           aria-label='go to budget incomes'
           className={classes.editIcon}

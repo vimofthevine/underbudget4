@@ -49,11 +49,13 @@ test('should display active budgets tab by default', async () => {
   await waitFor(() =>
     expect(screen.getByRole('button', { name: '2021 Test Budget' })).toBeInTheDocument(),
   );
-  expect(screen.queryByRole('button', { name: 'Test Budget' })).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole('button', { name: 'Test Budget Monthly (12)' }),
+  ).not.toBeInTheDocument();
 
   userEvent.click(screen.getByRole('tab', { name: /all/i }));
   await waitFor(() =>
-    expect(screen.getByRole('button', { name: 'Test Budget' })).toBeInTheDocument(),
+    expect(screen.getByRole('button', { name: 'Test Budget Monthly (12)' })).toBeInTheDocument(),
   );
   expect(screen.queryByRole('button', { name: '2021 Test Budget' })).not.toBeInTheDocument();
 });
@@ -61,7 +63,7 @@ test('should display active budgets tab by default', async () => {
 test('should display all budgets tab if initial route matches', async () => {
   render('/budgets?tab=all');
   await waitFor(() =>
-    expect(screen.getByRole('button', { name: 'Test Budget' })).toBeInTheDocument(),
+    expect(screen.getByRole('button', { name: 'Test Budget Monthly (12)' })).toBeInTheDocument(),
   );
   expect(screen.queryByRole('button', { name: '2021 Test Budget' })).not.toBeInTheDocument();
 
@@ -69,7 +71,9 @@ test('should display all budgets tab if initial route matches', async () => {
   await waitFor(() =>
     expect(screen.getByRole('button', { name: '2021 Test Budget' })).toBeInTheDocument(),
   );
-  expect(screen.queryByRole('button', { name: 'Test Budget' })).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole('button', { name: 'Test Budget Monthly (12)' }),
+  ).not.toBeInTheDocument();
 });
 
 test('should display create-budget dialog if initial route matches', async () => {
