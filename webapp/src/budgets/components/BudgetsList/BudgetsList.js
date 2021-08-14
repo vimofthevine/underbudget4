@@ -23,11 +23,13 @@ const ListOfBudgets = ({ budgets, onSelect, onSetActive }) => {
             primary={budget.year || budget.name}
             secondary={budget.year ? budget.name : periodLabels[budget.periods]}
           />
-          <ListItemSecondaryAction>
-            <IconButton aria-label='change active budget' onClick={() => onSetActive(budget.id)}>
-              <EditIcon />
-            </IconButton>
-          </ListItemSecondaryAction>
+          {budget.year && (
+            <ListItemSecondaryAction>
+              <IconButton aria-label='change active budget' onClick={() => onSetActive(budget.id)}>
+                <EditIcon />
+              </IconButton>
+            </ListItemSecondaryAction>
+          )}
         </ListItem>
       ))}
     </List>
