@@ -4,17 +4,20 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
+import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import Alert from '@material-ui/lab/Alert';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 
+import useConfirmation from 'common/hooks/useConfirmation';
 import useNavigateKeepingSearch from 'common/hooks/useNavigateKeepingSearch';
 import * as routes from 'common/utils/routes';
+import useDeleteActiveBudget from '../../hooks/useDeleteActiveBudget';
 import { labels as periodLabels } from '../../utils/periods';
 
-const ListOfBudgets = ({ budgets, onSelect, onSetActive }) => {
+const ListOfBudgets = ({ budgets, onDelete, onSelect, onSetActive }) => {
   return (
     <List dense disablePadding>
       {budgets.map((budget) => (
@@ -27,6 +30,13 @@ const ListOfBudgets = ({ budgets, onSelect, onSetActive }) => {
             <ListItemSecondaryAction>
               <IconButton aria-label='change active budget' onClick={() => onSetActive(budget.id)}>
                 <EditIcon />
+              </IconButton>
+              <IconButton
+                aria-label='delete active budget'
+                edge='end'
+                onClick={() => onDelete(budget)}
+              >
+                <DeleteIcon />
               </IconButton>
             </ListItemSecondaryAction>
           )}
@@ -45,11 +55,13 @@ ListOfBudgets.propTypes = {
       year: PropTypes.number,
     }),
   ).isRequired,
+  onDelete: PropTypes.func.isRequired,
   onSelect: PropTypes.func.isRequired,
   onSetActive: PropTypes.func.isRequired,
 };
 
 const BudgetsList = ({ useFetchBudgets }) => {
+  const confirm = useConfirmation();
   const { search } = useLocation();
   const navigate = useNavigateKeepingSearch();
   const { budgets, error, status } = useFetchBudgets();
@@ -66,10 +78,21 @@ const BudgetsList = ({ useFetchBudgets }) => {
     );
   const handleSetActive = (id) => navigate(`modify-active/${id}`);
 
+  const { mutate: deleteActiveBudget } = useDeleteActiveBudget();
+  const handleDelete = (budget) =>
+    confirm({
+      message: [`Delete active budget for ${budget.year}?`],
+    }).then(() => deleteActiveBudget(budget.id));
+
   return (
     <>
       {status === 'success' && (
-        <ListOfBudgets budgets={budgets} onSelect={handleSelect} onSetActive={handleSetActive} />
+        <ListOfBudgets
+          budgets={budgets}
+          onDelete={handleDelete}
+          onSelect={handleSelect}
+          onSetActive={handleSetActive}
+        />
       )}
       {status === 'loading' && <LinearProgress />}
       {status === 'error' && <Alert severity='error'>{error}</Alert>}

@@ -6,13 +6,13 @@ import { Routes, Route, useLocation, useParams } from 'react-router-dom';
 import ExpenseSummary from 'budgets/components/ExpenseSummary';
 import IncomeSummary from 'budgets/components/IncomeSummary';
 import ModifyBudgetDialog from 'budgets/components/ModifyBudgetDialog';
+import useDeleteBudget from 'budgets/hooks/useDeleteBudget';
 import useFetchActiveBudgets from 'budgets/hooks/useFetchActiveBudgets';
 import useFetchBudget from 'budgets/hooks/useFetchBudget';
 import FullAppPage from 'common/components/FullAppPage';
 import useConfirmation from 'common/hooks/useConfirmation';
 import useNavigateKeepingSearch from 'common/hooks/useNavigateKeepingSearch';
 import * as routes from 'common/utils/routes';
-import useDeleteBudget from 'budgets/hooks/useDeleteBudget';
 
 const BudgetPage = () => {
   const confirm = useConfirmation();

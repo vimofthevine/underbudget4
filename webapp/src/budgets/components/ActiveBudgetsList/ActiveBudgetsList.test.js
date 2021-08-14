@@ -82,3 +82,38 @@ test('should navigate to modify-active route when change button clicked', async 
   userEvent.click(screen.getByRole('button', { name: /change/i }));
   expect(history.location.pathname).toBe('/budgets/modify-active/1');
 });
+
+test('should prompt to confirm deletion of active budget', async () => {
+  const { mockApi, queryClient } = render([{ id: 1, budgetId: 2, name: 'Budget', year: 2021 }]);
+  const invalidateQueries = jest.spyOn(queryClient, 'invalidateQueries');
+  mockApi.onDelete('/api/active-budgets/1').reply(204);
+
+  await waitFor(() => expect(screen.getByRole('progressbar')).toBeInTheDocument());
+  await waitFor(() => expect(screen.queryByRole('progressbar')).not.toBeInTheDocument());
+
+  // Reject cancellation
+  userEvent.click(screen.getByRole('button', { name: /delete/i }));
+  await waitFor(() =>
+    expect(screen.getByRole('heading', { name: /confirm/i })).toBeInTheDocument(),
+  );
+  userEvent.click(screen.getByRole('button', { name: /cancel/i }));
+
+  await waitFor(() =>
+    expect(screen.queryByRole('heading', { name: /confirm/i })).not.toBeInTheDocument(),
+  );
+  expect(mockApi.history.delete).toHaveLength(0);
+
+  // Confirm cancellation
+  userEvent.click(screen.getByRole('button', { name: /delete/i }));
+  await waitFor(() =>
+    expect(screen.getByRole('heading', { name: /confirm/i })).toBeInTheDocument(),
+  );
+  userEvent.click(screen.getByRole('button', { name: /ok/i }));
+
+  await waitFor(() =>
+    expect(screen.queryByRole('heading', { name: /confirm/i })).not.toBeInTheDocument(),
+  );
+  await waitFor(() => expect(mockApi.history.delete).toHaveLength(1));
+  expect(mockApi.history.delete[0].url).toBe('/api/active-budgets/1');
+  expect(invalidateQueries).toHaveBeenCalledWith(['active-budgets', { ledger: '2' }]);
+});
