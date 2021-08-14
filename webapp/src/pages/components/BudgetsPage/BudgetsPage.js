@@ -2,7 +2,6 @@ import Paper from '@material-ui/core/Paper';
 import Tab from '@material-ui/core/Tab';
 import { makeStyles } from '@material-ui/core/styles';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import TabContext from '@material-ui/lab/TabContext';
 import TabList from '@material-ui/lab/TabList';
 import TabPanel from '@material-ui/lab/TabPanel';
@@ -29,21 +28,23 @@ const BudgetsPage = () => {
 
   const [searchParams, setSearchParams] = useSearchParams({ tab: 'active' });
   const tabValue = searchParams.get('tab');
+  const isActiveTab = tabValue === 'active';
   const handleChangeTab = (e, tab) => setSearchParams({ tab });
 
   const actions = [
-    {
-      'aria-label': 'Set active budget',
-      icon: <CheckCircleIcon />,
-      onClick: () => navigate('set-active'),
-      text: 'Set active budget',
-    },
-    {
-      'aria-label': 'Create budget',
-      icon: <AddCircleIcon />,
-      onClick: () => navigate('create'),
-      text: 'Create budget',
-    },
+    isActiveTab
+      ? {
+          'aria-label': 'Set active budget',
+          icon: <AddCircleIcon />,
+          onClick: () => navigate('set-active'),
+          text: 'Set active budget',
+        }
+      : {
+          'aria-label': 'Create budget',
+          icon: <AddCircleIcon />,
+          onClick: () => navigate('create'),
+          text: 'Create budget',
+        },
   ];
 
   return (

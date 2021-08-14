@@ -110,15 +110,17 @@ test('should open create dialogs when using nav bar actions', async () => {
   expect(screen.getByRole('heading', { name: /budgets/i })).toBeInTheDocument();
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 
-  userEvent.click(screen.getByRole('button', { name: /create budget/i }));
-  await waitFor(() =>
-    expect(screen.getByRole('heading', { name: /create budget/i })).toBeInTheDocument(),
-  );
-  expect(history.location.pathname).toBe('/budgets/create');
-
   userEvent.click(screen.getByRole('button', { name: /set active budget/i }));
   await waitFor(() =>
     expect(screen.getByRole('heading', { name: /set active budget/i })).toBeInTheDocument(),
   );
   expect(history.location.pathname).toBe('/budgets/set-active');
+
+  userEvent.click(screen.getByRole('tab', { name: /all/i }));
+
+  userEvent.click(screen.getByRole('button', { name: /create budget/i }));
+  await waitFor(() =>
+    expect(screen.getByRole('heading', { name: /create budget/i })).toBeInTheDocument(),
+  );
+  expect(history.location.pathname).toBe('/budgets/create');
 });
