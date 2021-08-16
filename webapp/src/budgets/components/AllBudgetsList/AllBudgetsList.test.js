@@ -70,3 +70,38 @@ test('should navigate to budget route when card is clicked', async () => {
   userEvent.click(screen.getByRole('button', { name: 'Budget Monthly (12)' }));
   expect(history.location.pathname).toBe('/budget/2');
 });
+
+test('should prompt to copy budget', async () => {
+  const { mockApi, queryClient } = render([{ id: 7, name: 'Budget', periods: 12 }]);
+  const invalidateQueries = jest.spyOn(queryClient, 'invalidateQueries');
+  mockApi.onPost('/api/ledgers/2/budgets/copy').reply(204);
+
+  await waitFor(() => expect(screen.getByRole('progressbar')).toBeInTheDocument());
+  await waitFor(() => expect(screen.queryByRole('progressbar')).not.toBeInTheDocument());
+
+  // Reject copy
+  userEvent.click(screen.getByRole('button', { name: /copy budget/i }));
+  await waitFor(() =>
+    expect(screen.getByRole('heading', { name: /confirm/i })).toBeInTheDocument(),
+  );
+  userEvent.click(screen.getByRole('button', { name: /cancel/i }));
+
+  await waitFor(() =>
+    expect(screen.queryByRole('heading', { name: /confirm/i })).not.toBeInTheDocument(),
+  );
+  expect(mockApi.history.post).toHaveLength(0);
+
+  // Confirm copy
+  userEvent.click(screen.getByRole('button', { name: /copy budget/i }));
+  await waitFor(() =>
+    expect(screen.getByRole('heading', { name: /confirm/i })).toBeInTheDocument(),
+  );
+  userEvent.click(screen.getByRole('button', { name: /ok/i }));
+
+  await waitFor(() =>
+    expect(screen.queryByRole('heading', { name: /confirm/i })).not.toBeInTheDocument(),
+  );
+  await waitFor(() => expect(mockApi.history.post).toHaveLength(1));
+  expect(JSON.parse(mockApi.history.post[0].data)).toEqual({ origId: 7 });
+  await waitFor(() => expect(invalidateQueries).toHaveBeenCalledWith(['budgets', { ledger: '2' }]));
+});

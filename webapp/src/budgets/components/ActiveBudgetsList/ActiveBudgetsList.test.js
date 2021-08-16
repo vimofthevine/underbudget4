@@ -115,5 +115,7 @@ test('should prompt to confirm deletion of active budget', async () => {
   );
   await waitFor(() => expect(mockApi.history.delete).toHaveLength(1));
   expect(mockApi.history.delete[0].url).toBe('/api/active-budgets/1');
-  expect(invalidateQueries).toHaveBeenCalledWith(['active-budgets', { ledger: '2' }]);
+  await waitFor(() =>
+    expect(invalidateQueries).toHaveBeenCalledWith(['active-budgets', { ledger: '2' }]),
+  );
 });

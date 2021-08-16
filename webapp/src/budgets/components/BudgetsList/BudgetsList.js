@@ -6,6 +6,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
 import Alert from '@material-ui/lab/Alert';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -14,10 +15,11 @@ import { useLocation } from 'react-router-dom';
 import useConfirmation from 'common/hooks/useConfirmation';
 import useNavigateKeepingSearch from 'common/hooks/useNavigateKeepingSearch';
 import * as routes from 'common/utils/routes';
+import useCopyBudget from '../../hooks/useCopyBudget';
 import useDeleteActiveBudget from '../../hooks/useDeleteActiveBudget';
 import { labels as periodLabels } from '../../utils/periods';
 
-const ListOfBudgets = ({ budgets, onDelete, onSelect, onSetActive }) => {
+const ListOfBudgets = ({ budgets, onCopy, onDelete, onSelect, onSetActive }) => {
   return (
     <List dense disablePadding>
       {budgets.map((budget) => (
@@ -26,20 +28,30 @@ const ListOfBudgets = ({ budgets, onDelete, onSelect, onSetActive }) => {
             primary={budget.year || budget.name}
             secondary={budget.year ? budget.name : periodLabels[budget.periods]}
           />
-          {budget.year && (
-            <ListItemSecondaryAction>
-              <IconButton aria-label='change active budget' onClick={() => onSetActive(budget.id)}>
-                <EditIcon />
+          <ListItemSecondaryAction>
+            {budget.year && (
+              <>
+                <IconButton
+                  aria-label='change active budget'
+                  onClick={() => onSetActive(budget.id)}
+                >
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  aria-label='delete active budget'
+                  edge='end'
+                  onClick={() => onDelete(budget)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </>
+            )}
+            {!budget.year && (
+              <IconButton aria-label='copy budget' onClick={() => onCopy(budget)}>
+                <FileCopyIcon />
               </IconButton>
-              <IconButton
-                aria-label='delete active budget'
-                edge='end'
-                onClick={() => onDelete(budget)}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          )}
+            )}
+          </ListItemSecondaryAction>
         </ListItem>
       ))}
     </List>
@@ -55,6 +67,7 @@ ListOfBudgets.propTypes = {
       year: PropTypes.number,
     }),
   ).isRequired,
+  onCopy: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   onSelect: PropTypes.func.isRequired,
   onSetActive: PropTypes.func.isRequired,
@@ -84,11 +97,18 @@ const BudgetsList = ({ useFetchBudgets }) => {
       message: [`Delete active budget for ${budget.year}?`],
     }).then(() => deleteActiveBudget(budget.id));
 
+  const { mutate: copyBudget } = useCopyBudget();
+  const handleCopy = (budget) =>
+    confirm({
+      message: [`Create a copy of ${budget.name}?`],
+    }).then(() => copyBudget({ origId: budget.id }));
+
   return (
     <>
       {status === 'success' && (
         <ListOfBudgets
           budgets={budgets}
+          onCopy={handleCopy}
           onDelete={handleDelete}
           onSelect={handleSelect}
           onSetActive={handleSetActive}
