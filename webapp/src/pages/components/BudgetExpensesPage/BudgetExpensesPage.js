@@ -1,16 +1,85 @@
+import Paper from '@material-ui/core/Paper';
+import Tab from '@material-ui/core/Tab';
+import { makeStyles } from '@material-ui/core/styles';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import TabContext from '@material-ui/lab/TabContext';
+import TabList from '@material-ui/lab/TabList';
+import TabPanel from '@material-ui/lab/TabPanel';
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 
+import useFetchBudget from 'budgets/hooks/useFetchBudget';
 import FullAppPage from 'common/components/FullAppPage';
+import useNavigateKeepingSearch from 'common/hooks/useNavigateKeepingSearch';
 import * as routes from 'common/utils/routes';
 
+const useStyles = makeStyles({
+  tabPanel: {
+    padding: 0,
+  },
+});
+
 const BudgetExpensesPage = () => {
+  const classes = useStyles();
+  const navigate = useNavigateKeepingSearch();
+
+  const [searchParams, setSearchParams] = useSearchParams({ tab: 'periodic' });
+  const tabValue = searchParams.get('tab');
+  const handleChangeTab = (e, tab) => setSearchParams({ tab });
+
   const { id } = useParams();
+  const { data } = useFetchBudget({ id });
+
   const parentRoute = React.useMemo(() => ({ pathname: `${routes.BUDGET}/${id}`, search: '' }), [
     id,
   ]);
 
-  return <FullAppPage back={parentRoute}>{`expenses for budget ${id}`}</FullAppPage>;
+  const primaryActions = [
+    {
+      'aria-label': `Create ${tabValue} expense`,
+      icon: <AddCircleIcon />,
+      onClick: () => navigate(`create-${tabValue}`),
+      text: `Create ${tabValue} expense`,
+    },
+  ];
+
+  const title = data ? `${data.name} Expenses` : '...';
+
+  return (
+    <FullAppPage back={parentRoute} primaryActions={primaryActions} title={title}>
+      <TabContext value={tabValue}>
+        <Paper>
+          <TabList
+            aria-label='expense tabs'
+            centered
+            indicatorColor='primary'
+            onChange={handleChangeTab}
+          >
+            <Tab value='periodic' label='Periodic' />
+            <Tab value='annual' label='Annual' />
+          </TabList>
+        </Paper>
+        <TabPanel className={classes.tabPanel} value='periodic'>
+          {`periodic expenses for budget ${id}`}
+        </TabPanel>
+        <TabPanel className={classes.tabPanel} value='annual'>
+          {`annual expenses for budget ${id}`}
+        </TabPanel>
+      </TabContext>
+      {/* <Routes>
+        <Route path='create-periodic' element={<CreatePeriodicExpenseDialog budgetId={id} />} />
+        <Route
+          path='modify-periodic/:expenseId'
+          element={<ModifyPeriodicExpenseDialog budgetId={id} />}
+        />
+        <Route path='create-annual' element={<CreateAnnualExpenseDialog budgetId={id} />} />
+        <Route
+          path='modify-annual/:expenseId'
+          element={<ModifyAnnualExpenseDialog budgetId={id} />}
+        />
+      </Routes> */}
+    </FullAppPage>
+  );
 };
 
 export default BudgetExpensesPage;
