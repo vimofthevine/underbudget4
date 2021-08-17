@@ -11,25 +11,28 @@ import useConfirmation from 'common/hooks/useConfirmation';
 import useFormatMoney from 'common/hooks/useFormatMoney';
 import useNavigateKeepingSearch from 'common/hooks/useNavigateKeepingSearch';
 
-const IncomesList = ({ incomes, onDelete, type }) => {
+const ExpensesList = ({ expenses, onDelete, type }) => {
   const confirm = useConfirmation();
   const formatMoney = useFormatMoney();
   const navigate = useNavigateKeepingSearch();
 
-  const handleDelete = (income) =>
+  const handleDelete = (expense) =>
     confirm({
-      message: [`Delete ${type} income ${income.name}?`],
+      message: [`Delete ${type} expense ${expense.name}?`],
     }).then(() => {
-      onDelete(income.id);
+      onDelete(expense.id);
     });
 
   return (
     <List dense disablePadding>
-      {incomes.map((income) => (
-        <ListItem button key={income.id} onClick={() => navigate(`modify-${type}/${income.id}`)}>
-          <ListItemText primary={income.name} secondary={formatMoney(income.amount)} />
+      {expenses.map((expense) => (
+        <ListItem button key={expense.id} onClick={() => navigate(`modify-${type}/${expense.id}`)}>
+          <ListItemText
+            primary={`${expense.envelope} - ${expense.name}`}
+            secondary={formatMoney(expense.amount)}
+          />
           <ListItemSecondaryAction>
-            <IconButton aria-label='delete income' onClick={() => handleDelete(income)}>
+            <IconButton aria-label='delete expense' onClick={() => handleDelete(expense)}>
               <DeleteIcon />
             </IconButton>
           </ListItemSecondaryAction>
@@ -39,8 +42,8 @@ const IncomesList = ({ incomes, onDelete, type }) => {
   );
 };
 
-IncomesList.propTypes = {
-  incomes: PropTypes.arrayOf(
+ExpensesList.propTypes = {
+  expenses: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
       name: PropTypes.string.isRequired,
@@ -51,4 +54,4 @@ IncomesList.propTypes = {
   type: PropTypes.oneOf(['annual', 'periodic']).isRequired,
 };
 
-export default IncomesList;
+export default ExpensesList;

@@ -6,8 +6,11 @@ import TabContext from '@material-ui/lab/TabContext';
 import TabList from '@material-ui/lab/TabList';
 import TabPanel from '@material-ui/lab/TabPanel';
 import React from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { Routes, Route, useParams, useSearchParams } from 'react-router-dom';
 
+import CreatePeriodicExpenseDialog from 'budgets/components/CreatePeriodicExpenseDialog';
+import ModifyPeriodicExpenseDialog from 'budgets/components/ModifyPeriodicExpenseDialog';
+import PeriodicExpensesList from 'budgets/components/PeriodicExpensesList';
 import useFetchBudget from 'budgets/hooks/useFetchBudget';
 import FullAppPage from 'common/components/FullAppPage';
 import useNavigateKeepingSearch from 'common/hooks/useNavigateKeepingSearch';
@@ -60,24 +63,24 @@ const BudgetExpensesPage = () => {
           </TabList>
         </Paper>
         <TabPanel className={classes.tabPanel} value='periodic'>
-          {`periodic expenses for budget ${id}`}
+          <PeriodicExpensesList budgetId={id} />
         </TabPanel>
         <TabPanel className={classes.tabPanel} value='annual'>
           {`annual expenses for budget ${id}`}
         </TabPanel>
       </TabContext>
-      {/* <Routes>
+      <Routes>
         <Route path='create-periodic' element={<CreatePeriodicExpenseDialog budgetId={id} />} />
         <Route
           path='modify-periodic/:expenseId'
           element={<ModifyPeriodicExpenseDialog budgetId={id} />}
         />
-        <Route path='create-annual' element={<CreateAnnualExpenseDialog budgetId={id} />} />
+        {/* <Route path='create-annual' element={<CreateAnnualExpenseDialog budgetId={id} />} />
         <Route
           path='modify-annual/:expenseId'
           element={<ModifyAnnualExpenseDialog budgetId={id} />}
-        />
-      </Routes> */}
+        /> */}
+      </Routes>
     </FullAppPage>
   );
 };
