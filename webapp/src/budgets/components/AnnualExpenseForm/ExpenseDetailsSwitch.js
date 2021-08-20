@@ -6,7 +6,7 @@ import React from 'react';
 
 import ExpenseDetails from './ExpenseDetails';
 
-const ExpenseDetailsSwitch = ({ periods }) => {
+const ExpenseDetailsSwitch = ({ disableDowngrade, periods }) => {
   const { setFieldValue, values } = useFormikContext();
 
   const hasDetails = values.details.length !== 0;
@@ -27,7 +27,14 @@ const ExpenseDetailsSwitch = ({ periods }) => {
   return (
     <>
       <FormControlLabel
-        control={<Switch checked={hasDetails} color='primary' onChange={handleChangeDetails} />}
+        control={
+          <Switch
+            checked={hasDetails}
+            color='primary'
+            disabled={disableDowngrade && hasDetails}
+            onChange={handleChangeDetails}
+          />
+        }
         label='Use period-specific amounts'
       />
       {hasDetails && <ExpenseDetails periods={periods} />}
@@ -36,6 +43,7 @@ const ExpenseDetailsSwitch = ({ periods }) => {
 };
 
 ExpenseDetailsSwitch.propTypes = {
+  disableDowngrade: PropTypes.bool.isRequired,
   periods: PropTypes.number.isRequired,
 };
 
