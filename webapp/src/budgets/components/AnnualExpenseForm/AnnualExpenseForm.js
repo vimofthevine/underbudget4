@@ -8,7 +8,7 @@ import EnvelopeSelectField from 'envelopes/components/EnvelopeSelectField';
 import AnnualAmountField from './AnnualAmountField';
 import ExpenseDetailsSwitch from './ExpenseDetailsSwitch';
 
-const PeriodicExpenseForm = ({ disableDowngrade, periods }) => (
+const PeriodicExpenseForm = ({ disableDetailsSwitch, periods }) => (
   <>
     <Field
       autoComplete='off'
@@ -34,17 +34,17 @@ const PeriodicExpenseForm = ({ disableDowngrade, periods }) => (
       variant='outlined'
     />
     <AnnualAmountField periods={periods} />
-    <ExpenseDetailsSwitch disableDowngrade={disableDowngrade} periods={periods} />
+    <ExpenseDetailsSwitch disableDetailsSwitch={disableDetailsSwitch} periods={periods} />
   </>
 );
 
 PeriodicExpenseForm.propTypes = {
-  disableDowngrade: PropTypes.bool,
+  disableDetailsSwitch: PropTypes.bool,
   periods: PropTypes.number.isRequired,
 };
 
 PeriodicExpenseForm.defaultProps = {
-  disableDowngrade: false,
+  disableDetailsSwitch: false,
 };
 
 PeriodicExpenseForm.initialValues = {

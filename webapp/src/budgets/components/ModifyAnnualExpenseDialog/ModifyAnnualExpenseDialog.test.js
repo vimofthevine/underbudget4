@@ -113,6 +113,7 @@ test('should close and refresh query when successful modify', async () => {
   await waitFor(() =>
     expect(screen.getByRole('textbox', { name: /amount/i })).toHaveValue('$12.34'),
   );
+  expect(screen.getByRole('checkbox', { name: /use period-specific amounts/i })).toBeDisabled();
 
   userEvent.type(screen.getByRole('textbox', { name: /name/i }), '{selectall}Expense Name');
   userEvent.type(
@@ -144,44 +145,6 @@ test('should close and refresh query when successful modify', async () => {
       budgetId: '5',
     },
   ]);
-});
-
-test('should allow period details to be added', async () => {
-  const { mockApi } = render({
-    id: 8,
-    name: 'Test Expense',
-    envelopeId: 3,
-    amount: 10000,
-    details: [],
-  });
-  await waitFor(() =>
-    expect(screen.getByRole('textbox', { name: /name/i })).toHaveValue('Test Expense'),
-  );
-  await waitFor(() =>
-    expect(screen.getByRole('textbox', { name: /envelope/i })).toHaveValue('Category 2:Envelope 3'),
-  );
-  await waitFor(() =>
-    expect(screen.getByRole('textbox', { name: /amount/i })).toHaveValue('$100.00'),
-  );
-
-  userEvent.click(screen.getByRole('checkbox', { name: /use period-specific amounts/i }));
-  await waitFor(() => expect(screen.getAllByRole('textbox', { name: /amount/i })).toHaveLength(5));
-
-  await waitFor(() => expect(screen.getByRole('button', { name: /save/i })).toBeEnabled());
-  userEvent.click(screen.getByRole('button', { name: /save/i }));
-
-  await waitFor(() => expect(mockApi.history.put).toHaveLength(1));
-  expect(JSON.parse(mockApi.history.put[0].data)).toEqual({
-    name: 'Test Expense',
-    envelopeId: 3,
-    amount: 10000,
-    details: [
-      { name: '', amount: 2500 },
-      { name: '', amount: 2500 },
-      { name: '', amount: 2500 },
-      { name: '', amount: 2500 },
-    ],
-  });
 });
 
 test('should allow period details to be modified', async () => {

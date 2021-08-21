@@ -6,7 +6,7 @@ import React from 'react';
 
 import ExpenseDetails from './ExpenseDetails';
 
-const ExpenseDetailsSwitch = ({ disableDowngrade, periods }) => {
+const ExpenseDetailsSwitch = ({ disableDetailsSwitch, periods }) => {
   const { setFieldValue, values } = useFormikContext();
 
   const hasDetails = values.details.length !== 0;
@@ -31,7 +31,7 @@ const ExpenseDetailsSwitch = ({ disableDowngrade, periods }) => {
           <Switch
             checked={hasDetails}
             color='primary'
-            disabled={disableDowngrade && hasDetails}
+            disabled={disableDetailsSwitch}
             onChange={handleChangeDetails}
           />
         }
@@ -43,7 +43,7 @@ const ExpenseDetailsSwitch = ({ disableDowngrade, periods }) => {
 };
 
 ExpenseDetailsSwitch.propTypes = {
-  disableDowngrade: PropTypes.bool.isRequired,
+  disableDetailsSwitch: PropTypes.bool.isRequired,
   periods: PropTypes.number.isRequired,
 };
 

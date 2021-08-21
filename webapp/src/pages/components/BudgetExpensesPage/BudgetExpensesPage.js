@@ -8,7 +8,10 @@ import TabPanel from '@material-ui/lab/TabPanel';
 import React from 'react';
 import { Routes, Route, useParams, useSearchParams } from 'react-router-dom';
 
+import AnnualExpensesList from 'budgets/components/AnnualExpensesList';
+import CreateAnnualExpenseDialog from 'budgets/components/CreateAnnualExpenseDialog';
 import CreatePeriodicExpenseDialog from 'budgets/components/CreatePeriodicExpenseDialog';
+import ModifyAnnualExpenseDialog from 'budgets/components/ModifyAnnualExpenseDialog';
 import ModifyPeriodicExpenseDialog from 'budgets/components/ModifyPeriodicExpenseDialog';
 import PeriodicExpensesList from 'budgets/components/PeriodicExpensesList';
 import useFetchBudget from 'budgets/hooks/useFetchBudget';
@@ -47,6 +50,7 @@ const BudgetExpensesPage = () => {
   ];
 
   const title = data ? `${data.name} Expenses` : '...';
+  const periods = data ? data.periods : 1;
 
   return (
     <FullAppPage back={parentRoute} primaryActions={primaryActions} title={title}>
@@ -66,7 +70,7 @@ const BudgetExpensesPage = () => {
           <PeriodicExpensesList budgetId={id} />
         </TabPanel>
         <TabPanel className={classes.tabPanel} value='annual'>
-          {`annual expenses for budget ${id}`}
+          <AnnualExpensesList budgetId={id} />
         </TabPanel>
       </TabContext>
       <Routes>
@@ -75,11 +79,14 @@ const BudgetExpensesPage = () => {
           path='modify-periodic/:expenseId'
           element={<ModifyPeriodicExpenseDialog budgetId={id} />}
         />
-        {/* <Route path='create-annual' element={<CreateAnnualExpenseDialog budgetId={id} />} />
+        <Route
+          path='create-annual'
+          element={<CreateAnnualExpenseDialog budgetId={id} periods={periods} />}
+        />
         <Route
           path='modify-annual/:expenseId'
-          element={<ModifyAnnualExpenseDialog budgetId={id} />}
-        /> */}
+          element={<ModifyAnnualExpenseDialog budgetId={id} periods={periods} />}
+        />
       </Routes>
     </FullAppPage>
   );

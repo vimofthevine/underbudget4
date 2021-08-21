@@ -26,7 +26,7 @@ const ModifyAnnualExpenseDialog = ({ budgetId, onExitNavigateTo, periods }) => {
       actionText='Save'
       enableReinitialize
       FormComponent={AnnualExpenseForm}
-      formProps={{ disableDowngrade: true, periods }}
+      formProps={{ disableDetailsSwitch: true, periods }}
       initialValues={expense}
       isLoading={isLoading}
       onExitNavigateTo={onExitNavigateTo}
