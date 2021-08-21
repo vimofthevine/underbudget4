@@ -9,8 +9,7 @@ import DashboardIcon from '@material-ui/icons/Dashboard';
 import LogoutIcon from '@material-ui/icons/Lock';
 import ReportIcon from '@material-ui/icons/InsertChart';
 import EnvelopeIcon from '@material-ui/icons/Mail';
-import IncomeIcon from '@material-ui/icons/MonetizationOn';
-import ExpenseIcon from '@material-ui/icons/ShoppingCart';
+import BudgetIcon from '@material-ui/icons/MonetizationOn';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -51,22 +50,11 @@ const NavIconList = () => {
           </ListItemIcon>
           <ListItemText primary='Envelopes' />
         </ListItem>
-      </List>
-
-      <Divider />
-
-      <List>
-        <ListItem button onClick={() => navigate(routes.INCOMES)}>
+        <ListItem button onClick={() => navigate(routes.BUDGETS)}>
           <ListItemIcon>
-            <IncomeIcon />
+            <BudgetIcon />
           </ListItemIcon>
-          <ListItemText primary='Incomes' />
-        </ListItem>
-        <ListItem button onClick={() => navigate(routes.EXPENSES)}>
-          <ListItemIcon>
-            <ExpenseIcon />
-          </ListItemIcon>
-          <ListItemText primary='Expenses' />
+          <ListItemText primary='Budgets' />
         </ListItem>
       </List>
 

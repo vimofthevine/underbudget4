@@ -42,7 +42,7 @@ const FullAppBar = ({ back, primaryActions, secondaryActions, selectionActions, 
       return {
         'aria-label': 'go to previous page',
         icon: <ArrowBackIcon />,
-        onClick: () => navigate(back),
+        onClick: () => navigate(typeof back === 'function' ? back() : back),
         text: 'Go to previous page',
       };
     }

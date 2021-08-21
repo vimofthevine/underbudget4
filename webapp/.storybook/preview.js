@@ -3,6 +3,8 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { withA11y } from '@storybook/addon-a11y';
 import { action } from '@storybook/addon-actions';
 import { addDecorator } from '@storybook/react';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { createMemoryHistory } from 'history';
@@ -32,6 +34,23 @@ addDecorator((story, { parameters }) => {
       </QueryClientProvider>
     </ThemeProvider>
   );
+});
+
+addDecorator((story, { parameters }) => {
+  const { api } = parameters;
+  if (api) {
+    const { delayResponse = 1000 } = api;
+
+    const mockApi = new MockAdapter(axios, { delayResponse });
+
+    const { delete: del = [], get = [], post = [], put = [] } = api;
+    del.forEach(([url, code = 204]) => mockApi.onDelete(url).reply(code));
+    get.forEach(([url, response, code = 200]) => mockApi.onGet(url).reply(code, response));
+    post.forEach(([url, code = 201]) => mockApi.onPost(url).reply(code));
+    put.forEach(([url, code = 200]) => mockApi.onPut(url).reply(code));
+  }
+
+  return story();
 });
 
 addDecorator(withA11y);

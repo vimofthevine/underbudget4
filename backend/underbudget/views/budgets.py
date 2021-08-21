@@ -502,12 +502,14 @@ class AnnualExpensesView(MethodView):
                 raise BadRequest("Wrong number of period details")
 
             num_old_details = len(expense.details)
-            if num_old_details > 0 and num_old_details != num_new_details:
+            if num_old_details != num_new_details:
                 raise BadRequest("Wrong number of period details")
 
             amount = 0
-            for detail in args["details"]:
+            for period, detail in enumerate(args["details"]):
                 amount += detail["amount"]
+                expense.details[period].name = detail["name"]
+                expense.details[period].amount = detail["amount"]
         else:
             amount = args["amount"]
 
@@ -517,11 +519,6 @@ class AnnualExpensesView(MethodView):
         expense.envelope_id = envelope.id
         expense.name = args["name"]
         expense.amount = amount
-
-        if args["details"]:
-            for period, detail in enumerate(args["details"]):
-                expense.details[period].name = detail["name"]
-                expense.details[period].amount = detail["amount"]
 
         expense.last_updated = datetime.now()
         expense.save()

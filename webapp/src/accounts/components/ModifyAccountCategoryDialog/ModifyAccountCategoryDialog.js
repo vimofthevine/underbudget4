@@ -10,10 +10,7 @@ import AccountCategoryForm from '../AccountCategoryForm';
 const ModifyAccountCategoryDialog = () => {
   const navigate = useNavigateKeepingSearch();
   const { id } = useParams();
-  const { data, isLoading } = useFetchAccountCategory(
-    { id },
-    { onError: () => navigate('../../') },
-  );
+  const { data, isLoading } = useFetchAccountCategory({ id }, { onError: () => navigate('../..') });
   const category = data || AccountCategoryForm.initialValues;
   const { mutate } = useModifyAccountCategory();
 
@@ -24,7 +21,7 @@ const ModifyAccountCategoryDialog = () => {
       FormComponent={AccountCategoryForm}
       initialValues={category}
       isLoading={isLoading}
-      onExitNavigateTo='../../'
+      onExitNavigateTo='../..'
       onSubmit={mutate}
       title='Modify Category'
       validationSchema={AccountCategoryForm.validationSchema}

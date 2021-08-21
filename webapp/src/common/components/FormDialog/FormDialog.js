@@ -152,7 +152,7 @@ FormDialog.defaultProps = {
   fullWidth: false,
   isLoading: false,
   maxWidth: 'sm',
-  onExitNavigateTo: '../',
+  onExitNavigateTo: '..',
 };
 
 export default FormDialog;

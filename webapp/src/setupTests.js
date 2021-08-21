@@ -34,3 +34,5 @@ function getElementError(message, container) {
 configure({ getElementError });
 
 MockDate.set('2021-06-24T12:00:00.000Z');
+
+jest.setTimeout(30000);
