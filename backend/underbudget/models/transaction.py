@@ -149,6 +149,8 @@ class AccountTransactionModel(db.Model):
     memo = db.Column(db.String(256), nullable=False)
     cleared = db.Column(db.Boolean, nullable=False)
 
+    reconciliation_id = db.Column(db.Integer, db.ForeignKey("reconciliation.id"), nullable=True)
+
     @classmethod
     def get_history(
         cls: Type["AccountTransactionModel"],
