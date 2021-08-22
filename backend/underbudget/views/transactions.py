@@ -21,6 +21,7 @@ import underbudget.schemas.transaction as schema
 transaction_schema = schema.TransactionSchema()
 patch_schema = schema.TransactionPatchSchema()
 acct_trn_history_schema = schema.AccountTransactionHistorySchema()
+env_trn_history_schema = schema.EnvelopeTransactionHistorySchema()
 
 
 class TransactionsView(MethodView):
@@ -264,6 +265,6 @@ class EnvelopeTransactionsView(MethodView):
     def get(envelope_id: int, page: int, size: int):
         """ Gets transaction history for an envelope """
         EnvelopeModel.query.get_or_404(envelope_id)
-        return acct_trn_history_schema.dump(
+        return env_trn_history_schema.dump(
             EnvelopeTransactionModel.get_history(envelope_id, page, size)
         )
