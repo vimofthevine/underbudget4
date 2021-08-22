@@ -29,6 +29,7 @@ def create_app(app_config=config.BaseConfig) -> Flask:
     import underbudget.views.envelopes as envelopes
     import underbudget.views.health as health
     import underbudget.views.ledgers as ledgers
+    import underbudget.views.reconciliations as reconciliations
     import underbudget.views.transactions as transactions
 
     health.HealthView.register(app)
@@ -45,6 +46,7 @@ def create_app(app_config=config.BaseConfig) -> Flask:
     budgets.register(app)
     budget_generators.register(app)
     budget_queries.register(app)
+    reconciliations.register(app)
     demo.DemoView.register(app)
 
     # pylint: disable=unused-variable
