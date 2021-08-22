@@ -12,6 +12,7 @@ class AccountTransactionSchema(Schema):
     amount = fields.Integer(required=True)
     memo = fields.String(missing="")
     cleared = fields.Boolean(missing=False)
+    reconciliation_id = fields.Integer(data_key="reconciliationId", dump_only=True)
 
 
 class ModifyAccountTransactionSchema(AccountTransactionSchema):
@@ -96,6 +97,7 @@ class AccountTransactionHistoryEntrySchema(Schema):
     balance = fields.Integer()
     memo = fields.String(missing="")
     cleared = fields.Boolean(missing=False)
+    reconciliation_id = fields.Integer(data_key="reconciliationId")
     transaction_id = fields.Integer(data_key="transactionId")
     # Transaction fields
     transaction_type = fields.String(data_key="type")
