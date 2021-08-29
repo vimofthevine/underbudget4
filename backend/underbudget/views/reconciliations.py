@@ -1,6 +1,8 @@
 """ REST APIs for reconciliations """
 from flask import Flask
 
+from underbudget.models.reconciliation import ReconciliationModel
+
 
 def register(app: Flask):
     """ Registers all API rules """
