@@ -20,25 +20,11 @@ class CreateReconciliationSchema(BaseReconciliationSchema):
     transaction_ids = fields.List(fields.Integer(), data_key="transactionIds")
 
 
-class ReconciledTransactionSchema(Schema):
-    """ Reconciled transaction schema """
-
-    # AccountTransaction fields
-    id = fields.Integer()
-    amount = fields.Integer()
-    memo = fields.String()
-    transaction_id = fields.Integer(data_key="transactionId")
-    # Transaction fields
-    transaction_type = fields.String(data_key="type")
-    recorded_date = fields.Date(data_key="recordedDate")
-    payee = fields.String()
-
-
-class ReconciledTransactionsSchema(Schema):
-    """ Paginated reconciled transaction schema """
+class ReconciliationPageSchema(Schema):
+    """ Paginated reconciliations schema """
 
     items = fields.List(
-        fields.Nested(ReconciledTransactionSchema), data_key="transactions"
+        fields.Nested(BaseReconciliationSchema), data_key="reconciliations"
     )
     page = fields.Integer()
     per_page = fields.Integer(data_key="size")

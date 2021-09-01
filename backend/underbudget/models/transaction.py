@@ -3,7 +3,7 @@ import enum
 from typing import Any, Dict, List, Optional, Type
 from flask_sqlalchemy import Pagination
 from sqlalchemy import text
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, NotFound
 
 import underbudget.models.filter_ops as filter_ops
 from underbudget.database import db
@@ -153,6 +153,28 @@ class AccountTransactionModel(db.Model):
     reconciliation_id = db.Column(
         db.Integer, db.ForeignKey("reconciliation.id"), nullable=True
     )
+
+    @classmethod
+    def update_reconciliation_id(
+        cls: Type["AccountTransactionModel"],
+        transaction_ids: List[int],
+        reconciliation_id: int,
+    ):
+        """ Updates the specified transactions to reference the given reconciliation """
+        count = cls.query.filter(cls.id.in_(transaction_ids)).update(
+            {cls.reconciliation_id: reconciliation_id}, synchronize_session=False
+        )
+        if count != len(transaction_ids):
+            raise NotFound("Account transaction not found")
+
+    @classmethod
+    def remove_reconciliation_id(
+        cls: Type["AccountTransactionModel"], reconciliation_id: int
+    ):
+        """ Removes any references to the given reconciliation ID from all transactions """
+        cls.query.filter_by(reconciliation_id=reconciliation_id).update(
+            {"reconciliation_id": None}, synchronize_session=False
+        )
 
     @classmethod
     def get_history(
