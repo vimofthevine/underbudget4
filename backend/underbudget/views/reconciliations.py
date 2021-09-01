@@ -10,7 +10,7 @@ from underbudget.models.account import AccountModel
 from underbudget.models.reconciliation import ReconciliationModel
 from underbudget.models.transaction import AccountTransactionModel
 import underbudget.schemas.reconciliation as schema
-from underbudget.schemas.transaction import AccountTransactionHistorySchema
+from underbudget.schemas.transaction import AccountTransactionSearchSchema
 
 
 blueprint = Blueprint("reconciliations", __name__)
@@ -78,7 +78,7 @@ def get_last_reconciliation(account_id: int):
 @with_pagination
 def get_unreconciled_transactions(account_id: int, page: int, size: int):
     """ Retrieves transactions in the reconciliation """
-    return AccountTransactionHistorySchema().dump(
+    return AccountTransactionSearchSchema().dump(
         AccountTransactionModel.search(
             page=page,
             size=size,
@@ -102,7 +102,7 @@ def get_reconciliation(reconciliation_id: int):
 @with_pagination
 def get_reconciliation_transactions(reconciliation_id: int, page: int, size: int):
     """ Retrieves transactions in the reconciliation """
-    return AccountTransactionHistorySchema().dump(
+    return AccountTransactionSearchSchema().dump(
         AccountTransactionModel.search(
             page=page,
             size=size,

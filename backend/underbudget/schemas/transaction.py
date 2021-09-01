@@ -116,6 +116,18 @@ class AccountTransactionHistorySchema(Schema):
     total = fields.Integer()
 
 
+class AccountTransactionSearchSchema(Schema):
+    """ Paginated account transaction search result (read-only) schema """
+
+    items = fields.List(
+        fields.Nested(AccountTransactionHistoryEntrySchema(exclude=["balance"])),
+        data_key="transactions",
+    )
+    page = fields.Integer()
+    per_page = fields.Integer(data_key="size")
+    total = fields.Integer()
+
+
 class EnvelopeTransactionHistoryEntrySchema(Schema):
     """ Single envelope transaction in history (read-only) schema """
 
@@ -136,6 +148,18 @@ class EnvelopeTransactionHistorySchema(Schema):
 
     items = fields.List(
         fields.Nested(EnvelopeTransactionHistoryEntrySchema), data_key="transactions"
+    )
+    page = fields.Integer()
+    per_page = fields.Integer(data_key="size")
+    total = fields.Integer()
+
+
+class EnvelopeTransactionSearchSchema(Schema):
+    """ Paginated envelope transaction search result (read-only) schema """
+
+    items = fields.List(
+        fields.Nested(EnvelopeTransactionHistoryEntrySchema(exclude=["balance"])),
+        data_key="transactions",
     )
     page = fields.Integer()
     per_page = fields.Integer(data_key="size")

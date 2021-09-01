@@ -10,8 +10,8 @@ from underbudget.models.transaction import (
     TransactionType,
 )
 from underbudget.schemas.transaction import (
-    AccountTransactionHistorySchema,
-    EnvelopeTransactionHistorySchema,
+    AccountTransactionSearchSchema,
+    EnvelopeTransactionSearchSchema,
 )
 
 
@@ -27,7 +27,7 @@ def register(app: Flask):
 @with_pagination
 def search_account_transactions(page: int, size: int):
     """ Searches for account transactions """
-    return AccountTransactionHistorySchema().dump(
+    return AccountTransactionSearchSchema().dump(
         AccountTransactionModel.search(
             page=page,
             size=size,
@@ -53,7 +53,7 @@ def search_account_transactions(page: int, size: int):
 @with_pagination
 def search_envelope_transactions(page: int, size: int):
     """ Searches for envelope transactions """
-    return EnvelopeTransactionHistorySchema().dump(
+    return EnvelopeTransactionSearchSchema().dump(
         EnvelopeTransactionModel.search(
             page=page,
             size=size,
