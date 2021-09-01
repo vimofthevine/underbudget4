@@ -247,7 +247,9 @@ class ReconciliationsTestCase(BaseTestCase):
         ids = self.create_transaction_history()
         acct_id = ids["acct_id_1"]
 
-        resp = self.client.get(f"/api/accounts/{acct_id}/unreconciled-transactions?size=3")
+        resp = self.client.get(
+            f"/api/accounts/{acct_id}/unreconciled-transactions?size=3"
+        )
         assert resp.status_code == 200
         trn_ids = [trn["id"] for trn in resp.json.get("transactions")]
 
@@ -287,7 +289,9 @@ class ReconciliationsTestCase(BaseTestCase):
         ids = self.create_transaction_history()
         acct_id = ids["acct_id_1"]
 
-        resp = self.client.get(f"/api/accounts/{acct_id}/unreconciled-transactions?size=3")
+        resp = self.client.get(
+            f"/api/accounts/{acct_id}/unreconciled-transactions?size=3"
+        )
         assert resp.status_code == 200
 
         resp = self.client.post(
@@ -303,18 +307,24 @@ class ReconciliationsTestCase(BaseTestCase):
         assert resp.status_code == 201
         reconciliation_id = resp.json.get("id")
 
-        resp = self.client.get(f"/api/reconciliations/{reconciliation_id}/transactions?size=20")
+        resp = self.client.get(
+            f"/api/reconciliations/{reconciliation_id}/transactions?size=20"
+        )
         assert resp.status_code == 200
         assert len(resp.json.get("transactions")) == 3
 
-        resp = self.client.get(f"/api/accounts/{acct_id}/unreconciled-transactions?size=10")
+        resp = self.client.get(
+            f"/api/accounts/{acct_id}/unreconciled-transactions?size=10"
+        )
         assert resp.status_code == 200
         assert len(resp.json.get("transactions")) == 2
 
         resp = self.client.delete(f"/api/reconciliations/{reconciliation_id}")
         assert resp.status_code == 204
 
-        resp = self.client.get(f"/api/accounts/{acct_id}/unreconciled-transactions?size=10")
+        resp = self.client.get(
+            f"/api/accounts/{acct_id}/unreconciled-transactions?size=10"
+        )
         assert resp.status_code == 200
         assert len(resp.json.get("transactions")) == 5
 

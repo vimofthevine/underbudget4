@@ -158,7 +158,9 @@ class TransactionQueriesTestCase(BaseTestCase):
         ]
     )
     def test_account_transaction_query_by_amount(self, criteria, expected):
-        resp = self.client.get(f"/api/account-transactions/search?amount={criteria}&size=50")
+        resp = self.client.get(
+            f"/api/account-transactions/search?amount={criteria}&size=50"
+        )
         assert resp.status_code == 200
         assert len(resp.json["transactions"]) == expected
 
@@ -176,7 +178,9 @@ class TransactionQueriesTestCase(BaseTestCase):
         ]
     )
     def test_account_transaction_query_by_cleared(self, criteria, expected):
-        resp = self.client.get(f"/api/account-transactions/search?cleared={criteria}&size=50")
+        resp = self.client.get(
+            f"/api/account-transactions/search?cleared={criteria}&size=50"
+        )
         assert resp.status_code == 200
         assert len(resp.json["transactions"]) == expected
 
@@ -201,7 +205,9 @@ class TransactionQueriesTestCase(BaseTestCase):
         ]
     )
     def test_account_transaction_query_by_memo(self, criteria, expected):
-        resp = self.client.get(f"/api/account-transactions/search?memo={criteria}&size=50")
+        resp = self.client.get(
+            f"/api/account-transactions/search?memo={criteria}&size=50"
+        )
         assert resp.status_code == 200
         assert len(resp.json["transactions"]) == expected
 
@@ -214,17 +220,20 @@ class TransactionQueriesTestCase(BaseTestCase):
         ]
     )
     def test_account_transaction_query_by_payee(self, criteria, expected):
-        resp = self.client.get(f"/api/account-transactions/search?payee={criteria}&size=50")
+        resp = self.client.get(
+            f"/api/account-transactions/search?payee={criteria}&size=50"
+        )
         assert resp.status_code == 200
         assert len(resp.json["transactions"]) == expected
 
     def test_account_transaction_query_by_reconciliation_id(self):
-        resp = self.client.get("/api/account-transactions/search?reconciliationId=is:null&size=50")
+        resp = self.client.get(
+            "/api/account-transactions/search?reconciliationId=is:null&size=50"
+        )
         assert resp.status_code == 200
         assert len(resp.json["transactions"]) == 20
 
         # TODO add reconciliations and test filtering
-
 
     @parameterized.expand(
         [
@@ -250,7 +259,9 @@ class TransactionQueriesTestCase(BaseTestCase):
         ]
     )
     def test_account_transaction_query_by_recorded_date(self, criteria, expected):
-        resp = self.client.get(f"/api/account-transactions/search?recordedDate={criteria}&size=50")
+        resp = self.client.get(
+            f"/api/account-transactions/search?recordedDate={criteria}&size=50"
+        )
         assert resp.status_code == 200
         assert len(resp.json["transactions"]) == expected
 
@@ -268,7 +279,9 @@ class TransactionQueriesTestCase(BaseTestCase):
         ]
     )
     def test_account_transaction_query_by_type(self, criteria, expected):
-        resp = self.client.get(f"/api/account-transactions/search?type={criteria}&size=50")
+        resp = self.client.get(
+            f"/api/account-transactions/search?type={criteria}&size=50"
+        )
         assert resp.status_code == 200
         assert len(resp.json["transactions"]) == expected
 
@@ -337,7 +350,9 @@ class TransactionQueriesTestCase(BaseTestCase):
         ]
     )
     def test_envelope_transaction_query_by_amount(self, criteria, expected):
-        resp = self.client.get(f"/api/envelope-transactions/search?amount={criteria}&size=50")
+        resp = self.client.get(
+            f"/api/envelope-transactions/search?amount={criteria}&size=50"
+        )
         assert resp.status_code == 200
         assert len(resp.json["transactions"]) == expected
 
@@ -362,7 +377,9 @@ class TransactionQueriesTestCase(BaseTestCase):
         ]
     )
     def test_envelope_transaction_query_by_memo(self, criteria, expected):
-        resp = self.client.get(f"/api/envelope-transactions/search?memo={criteria}&size=50")
+        resp = self.client.get(
+            f"/api/envelope-transactions/search?memo={criteria}&size=50"
+        )
         assert resp.status_code == 200
         assert len(resp.json["transactions"]) == expected
 
@@ -375,7 +392,9 @@ class TransactionQueriesTestCase(BaseTestCase):
         ]
     )
     def test_envelope_transaction_query_by_payee(self, criteria, expected):
-        resp = self.client.get(f"/api/envelope-transactions/search?payee={criteria}&size=50")
+        resp = self.client.get(
+            f"/api/envelope-transactions/search?payee={criteria}&size=50"
+        )
         assert resp.status_code == 200
         assert len(resp.json["transactions"]) == expected
 
@@ -403,7 +422,9 @@ class TransactionQueriesTestCase(BaseTestCase):
         ]
     )
     def test_envelope_transaction_query_by_recorded_date(self, criteria, expected):
-        resp = self.client.get(f"/api/envelope-transactions/search?recordedDate={criteria}&size=50")
+        resp = self.client.get(
+            f"/api/envelope-transactions/search?recordedDate={criteria}&size=50"
+        )
         assert resp.status_code == 200
         assert len(resp.json["transactions"]) == expected
 
@@ -421,6 +442,8 @@ class TransactionQueriesTestCase(BaseTestCase):
         ]
     )
     def test_envelope_transaction_query_by_type(self, criteria, expected):
-        resp = self.client.get(f"/api/envelope-transactions/search?type={criteria}&size=50")
+        resp = self.client.get(
+            f"/api/envelope-transactions/search?type={criteria}&size=50"
+        )
         assert resp.status_code == 200
         assert len(resp.json["transactions"]) == expected
