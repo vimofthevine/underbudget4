@@ -1,10 +1,11 @@
 """ Transaction database models """
 import enum
-from typing import List, Optional, Type
+from typing import Any, Dict, List, Optional, Type
 from flask_sqlalchemy import Pagination
 from sqlalchemy import text
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, NotFound
 
+import underbudget.models.filter_ops as filter_ops
 from underbudget.database import db
 from underbudget.models.base import AuditModel, CrudModel
 from underbudget.models.ledger import LedgerModel
@@ -149,6 +150,32 @@ class AccountTransactionModel(db.Model):
     memo = db.Column(db.String(256), nullable=False)
     cleared = db.Column(db.Boolean, nullable=False)
 
+    reconciliation_id = db.Column(
+        db.Integer, db.ForeignKey("reconciliation.id"), nullable=True
+    )
+
+    @classmethod
+    def update_reconciliation_id(
+        cls: Type["AccountTransactionModel"],
+        transaction_ids: List[int],
+        reconciliation_id: int,
+    ):
+        """ Updates the specified transactions to reference the given reconciliation """
+        count = cls.query.filter(cls.id.in_(transaction_ids)).update(
+            {cls.reconciliation_id: reconciliation_id}, synchronize_session=False
+        )
+        if count != len(transaction_ids):
+            raise NotFound("Account transaction not found")
+
+    @classmethod
+    def remove_reconciliation_id(
+        cls: Type["AccountTransactionModel"], reconciliation_id: int
+    ):
+        """ Removes any references to the given reconciliation ID from all transactions """
+        cls.query.filter_by(reconciliation_id=reconciliation_id).update(
+            {"reconciliation_id": None}, synchronize_session=False
+        )
+
     @classmethod
     def get_history(
         cls: Type["AccountTransactionModel"],
@@ -166,6 +193,7 @@ class AccountTransactionModel(db.Model):
             f"{cls.__tablename__}.amount as amount, "
             f"{cls.__tablename__}.memo as memo, "
             f"{cls.__tablename__}.cleared as cleared, "
+            f"{cls.__tablename__}.reconciliation_id as reconciliation_id, "
             f"{cls.__tablename__}.transaction_id as transaction_id, "
             f"{TransactionModel.__tablename__}.transaction_type as transaction_type, "
             f"{TransactionModel.__tablename__}.recorded_date as recorded_date, "
@@ -187,6 +215,49 @@ class AccountTransactionModel(db.Model):
         )
         total = cls.query.filter_by(account_id=account_id).count()
         return Pagination(cls.query, page, size, total, transactions)
+
+    # pylint: disable=too-many-arguments
+    @classmethod
+    def search(
+        cls: Type["AccountTransactionModel"],
+        page: int = 1,
+        size: int = 20,
+        account_id: Optional[Dict[str, Any]] = None,
+        amount: Optional[Dict[str, Any]] = None,
+        cleared: Optional[Dict[str, Any]] = None,
+        memo: Optional[Dict[str, Any]] = None,
+        payee: Optional[Dict[str, Any]] = None,
+        reconciliation_id: Optional[Dict[str, Any]] = None,
+        recorded_date: Optional[Dict[str, Any]] = None,
+        transaction_type: Optional[Dict[str, Any]] = None,
+    ):
+        """ Searches for account transactions """
+        query = cls.query.join(TransactionModel)
+        if account_id:
+            query = filter_ops.filter_in(query, cls.account_id, **account_id)
+        if amount:
+            query = filter_ops.filter_comp(query, cls.amount, **amount)
+        if cleared:
+            query = filter_ops.filter_bool(query, cls.cleared, **cleared)
+        if memo:
+            query = filter_ops.filter_str(query, cls.memo, **memo)
+        if payee:
+            query = filter_ops.filter_str(query, TransactionModel.payee, **payee)
+        if reconciliation_id:
+            query = filter_ops.filter_in(
+                query, cls.reconciliation_id, **reconciliation_id
+            )
+        if recorded_date:
+            query = filter_ops.filter_comp(
+                query, TransactionModel.recorded_date, **recorded_date
+            )
+        if transaction_type:
+            query = filter_ops.filter_in(
+                query, TransactionModel.transaction_type, **transaction_type
+            )
+        return query.order_by(TransactionModel.recorded_date.desc()).paginate(
+            page, size
+        )
 
 
 class EnvelopeTransactionModel(db.Model):
@@ -240,3 +311,38 @@ class EnvelopeTransactionModel(db.Model):
         )
         total = cls.query.filter_by(envelope_id=envelope_id).count()
         return Pagination(cls.query, page, size, total, transactions)
+
+    # pylint: disable=too-many-arguments
+    @classmethod
+    def search(
+        cls: Type["EnvelopeTransactionModel"],
+        page: int = 1,
+        size: int = 20,
+        amount: Optional[Dict[str, Any]] = None,
+        envelope_id: Optional[Dict[str, Any]] = None,
+        memo: Optional[Dict[str, Any]] = None,
+        payee: Optional[Dict[str, Any]] = None,
+        recorded_date: Optional[Dict[str, Any]] = None,
+        transaction_type: Optional[Dict[str, Any]] = None,
+    ):
+        """ Searches for envelope transactions """
+        query = cls.query.join(TransactionModel)
+        if amount:
+            query = filter_ops.filter_comp(query, cls.amount, **amount)
+        if envelope_id:
+            query = filter_ops.filter_in(query, cls.envelope_id, **envelope_id)
+        if memo:
+            query = filter_ops.filter_str(query, cls.memo, **memo)
+        if payee:
+            query = filter_ops.filter_str(query, TransactionModel.payee, **payee)
+        if recorded_date:
+            query = filter_ops.filter_comp(
+                query, TransactionModel.recorded_date, **recorded_date
+            )
+        if transaction_type:
+            query = filter_ops.filter_in(
+                query, TransactionModel.transaction_type, **transaction_type
+            )
+        return query.order_by(TransactionModel.recorded_date.desc()).paginate(
+            page, size
+        )
