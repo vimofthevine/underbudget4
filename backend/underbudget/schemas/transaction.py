@@ -97,6 +97,7 @@ class AccountTransactionHistoryEntrySchema(Schema):
     balance = fields.Integer()
     memo = fields.String(missing="")
     cleared = fields.Boolean(missing=False)
+    account_id = fields.Integer(data_key="accountId")
     reconciliation_id = fields.Integer(data_key="reconciliationId")
     transaction_id = fields.Integer(data_key="transactionId")
     # Transaction fields
@@ -136,6 +137,7 @@ class EnvelopeTransactionHistoryEntrySchema(Schema):
     amount = fields.Integer()
     balance = fields.Integer()
     memo = fields.String(missing="")
+    envelope_id = fields.Integer(data_key="envelopeId")
     transaction_id = fields.Integer(data_key="transactionId")
     # Transaction fields
     transaction_type = fields.String(data_key="type")

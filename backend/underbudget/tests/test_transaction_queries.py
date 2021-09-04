@@ -233,7 +233,36 @@ class TransactionQueriesTestCase(BaseTestCase):
         assert resp.status_code == 200
         assert len(resp.json["transactions"]) == 20
 
-        # TODO add reconciliations and test filtering
+        trn_ids = [
+            t["id"]
+            for t in resp.json["transactions"]
+            if t["accountId"] == self.ids["acct_id_1"]
+        ]
+
+        resp = self.client.post(
+            f"/api/accounts/{self.ids['acct_id_1']}/reconciliations",
+            json={
+                "beginningBalance": 0,
+                "beginningDate": "2021-04-01",
+                "endingBalance": 0,
+                "endingDate": "2021-04-30",
+                "transactionIds": trn_ids,
+            },
+        )
+        assert resp.status_code == 201
+        reconciliation_id = resp.json.get("id")
+
+        resp = self.client.get(
+            "/api/account-transactions/search?reconciliationId=is:null&size=50"
+        )
+        assert resp.status_code == 200
+        assert len(resp.json["transactions"]) == 8
+
+        resp = self.client.get(
+            f"/api/account-transactions/search?reconciliationId={reconciliation_id}&size=50"
+        )
+        assert resp.status_code == 200
+        assert len(resp.json["transactions"]) == 12
 
     @parameterized.expand(
         [
