@@ -83,7 +83,7 @@ def get_unreconciled_transactions(account_id: int, page: int, size: int):
             page=page,
             size=size,
             account_id={"values": [account_id]},
-            reconciliation_id={"isNull": True},
+            reconciliation_id={"is_null": True},
         )
     )
 
