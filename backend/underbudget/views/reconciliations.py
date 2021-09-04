@@ -1,7 +1,7 @@
 """ REST APIs for reconciliations """
 from datetime import datetime
-from flask import Blueprint, Flask
 from typing import Any, Dict
+from flask import Blueprint, Flask
 from werkzeug.exceptions import BadRequest
 
 from underbudget.common.decorators import use_args, with_pagination
@@ -47,9 +47,9 @@ def create_reconciliation(args: Dict[str, Any], account_id: int):
         AccountTransactionModel.update_reconciliation_id(
             args["transaction_ids"], reconciliation.id
         )
-    except Exception as e:
+    except Exception as err:
         db.session.rollback()
-        raise e
+        raise err
 
     reconciliation.save()
     return {"id": int(reconciliation.id)}, 201

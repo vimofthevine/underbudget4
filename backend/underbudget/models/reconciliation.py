@@ -1,5 +1,4 @@
 """ Reconciliation database models """
-from typing import List
 from werkzeug.exceptions import NotFound
 
 from underbudget.database import db
@@ -42,10 +41,6 @@ class ReconciliationModel(db.Model, AuditModel, CrudModel):
         if not reconciliation:
             raise NotFound()
         return reconciliation
-
-    def delete(self):
-        """ Deletes the reconciliation """
-        super().delete()
 
 
 AccountModel.reconciliations = db.relationship(

@@ -216,6 +216,7 @@ class AccountTransactionModel(db.Model):
         total = cls.query.filter_by(account_id=account_id).count()
         return Pagination(cls.query, page, size, total, transactions)
 
+    # pylint: disable=too-many-arguments
     @classmethod
     def search(
         cls: Type["AccountTransactionModel"],
@@ -311,6 +312,7 @@ class EnvelopeTransactionModel(db.Model):
         total = cls.query.filter_by(envelope_id=envelope_id).count()
         return Pagination(cls.query, page, size, total, transactions)
 
+    # pylint: disable=too-many-arguments
     @classmethod
     def search(
         cls: Type["EnvelopeTransactionModel"],

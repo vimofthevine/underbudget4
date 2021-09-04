@@ -21,23 +21,26 @@ def split_comp(param: Any, convert: Callable[[str], Any] = str) -> Dict[str, Any
     if ":" not in param:
         return dict(value=convert(param))
 
-    # param = (not:)(op:)value(:upper)
+    # param = (not:)(oper:)value(:upper)
     parts = param.split(":")
     count = len(parts)
     negate = parts[0] == "not"
 
     if count >= 4:
         return dict(
-            negate=negate, op=parts[1], value=convert(parts[2]), upper=convert(parts[3])
+            negate=negate,
+            oper=parts[1],
+            value=convert(parts[2]),
+            upper=convert(parts[3]),
         )
     elif count == 3:
         if negate:
-            return dict(negate=negate, op=parts[1], value=convert(parts[2]))
-        return dict(op=parts[0], value=convert(parts[1]), upper=convert(parts[2]))
+            return dict(negate=negate, oper=parts[1], value=convert(parts[2]))
+        return dict(oper=parts[0], value=convert(parts[1]), upper=convert(parts[2]))
     # else count == 2 (and can't be 1)
     elif negate:
         return dict(negate=negate, value=convert(parts[1]))
-    return dict(op=parts[0], value=convert(parts[1]))
+    return dict(oper=parts[0], value=convert(parts[1]))
 
 
 def split_in(param: Any, convert: Callable[[str], Any] = str) -> Dict[str, Any]:
@@ -47,7 +50,7 @@ def split_in(param: Any, convert: Callable[[str], Any] = str) -> Dict[str, Any]:
     if type(param) != str:
         return dict(values=[param])
     if param == "is:null":
-        return dict(isNull=True)
+        return dict(is_null=True)
     if ":" not in param:
         return dict(values=list(map(convert, param.split(","))))
     parts = param.split(":")
@@ -63,14 +66,14 @@ def split_str(param: Any) -> Dict[str, Any]:
     if ":" not in param:
         return dict(value=param)
 
-    # param = (not:)(op:)value
+    # param = (not:)(oper:)value
     parts = param.split(":")
     count = len(parts)
     negate = parts[0] == "not"
 
     if count >= 3:
-        return dict(negate=negate, op=parts[1], value=parts[2])
+        return dict(negate=negate, oper=parts[1], value=parts[2])
     # else count == 2 (and can't be 1)
     elif negate:
         return dict(negate=negate, value=parts[1])
-    return dict(op=parts[0], value=parts[1])
+    return dict(oper=parts[0], value=parts[1])

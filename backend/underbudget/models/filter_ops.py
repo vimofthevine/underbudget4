@@ -1,5 +1,5 @@
 """ Model search filter operations """
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional
 from sqlalchemy import not_
 from sqlalchemy.orm import Query
 from sqlalchemy.sql.schema import Column
@@ -16,11 +16,12 @@ def filter_bool(
     return query.filter(column.is_(value))
 
 
+# pylint: disable=too-many-arguments
 def filter_comp(
     query: Query,
     column: Column,
     negate: bool = False,
-    op: str = "eq",
+    oper: str = "eq",
     upper: Optional[Any] = None,
     value: Optional[Any] = None,
 ) -> Query:
@@ -28,17 +29,17 @@ def filter_comp(
     if value is None:
         return query
 
-    if op == "eq":
+    if oper == "eq":
         expr = column == value
-    elif op == "lt":
+    elif oper == "lt":
         expr = column < value
-    elif op == "lte":
+    elif oper == "lte":
         expr = column <= value
-    elif op == "gt":
+    elif oper == "gt":
         expr = column > value
-    elif op == "gte":
+    elif oper == "gte":
         expr = column >= value
-    elif op == "between" and upper is not None:
+    elif oper == "between" and upper is not None:
         expr = column.between(value, upper)
     else:
         return query  # unknown operator
@@ -51,12 +52,13 @@ def filter_comp(
 def filter_in(
     query: Query,
     column: Column,
-    isNull: bool = False,
+    is_null: bool = False,
     negate: bool = False,
     values: Optional[List[Any]] = None,
 ) -> Query:
     """ Update the query to filter based on a set of values for a column """
-    if isNull:
+    if is_null:
+        # pylint: disable=singleton-comparison
         return query.filter(column == None)
     if not values:
         return query
@@ -69,20 +71,20 @@ def filter_str(
     query: Query,
     column: Column,
     negate: bool = False,
-    op: str = "eq",
+    oper: str = "eq",
     value: Optional[str] = None,
 ) -> Query:
     """ Update the query to filter based on string comparisons for a column """
     if value is None:
         return query
 
-    if op == "eq":
+    if oper == "eq":
         expr = column == value
-    elif op == "starts":
+    elif oper == "starts":
         expr = column.startswith(value)
-    elif op == "ends":
+    elif oper == "ends":
         expr = column.endswith(value)
-    elif op == "contains":
+    elif oper == "contains":
         expr = column.contains(value)
 
     if negate:

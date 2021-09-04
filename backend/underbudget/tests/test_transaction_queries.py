@@ -108,7 +108,8 @@ class TransactionQueriesTestCase(BaseTestCase):
         assert len(resp.json["transactions"]) == 8
 
         resp = self.client.get(
-            f"/api/account-transactions/search?accountId={self.ids['acct_id_1']},{self.ids['acct_id_2']}&size=50"
+            "/api/account-transactions/search?"
+            f"accountId={self.ids['acct_id_1']},{self.ids['acct_id_2']}&size=50"
         )
         assert resp.status_code == 200
         assert len(resp.json["transactions"]) == 20
@@ -127,7 +128,8 @@ class TransactionQueriesTestCase(BaseTestCase):
         assert len(resp.json["transactions"]) == 12
 
         resp = self.client.get(
-            f"/api/account-transactions/search?accountId=not:{self.ids['acct_id_1']},{self.ids['acct_id_2']}&size=50"
+            "/api/account-transactions/search?"
+            f"accountId=not:{self.ids['acct_id_1']},{self.ids['acct_id_2']}&size=50"
         )
         assert resp.status_code == 200
         assert len(resp.json["transactions"]) == 0
@@ -329,7 +331,8 @@ class TransactionQueriesTestCase(BaseTestCase):
         assert len(resp.json["transactions"]) == 9
 
         resp = self.client.get(
-            f"/api/envelope-transactions/search?envelopeId={self.ids['env_id_1']},{self.ids['env_id_2']}&size=50"
+            "/api/envelope-transactions/search?"
+            f"envelopeId={self.ids['env_id_1']},{self.ids['env_id_2']}&size=50"
         )
         assert resp.status_code == 200
         assert len(resp.json["transactions"]) == 20
@@ -348,7 +351,8 @@ class TransactionQueriesTestCase(BaseTestCase):
         assert len(resp.json["transactions"]) == 11
 
         resp = self.client.get(
-            f"/api/envelope-transactions/search?envelopeId=not:{self.ids['env_id_1']},{self.ids['env_id_2']}&size=50"
+            "/api/envelope-transactions/search?"
+            f"envelopeId=not:{self.ids['env_id_1']},{self.ids['env_id_2']}&size=50"
         )
         assert resp.status_code == 200
         assert len(resp.json["transactions"]) == 0
