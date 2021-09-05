@@ -5,7 +5,7 @@ import { Route, Routes } from 'react-router-dom';
 
 import AppProviders from 'common/components/AppProviders';
 import setSelectedLedger from 'common/utils/setSelectedLedger';
-import * as TransactionStories from 'transactions/components/FullTransactionsTable/FullTransactionsTable.stories';
+import { transactionGenerator } from 'test/data-generators';
 import AccountTransactionsPage from './AccountTransactionsPage';
 
 export default {
@@ -39,7 +39,7 @@ export default {
       // Transactions
       if (hasTransactions) {
         mockAxios.onGet(/\/api\/accounts\/3\/transactions.*/).reply(200, {
-          transactions: TransactionStories.ManyTransactions.args.transactions,
+          transactions: [...Array(12)].map(transactionGenerator),
           page: 1,
           size: 25,
           total: 12,

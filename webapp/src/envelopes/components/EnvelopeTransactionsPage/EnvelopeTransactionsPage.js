@@ -11,11 +11,13 @@ import useFormatMoney from 'common/hooks/useFormatMoney';
 import useMobile from 'common/hooks/useMobile';
 import useNavigateKeepingSearch from 'common/hooks/useNavigateKeepingSearch';
 import * as routes from 'common/utils/routes';
-import CreateTransactionDialog from 'transactions/components/CreateTransactionDialog';
-import ModifyTransactionDialog from 'transactions/components/ModifyTransactionDialog';
-import TransactionDetailsDialog from 'transactions/components/TransactionDetailsDialog';
-import TransactionHistory from 'transactions/components/TransactionHistory';
-import useFetchEnvelopeTransactions from 'transactions/hooks/useFetchEnvelopeTransactions';
+import {
+  CreateTransactionDialog,
+  ModifyTransactionDialog,
+  TransactionDetailsDialog,
+  TransactionHistory,
+  useFetchEnvelopeTransactions,
+} from 'features/transactions';
 import useDeleteEnvelope from '../../hooks/useDeleteEnvelope';
 import useFetchEnvelope from '../../hooks/useFetchEnvelope';
 import useFetchEnvelopeBalance from '../../hooks/useFetchEnvelopeBalance';
