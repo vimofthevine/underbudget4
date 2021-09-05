@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import useFormatMoney from 'common/hooks/useFormatMoney';
-import useAccountName from 'accounts/hooks/useAccountName';
+import { useAccountName } from 'features/accounts';
 import { useEnvelopeName } from 'features/envelopes';
 import useFetchTransaction from '../hooks/useFetchTransaction';
 import TransactionIcon from './TransactionIcon';

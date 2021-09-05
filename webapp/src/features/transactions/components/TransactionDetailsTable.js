@@ -9,7 +9,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import useAccountName from 'accounts/hooks/useAccountName';
+import { useAccountName } from 'features/accounts';
 import { useEnvelopeName } from 'features/envelopes';
 import useFetchTransaction from '../hooks/useFetchTransaction';
 

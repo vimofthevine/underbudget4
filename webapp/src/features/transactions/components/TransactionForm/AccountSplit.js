@@ -6,10 +6,10 @@ import { TextField } from 'formik-material-ui';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import AccountSelectField from 'accounts/components/AccountSelectField';
 import CheckboxWithTooltip from 'common/components/CheckboxWithTooltip';
 import FieldWithSideEffect from 'common/components/FieldWithSideEffect';
 import MoneyInputField from 'common/components/MoneyInputField';
+import { AccountSelectField } from 'features/accounts';
 
 import useAccountAmountSideEffect from './useAccountAmountSideEffect';
 

@@ -1,10 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
 import React from 'react';
 
-import AccountsListPage from 'accounts/components/AccountsListPage';
-import AccountTransactionsPage from 'accounts/components/AccountTransactionsPage';
 import * as routes from 'common/utils/routes';
 import LedgerPages from 'ledgers/components/LedgerPages';
+import { AccountsListPage, AccountTransactionsPage } from 'features/accounts';
 import { BudgetsPage, BudgetRoutes } from 'features/budgets';
 import { EnvelopesListPage, EnvelopeTransactionsPage } from 'features/envelopes';
 
