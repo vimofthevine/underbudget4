@@ -4,8 +4,8 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import setSelectedLedger from 'common/utils/setSelectedLedger';
-import renderWithRouter from 'tests/renderWithRouter';
-import setupMockApi from 'tests/setupMockApi';
+import renderWithRouter from 'test/renderWithRouter';
+import setupMockApi from 'test/setupMockApi';
 import ExpenseSummary from '../ExpenseSummary';
 
 const render = (firstPeriod, secondPeriod, code = 200) => {

@@ -5,9 +5,9 @@ import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Routes, Route } from 'react-router-dom';
-import createMediaQuery from 'tests/createMediaQuery';
+import createMediaQuery from 'test/createMediaQuery';
 
-import renderWithRouter from 'tests/renderWithRouter';
+import renderWithRouter from 'test/renderWithRouter';
 import AccountsList from '../AccountsList';
 
 const threeCategories = {

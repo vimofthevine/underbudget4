@@ -6,8 +6,8 @@ import moment from 'moment';
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-import createMediaQuery from 'tests/createMediaQuery';
-import renderWithRouter from 'tests/renderWithRouter';
+import createMediaQuery from 'test/createMediaQuery';
+import renderWithRouter from 'test/renderWithRouter';
 import LedgersPage from '../LedgersPage';
 
 const render = () => {

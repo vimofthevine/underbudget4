@@ -6,8 +6,8 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Routes, Route } from 'react-router-dom';
 
-import createMediaQuery from 'tests/createMediaQuery';
-import renderWithRouter from 'tests/renderWithRouter';
+import createMediaQuery from 'test/createMediaQuery';
+import renderWithRouter from 'test/renderWithRouter';
 import AccountsListPage from '../AccountsListPage';
 
 const render = ({ route = '/accounts', width = '800px' } = {}) => {

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import setSelectedLedger from 'common/utils/setSelectedLedger';
-import { standardLedgerResponses } from 'tests/setupMockApi';
+import { standardLedgerResponses } from 'test/setupMockApi';
 import ExpenseSummary from '../ExpenseSummary';
 
 export default {

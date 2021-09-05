@@ -5,7 +5,7 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import setSelectedLedger from 'common/utils/setSelectedLedger';
-import renderWithRouter from 'tests/renderWithRouter';
+import renderWithRouter from 'test/renderWithRouter';
 import TransactionDetailsList from '../TransactionDetailsList';
 
 const accounts = {

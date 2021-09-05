@@ -5,8 +5,8 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { Routes, Route } from 'react-router-dom';
 
 import setSelectedLedger from 'common/utils/setSelectedLedger';
-import renderWithRouter from 'tests/renderWithRouter';
-import setupMockApi from 'tests/setupMockApi';
+import renderWithRouter from 'test/renderWithRouter';
+import setupMockApi from 'test/setupMockApi';
 import ModifyTransactionDialog from '../ModifyTransactionDialog';
 
 const render = (transaction, { getCode = 200, patchCode = 200 } = {}) => {

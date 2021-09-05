@@ -2,7 +2,7 @@ import { action } from '@storybook/addon-actions';
 import React from 'react';
 
 import AppProviders from 'common/components/AppProviders';
-import { standardLedgerResponses } from 'tests/setupMockApi';
+import { standardLedgerResponses } from 'test/setupMockApi';
 import IncomesList from '../IncomesList';
 
 export default {

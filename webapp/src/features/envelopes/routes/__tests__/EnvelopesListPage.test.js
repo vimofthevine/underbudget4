@@ -6,8 +6,8 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Routes, Route } from 'react-router-dom';
 
-import createMediaQuery from 'tests/createMediaQuery';
-import renderWithRouter from 'tests/renderWithRouter';
+import createMediaQuery from 'test/createMediaQuery';
+import renderWithRouter from 'test/renderWithRouter';
 import EnvelopesListPage from '../EnvelopesListPage';
 
 const render = ({ route = '/envelopes', width = '800px' } = {}) => {

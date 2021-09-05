@@ -6,7 +6,7 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Routes, Route } from 'react-router-dom';
 
-import renderWithRouter from 'tests/renderWithRouter';
+import renderWithRouter from 'test/renderWithRouter';
 import ModifyEnvelopeDialog from '../ModifyEnvelopeDialog';
 
 const render = (envelope, code = 200) => {

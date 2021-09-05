@@ -5,7 +5,7 @@ import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-import renderWithRouter from 'tests/renderWithRouter';
+import renderWithRouter from 'test/renderWithRouter';
 import CreateAccountDialog from '../CreateAccountDialog';
 
 const render = () => {

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import setSelectedLedger from 'common/utils/setSelectedLedger';
-import setupMockApi from 'tests/setupMockApi';
+import setupMockApi from 'test/setupMockApi';
 import TransactionDetailsTable from '../TransactionDetailsTable';
 
 export default {

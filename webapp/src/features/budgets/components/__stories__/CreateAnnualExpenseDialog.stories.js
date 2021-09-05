@@ -2,7 +2,7 @@ import React from 'react';
 
 import AppProviders from 'common/components/AppProviders';
 import setSelectedLedger from 'common/utils/setSelectedLedger';
-import setupMockApi from 'tests/setupMockApi';
+import setupMockApi from 'test/setupMockApi';
 import CreateAnnualExpenseDialog from '../CreateAnnualExpenseDialog';
 
 export default {

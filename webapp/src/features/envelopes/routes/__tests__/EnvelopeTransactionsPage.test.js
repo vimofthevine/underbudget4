@@ -7,8 +7,8 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { Routes, Route } from 'react-router-dom';
 
 import setSelectedLedger from 'common/utils/setSelectedLedger';
-import createMediaQuery from 'tests/createMediaQuery';
-import renderWithRouter from 'tests/renderWithRouter';
+import createMediaQuery from 'test/createMediaQuery';
+import renderWithRouter from 'test/renderWithRouter';
 import EnvelopeTransactionsPage from '../EnvelopeTransactionsPage';
 
 const render = ({ route = '/envelope/7', width = '800px' } = {}) => {
