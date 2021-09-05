@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 
 import FieldWithSideEffect from 'common/components/FieldWithSideEffect';
 import MoneyInputField from 'common/components/MoneyInputField';
-import EnvelopeSelectField from 'envelopes/components/EnvelopeSelectField';
+import { EnvelopeSelectField } from 'features/envelopes';
 
 import useEnvelopeAmountSideEffect from './useEnvelopeAmountSideEffect';
 

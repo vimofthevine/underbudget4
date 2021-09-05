@@ -13,7 +13,7 @@ import React from 'react';
 
 import useFormatMoney from 'common/hooks/useFormatMoney';
 import useAccountName from 'accounts/hooks/useAccountName';
-import useEnvelopeName from 'envelopes/hooks/useEnvelopeName';
+import { useEnvelopeName } from 'features/envelopes';
 import useFetchTransaction from '../hooks/useFetchTransaction';
 import TransactionIcon from './TransactionIcon';
 

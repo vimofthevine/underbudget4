@@ -4,7 +4,7 @@ import React from 'react';
 import * as yup from 'yup';
 
 import MoneyInputField from 'common/components/MoneyInputField';
-import EnvelopeSelectField from 'envelopes/components/EnvelopeSelectField';
+import { EnvelopeSelectField } from 'features/envelopes';
 
 const PeriodicExpenseForm = () => (
   <>

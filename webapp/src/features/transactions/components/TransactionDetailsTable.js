@@ -9,8 +9,8 @@ import CheckIcon from '@material-ui/icons/Check';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import useAccountName from '../../../accounts/hooks/useAccountName';
-import useEnvelopeName from '../../../envelopes/hooks/useEnvelopeName';
+import useAccountName from 'accounts/hooks/useAccountName';
+import { useEnvelopeName } from 'features/envelopes';
 import useFetchTransaction from '../hooks/useFetchTransaction';
 
 const TransactionDetailsTable = ({ formatMoney, id }) => {

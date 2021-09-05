@@ -4,7 +4,7 @@ import React from 'react';
 import { useQuery } from 'react-query';
 
 import useErrorMessage from 'common/hooks/useErrorMessage';
-import useEnvelopeName from 'envelopes/hooks/useEnvelopeName';
+import { useEnvelopeName } from 'features/envelopes';
 
 export default ({ budgetId, period }, opts) => {
   const createErrorMessage = useErrorMessage({ request: 'Unable to retrieve budgeted expenses' });

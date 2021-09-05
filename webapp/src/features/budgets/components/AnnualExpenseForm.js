@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import * as yup from 'yup';
 
-import EnvelopeSelectField from 'envelopes/components/EnvelopeSelectField';
+import { EnvelopeSelectField } from 'features/envelopes';
 import AnnualAmountField from './AnnualAmountField';
 import ExpenseDetailsSwitch from './ExpenseDetailsSwitch';
 
