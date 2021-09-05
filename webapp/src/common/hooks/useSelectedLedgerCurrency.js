@@ -3,7 +3,7 @@ import React from 'react';
 
 // This is a violation of my desired import structure, but doing this
 // is better than having useFormatMoney in ledgers or useFetchLedger in common
-import useFetchLedger from 'ledgers/hooks/useFetchLedger';
+import { useFetchLedger } from 'features/ledgers';
 import useSelectedLedger from './useSelectedLedger';
 
 export default () => {

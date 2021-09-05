@@ -2,10 +2,10 @@ import { Route, Routes } from 'react-router-dom';
 import React from 'react';
 
 import * as routes from 'common/utils/routes';
-import LedgerPages from 'ledgers/components/LedgerPages';
 import { AccountsListPage, AccountTransactionsPage } from 'features/accounts';
 import { BudgetsPage, BudgetRoutes } from 'features/budgets';
 import { EnvelopesListPage, EnvelopeTransactionsPage } from 'features/envelopes';
+import { LedgersPage } from 'features/ledgers';
 
 export const AppRoutes = () => (
   <Routes>
@@ -15,7 +15,7 @@ export const AppRoutes = () => (
     <Route path={`${routes.BUDGET}/*`} element={<BudgetRoutes />} />
     <Route path={`${routes.ENVELOPES}/*`} element={<EnvelopesListPage />} />
     <Route path={`${routes.ENVELOPE}/:id/*`} element={<EnvelopeTransactionsPage />} />
-    <Route path={`${routes.LEDGERS}/*`} element={<LedgerPages />} />
+    <Route path={`${routes.LEDGERS}/*`} element={<LedgersPage />} />
     <Route path='*' element={<div>hi</div>} />
   </Routes>
 );
