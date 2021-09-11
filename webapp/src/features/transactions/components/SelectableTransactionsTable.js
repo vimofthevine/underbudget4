@@ -71,7 +71,6 @@ const SelectableTransactionsTable = ({
               key={transaction.id}
               onClick={() => onSelect(transaction)}
               role='checkbox'
-              selected={selected.indexOf(transaction.id) !== -1}
               style={{ cursor: 'pointer' }}
             >
               <TableCell>
