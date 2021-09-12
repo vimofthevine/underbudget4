@@ -9,6 +9,7 @@ import React from 'react';
 import * as yup from 'yup';
 
 import MoneyInputField from 'common/components/MoneyInputField';
+import PromptWhenDirty from 'common/components/PromptWhenDirty';
 import SubmitButton from 'common/components/SubmitButton';
 import useMobile from 'common/hooks/useMobile';
 import useReconciliationForm from '../hooks/useReconciliationForm';
@@ -37,6 +38,7 @@ const ReconciliationForm = ({ accountId }) => {
 
   return (
     <Grid container spacing={1}>
+      <PromptWhenDirty />
       {(isParamStep || !mobile) && <ReconciliationParameters disabled={step > 1} />}
       <Grid container item xs={12}>
         <Button
