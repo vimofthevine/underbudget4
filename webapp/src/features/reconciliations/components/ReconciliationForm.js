@@ -9,9 +9,9 @@ import React from 'react';
 import * as yup from 'yup';
 
 import MoneyInputField from 'common/components/MoneyInputField';
-import PromptWhenDirty from 'common/components/PromptWhenDirty';
 import SubmitButton from 'common/components/SubmitButton';
 import useMobile from 'common/hooks/useMobile';
+import usePromptToLeave from '../hooks/usePromptToLeave';
 import useReconciliationForm from '../hooks/useReconciliationForm';
 import ReconciliationParameters from './ReconciliationParameters';
 import UnreconciledTransactions from './UnreconciledTransactions';
@@ -30,6 +30,8 @@ const ReconciliationForm = ({ accountId }) => {
   const classes = useStyles();
   const mobile = useMobile();
 
+  usePromptToLeave();
+
   const { setStep, setTransactions, step, transactions } = useReconciliationForm(accountId);
   const handleGoToPrevStep = () => setStep(step - 1);
   const handleGoToNextStep = () => setStep(step + 1);
@@ -38,7 +40,6 @@ const ReconciliationForm = ({ accountId }) => {
 
   return (
     <Grid container spacing={1}>
-      <PromptWhenDirty />
       {(isParamStep || !mobile) && <ReconciliationParameters disabled={step > 1} />}
       <Grid container item xs={12}>
         <Button

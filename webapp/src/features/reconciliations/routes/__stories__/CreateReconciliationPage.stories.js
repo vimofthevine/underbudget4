@@ -19,7 +19,7 @@ export default {
   decorators: [
     (story) => (
       <Routes>
-        <Route path='/account/:id/create-reconciliation' element={story()} />
+        <Route path='/account/:id/create-reconciliation/*' element={story()} />
       </Routes>
     ),
     (story) => <AppProviders>{story()}</AppProviders>,

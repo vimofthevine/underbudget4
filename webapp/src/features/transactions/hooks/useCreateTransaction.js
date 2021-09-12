@@ -23,6 +23,7 @@ export default (opts) => {
         accountTransactions.forEach((trn) => {
           queries.push(['account-balance', toString(trn.accountId)]);
           queries.push(['account-transactions', toString(trn.accountId)]);
+          queries.push(['unreconciled-transactions', toString(trn.accountId)]);
         });
         envelopeTransactions.forEach((trn) => {
           queries.push(['envelope-balance', toString(trn.envelopeId)]);
