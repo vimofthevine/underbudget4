@@ -5,7 +5,7 @@ import FormDialog from 'common/components/FormDialog';
 import useCreateTransaction from '../hooks/useCreateTransaction';
 import TransactionForm from './TransactionForm';
 
-const CreateTransactionDialog = ({ initialAccountId, initialEnvelopeId }) => {
+const CreateTransactionDialog = ({ initialAccountId, initialEnvelopeId, onExit }) => {
   const { mutate } = useCreateTransaction();
   const initialValues = React.useMemo(
     () => ({
@@ -32,6 +32,7 @@ const CreateTransactionDialog = ({ initialAccountId, initialEnvelopeId }) => {
       FormComponent={TransactionForm}
       initialValues={initialValues}
       maxWidth='lg'
+      onExit={onExit}
       onSubmit={mutate}
       title='Create Transaction'
       validate={TransactionForm.validate}
@@ -44,11 +45,13 @@ const CreateTransactionDialog = ({ initialAccountId, initialEnvelopeId }) => {
 CreateTransactionDialog.propTypes = {
   initialAccountId: PropTypes.number,
   initialEnvelopeId: PropTypes.number,
+  onExit: PropTypes.func,
 };
 
 CreateTransactionDialog.defaultProps = {
   initialAccountId: 0,
   initialEnvelopeId: 0,
+  onExit: null,
 };
 
 export default CreateTransactionDialog;

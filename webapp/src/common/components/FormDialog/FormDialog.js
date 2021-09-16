@@ -40,6 +40,7 @@ const FormDialog = ({
   fullWidth,
   isLoading,
   maxWidth,
+  onExit,
   onExitNavigateTo,
   onSubmit,
   title,
@@ -72,7 +73,7 @@ const FormDialog = ({
       setIsOpen(false);
     }
   };
-  const handleExited = () => navigate(onExitNavigateTo);
+  const handleExited = onExit || (() => navigate(onExitNavigateTo));
 
   // Set some additional callbacks to allow for cleaning up the form/dialog
   const handleSubmit = (values, { resetForm, setSubmitting, ...formikBag }) =>
@@ -139,6 +140,7 @@ FormDialog.propTypes = {
   fullWidth: PropTypes.bool,
   isLoading: PropTypes.bool,
   maxWidth: PropTypes.oneOf(['lg', 'md', 'sm', 'xl', 'xs', false]),
+  onExit: PropTypes.func,
   onExitNavigateTo: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
@@ -152,6 +154,7 @@ FormDialog.defaultProps = {
   fullWidth: false,
   isLoading: false,
   maxWidth: 'sm',
+  onExit: null,
   onExitNavigateTo: '..',
 };
 

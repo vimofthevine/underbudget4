@@ -11,7 +11,7 @@ import * as yup from 'yup';
 import MoneyInputField from 'common/components/MoneyInputField';
 import SubmitButton from 'common/components/SubmitButton';
 import useMobile from 'common/hooks/useMobile';
-import usePromptToLeave from '../hooks/usePromptToLeave';
+import usePromptWhenDirty from 'common/hooks/usePromptWhenDirty';
 import useReconciliationForm from '../hooks/useReconciliationForm';
 import ReconciliationParameters from './ReconciliationParameters';
 import UnreconciledTransactions from './UnreconciledTransactions';
@@ -30,7 +30,7 @@ const ReconciliationForm = ({ accountId }) => {
   const classes = useStyles();
   const mobile = useMobile();
 
-  usePromptToLeave();
+  usePromptWhenDirty();
 
   const { setStep, setTransactions, step, transactions } = useReconciliationForm(accountId);
   const handleGoToPrevStep = () => setStep(step - 1);

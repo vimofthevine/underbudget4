@@ -6,6 +6,7 @@ export default (message, when) => {
     (tx) => {
       const result = typeof message === 'string' ? message : message(tx);
       if (typeof result === 'string') {
+        // eslint-disable-next-line no-alert
         if (window.confirm(result)) {
           tx.retry();
         }

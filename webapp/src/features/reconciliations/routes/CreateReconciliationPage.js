@@ -2,10 +2,9 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik } from 'formik';
 import React from 'react';
-import { Routes, Route, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import FullAppPage from 'common/components/FullAppPage';
-import useNavigateKeepingSearch from 'common/hooks/useNavigateKeepingSearch';
 import * as routes from 'common/utils/routes';
 import { CreateTransactionDialog } from 'features/transactions';
 import ReconciliationForm from '../components/ReconciliationForm';
@@ -24,12 +23,13 @@ const CreateReconciliationPage = () => {
   ]);
   const accountId = parseInt(id, 10);
 
-  const navigate = useNavigateKeepingSearch();
+  const [createTrnIsOpen, setCreateTrnIsOpen] = React.useState(false);
+  const handleCloseCreateTrn = () => setCreateTrnIsOpen(false);
   const primaryActions = [
     {
       'aria-label': 'Create transaction',
       icon: <AddCircleIcon />,
-      onClick: () => navigate('create-transaction'),
+      onClick: () => setCreateTrnIsOpen(true),
       text: 'Create transaction',
     },
   ];
@@ -45,12 +45,9 @@ const CreateReconciliationPage = () => {
           <ReconciliationForm accountId={accountId} />
         </Formik>
       </div>
-      <Routes>
-        <Route
-          path='create-transaction'
-          element={<CreateTransactionDialog initialAccountId={accountId} />}
-        />
-      </Routes>
+      {createTrnIsOpen && (
+        <CreateTransactionDialog initialAccountId={accountId} onExit={handleCloseCreateTrn} />
+      )}
     </FullAppPage>
   );
 };
