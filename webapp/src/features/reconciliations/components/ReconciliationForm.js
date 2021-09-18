@@ -75,7 +75,19 @@ const ReconciliationForm = ({ accountId }) => {
               variant='outlined'
             />
           </Grid>
-          <Grid container item sm={6} xs={12}>
+          <Grid item sm={6} xs={12}>
+            <Field
+              component={MoneyInputField}
+              disabled
+              fullWidth
+              id='reconciled-balance-diff'
+              label='Remaining To Be Reconciled'
+              margin='dense'
+              name='reconciledBalanceDiff'
+              variant='outlined'
+            />
+          </Grid>
+          <Grid container item xs={12}>
             <SubmitButton className={classes.submitButton} fullWidth={mobile} text='Create' />
           </Grid>
         </>
@@ -94,22 +106,23 @@ ReconciliationForm.initialValues = {
   endingBalance: 0,
   endingDate: new Date(),
   reconciledBalance: 0,
-  step: 0,
+  reconciledBalanceDiff: 0,
   transactionIds: [],
 };
 
 ReconciliationForm.validationSchema = yup.object().shape({
-  beginningDate: yup.date().typeError('Required').required('Required'),
   beginningBalance: yup.number().typeError('Required'),
-  endingDate: yup.date().typeError('Required').required('Required'),
+  beginningDate: yup.date().typeError('Required').required('Required'),
   endingBalance: yup.number().typeError('Required'),
+  endingDate: yup.date().typeError('Required').required('Required'),
   transactionIds: yup.array().of(yup.number()).typeError('Required'),
 });
 
-ReconciliationForm.validate = ({ endingBalance, reconciledBalance }) => {
-  const diff = endingBalance - reconciledBalance;
-  if (diff !== 0) {
-    return { reconciledBalance: 'Reconciled balance does not equal expected ending balance' };
+ReconciliationForm.validate = ({ reconciledBalanceDiff }) => {
+  if (reconciledBalanceDiff !== 0) {
+    return {
+      reconciledBalance: 'Reconciled balance does not equal expected ending balance',
+    };
   }
   return {};
 };

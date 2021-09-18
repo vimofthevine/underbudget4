@@ -10,8 +10,8 @@ export default (accountId) => {
   const [transactions, setTransactions] = React.useState([]);
   const [step, setStep] = React.useState(0);
 
-  const { setFieldValue, setValues, values } = useFormikContext();
-  const { beginningBalance, endingDate } = values;
+  const { setFieldValue, setTouched, setValues, values } = useFormikContext();
+  const { beginningBalance, endingBalance, endingDate } = values;
 
   // Step 0, fetch last reconciliation and pre-populate some fields
   useFetchLastReconciliation({
@@ -46,14 +46,17 @@ export default (accountId) => {
   // Step 2, re-calculate reconciled balance from selected transactions
   React.useEffect(() => {
     if (step === 2) {
+      const reconciledBalance =
+        beginningBalance + transactions.reduce((total, trn) => total + trn.amount, 0);
       setValues({
         ...values,
-        reconciledBalance:
-          beginningBalance + transactions.reduce((total, trn) => total + trn.amount, 0),
+        reconciledBalance,
+        reconciledBalanceDiff: endingBalance - reconciledBalance,
         transactionIds: transactions.map((t) => t.id),
       });
+      setTouched({ reconciledBalance: true });
     }
-  }, [beginningBalance, step, transactions]);
+  }, [beginningBalance, endingBalance, step, transactions]);
 
   return {
     setStep,
