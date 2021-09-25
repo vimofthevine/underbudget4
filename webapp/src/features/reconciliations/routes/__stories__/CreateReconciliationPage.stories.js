@@ -60,6 +60,7 @@ export default {
           },
         ],
       ],
+      post: [['/api/accounts/8/reconciliations']],
     },
     initialRoute: '/account/8/create-reconciliation',
   },
