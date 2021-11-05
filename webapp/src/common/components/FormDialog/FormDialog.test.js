@@ -6,7 +6,7 @@ import React from 'react';
 import { Router } from 'react-router-dom';
 import * as yup from 'yup';
 
-import createMediaQuery from '../../../tests/createMediaQuery';
+import createMediaQuery from '../../../test/createMediaQuery';
 import { ConfirmationContextProvider } from '../../contexts/confirmation';
 import FormDialog from './FormDialog';
 

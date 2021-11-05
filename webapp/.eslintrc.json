@@ -17,8 +17,14 @@
   },
   "rules": {
     "import/no-extraneous-dependencies": ["error", {
-      "devDependencies": ["**/*.stories.js", "**/*.test.js", "**/setupTests.js", "**/tests/**"]
+      "devDependencies": ["**/*.stories.js", "**/*.test.js", "**/setupTests.js", "**/test/**", "**/tests/**"]
     }],
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": ["features/*/*"]
+      }
+    ],
     "jsx-a11y/href-no-hash": ["off"],
     "react/jsx-filename-extension": ["warn", { "extensions": [".js", ".jsx"] }],
     "no-underscore-dangle": ["error", {
@@ -47,7 +53,7 @@
       }
     },
     {
-      "files": ["**/use*.js"],
+      "files": ["**/index.js", "**/use*.js"],
       "rules": {
         "import/prefer-default-export": "off"
       }
