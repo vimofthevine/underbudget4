@@ -10,7 +10,6 @@ const ChildPageAppBar = ({ back, ...props }) => (
 
 ChildPageAppBar.propTypes = {
   back: routePropType.isRequired,
-  ...AppBar.propTypes,
 };
 
 export default ChildPageAppBar;

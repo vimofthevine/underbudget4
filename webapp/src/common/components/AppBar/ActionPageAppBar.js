@@ -10,7 +10,6 @@ const ActionPageAppBar = ({ back, ...props }) => (
 
 ActionPageAppBar.propTypes = {
   back: routePropType.isRequired,
-  ...AppBar.propTypes,
 };
 
 export default ActionPageAppBar;

@@ -1,6 +1,7 @@
 import CloseIcon from '@material-ui/icons/Close';
 import React from 'react';
 
+import routePropType from '../../utils/route-prop-type';
 import NavIconButton from './NavIconButton';
 
 const NavCloseIconButton = (props) => (
@@ -12,6 +13,8 @@ const NavCloseIconButton = (props) => (
   />
 );
 
-NavCloseIconButton.propTypes = NavIconButton.propTypes;
+NavCloseIconButton.propTypes = {
+  dest: routePropType.isRequired,
+};
 
 export default NavCloseIconButton;
