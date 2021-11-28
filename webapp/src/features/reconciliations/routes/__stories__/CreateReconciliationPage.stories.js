@@ -6,12 +6,7 @@ import setSelectedLedger from 'common/utils/setSelectedLedger';
 import { transactionGenerator } from 'test/data-generators';
 import CreateReconciliationPage from '../CreateReconciliationPage';
 
-const trn1 = transactionGenerator({ id: 1 });
-const trn2 = transactionGenerator({ id: 2 });
-const trn3 = transactionGenerator({ id: 3 });
-const trn4 = transactionGenerator({ id: 4 });
-const trn5 = transactionGenerator({ id: 5 });
-const trn6 = transactionGenerator({ id: 6 });
+const trns = [...Array(30)].map((_, i) => transactionGenerator({ id: i + 1 }));
 
 export default {
   title: 'reconciliations/CreateReconciliationPage',
@@ -44,19 +39,27 @@ export default {
         [
           /\/api\/account-transactions\/search?.*08-31.*/,
           {
-            transactions: [trn1, trn2, trn3, trn5],
+            transactions: [trns[0], trns[1], trns[2], trns[4]],
           },
         ],
         [
           /\/api\/account-transactions\/search?.*/,
           {
-            transactions: [trn1, trn2, trn3],
+            transactions: trns.slice(0, 2),
           },
         ],
         [
-          /\/api\/accounts\/8\/unreconciled-transactions.*/,
+          /\/api\/accounts\/8\/unreconciled-transactions.*page=0.*/,
           {
-            transactions: [trn1, trn2, trn3, trn4, trn5, trn6],
+            total: 30,
+            transactions: trns.slice(0, 24),
+          },
+        ],
+        [
+          /\/api\/accounts\/8\/unreconciled-transactions.*page=1.*/,
+          {
+            total: 30,
+            transactions: trns.slice(25, 29),
           },
         ],
       ],

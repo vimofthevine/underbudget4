@@ -1,13 +1,13 @@
-import AddCircleIcon from '@material-ui/icons/AddCircle';
 import { makeStyles } from '@material-ui/core/styles';
 import { Form, Formik } from 'formik';
 import React from 'react';
 import { useParams, usePrompt } from 'react-router-dom';
 
-import FullAppPage from 'common/components/FullAppPage';
+import { AppPage } from 'common/components/AppPage';
 import useNavigateKeepingSearch from 'common/hooks/useNavigateKeepingSearch';
 import * as routes from 'common/utils/routes';
 import { CreateTransactionDialog } from 'features/transactions';
+import CreateReconciliationAppBar from '../components/CreateReconciliationAppBar';
 import ReconciliationForm from '../components/ReconciliationForm';
 import useCreateReconciliation from '../hooks/useCreateReconciliation';
 
@@ -39,18 +39,18 @@ const CreateReconciliationPage = () => {
   const handleSubmit = (values) => mutate(values, { onSuccess: () => setSubmitted(true) });
 
   const [createTrnIsOpen, setCreateTrnIsOpen] = React.useState(false);
+  const handleOpenCreateTrn = () => setCreateTrnIsOpen(true);
   const handleCloseCreateTrn = () => setCreateTrnIsOpen(false);
-  const primaryActions = [
-    {
-      'aria-label': 'Create transaction',
-      icon: <AddCircleIcon />,
-      onClick: () => setCreateTrnIsOpen(true),
-      text: 'Create transaction',
-    },
-  ];
 
   return (
-    <FullAppPage back={parentRoute} primaryActions={primaryActions} title='Create Reconciliation'>
+    <AppPage
+      appBar={
+        <CreateReconciliationAppBar
+          onCreateTransaction={handleOpenCreateTrn}
+          parentRoute={parentRoute}
+        />
+      }
+    >
       <div className={classes.content}>
         <Formik
           initialValues={ReconciliationForm.initialValues}
@@ -66,7 +66,7 @@ const CreateReconciliationPage = () => {
       {createTrnIsOpen && (
         <CreateTransactionDialog initialAccountId={accountId} onExit={handleCloseCreateTrn} />
       )}
-    </FullAppPage>
+    </AppPage>
   );
 };
 
