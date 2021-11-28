@@ -1,15 +1,12 @@
 import { makeStyles } from '@material-ui/core/styles';
-import { Form, Formik } from 'formik';
 import React from 'react';
-import { useParams, usePrompt } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { AppPage } from 'common/components/AppPage';
-import useNavigateKeepingSearch from 'common/hooks/useNavigateKeepingSearch';
 import * as routes from 'common/utils/routes';
 import { CreateTransactionDialog } from 'features/transactions';
 import CreateReconciliationAppBar from '../components/CreateReconciliationAppBar';
-import ReconciliationForm from '../components/ReconciliationForm';
-import useCreateReconciliation from '../hooks/useCreateReconciliation';
+import CreateReconciliationForm from '../components/CreateReconciliationForm';
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -19,24 +16,12 @@ const useStyles = makeStyles((theme) => ({
 
 const CreateReconciliationPage = () => {
   const classes = useStyles();
+
   const { id } = useParams();
   const parentRoute = React.useMemo(() => ({ pathname: `${routes.ACCOUNT}/${id}`, search: '' }), [
     id,
   ]);
   const accountId = parseInt(id, 10);
-
-  const [submitted, setSubmitted] = React.useState(false);
-  usePrompt('You have unsaved changes. Are you sure you wish to leave?', !submitted);
-
-  const navigate = useNavigateKeepingSearch();
-  React.useEffect(() => {
-    if (submitted) {
-      navigate(parentRoute);
-    }
-  }, [submitted]);
-
-  const { mutate } = useCreateReconciliation({ accountId });
-  const handleSubmit = (values) => mutate(values, { onSuccess: () => setSubmitted(true) });
 
   const [createTrnIsOpen, setCreateTrnIsOpen] = React.useState(false);
   const handleOpenCreateTrn = () => setCreateTrnIsOpen(true);
@@ -52,16 +37,7 @@ const CreateReconciliationPage = () => {
       }
     >
       <div className={classes.content}>
-        <Formik
-          initialValues={ReconciliationForm.initialValues}
-          onSubmit={handleSubmit}
-          validate={ReconciliationForm.validate}
-          validationSchema={ReconciliationForm.validationSchema}
-        >
-          <Form>
-            <ReconciliationForm accountId={accountId} />
-          </Form>
-        </Formik>
+        <CreateReconciliationForm accountId={accountId} parentRoute={parentRoute} />
       </div>
       {createTrnIsOpen && (
         <CreateTransactionDialog initialAccountId={accountId} onExit={handleCloseCreateTrn} />
