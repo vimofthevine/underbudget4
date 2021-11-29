@@ -10,7 +10,11 @@ import ReconciliationForm from './ReconciliationForm';
 const CreateReconciliationForm = ({ accountId, parentRoute }) => {
   const navigate = usePromptToLeave();
   const { mutate } = useCreateReconciliation({ accountId });
-  const handleSubmit = (values) => mutate(values, { onSuccess: () => navigate(parentRoute) });
+  const handleSubmit = (values, { setSubmitting }) =>
+    mutate(values, {
+      onSettled: () => setSubmitting(false),
+      onSuccess: () => navigate(parentRoute),
+    });
 
   return (
     <Formik
