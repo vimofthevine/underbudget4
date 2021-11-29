@@ -2,6 +2,7 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import ArchiveIcon from '@material-ui/icons/Archive';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 import React from 'react';
 import { Routes, Route, useParams } from 'react-router-dom';
 
@@ -63,24 +64,30 @@ const AccountTransactionsPage = () => {
       'aria-label': 'Modify account',
       icon: <EditIcon />,
       onClick: () => navigate('modify'),
-      text: 'Modify',
+      text: 'Modify account',
     },
   ];
 
   const secondaryActions = [
     {
+      'aria-label': 'Reconcile account',
+      icon: <PlaylistAddCheckIcon />,
+      onClick: () => navigate('create-reconciliation'),
+      text: 'Reconcile account',
+    },
+    {
       'aria-label': 'Delete account',
       disabled: balanceData && balanceData.total > 0,
       icon: <DeleteIcon />,
       onClick: handleDelete,
-      text: 'Delete',
+      text: 'Delete account',
     },
     {
       'aria-label': 'Archive account',
       disabled: true,
       icon: <ArchiveIcon />,
       onClick: () => navigate('archive'),
-      text: 'Archive',
+      text: 'Archive account',
     },
   ];
 

@@ -6,10 +6,15 @@ import { AccountsListPage, AccountTransactionsPage } from 'features/accounts';
 import { BudgetsPage, BudgetRoutes } from 'features/budgets';
 import { EnvelopesListPage, EnvelopeTransactionsPage } from 'features/envelopes';
 import { LedgersPage } from 'features/ledgers';
+import { CreateReconciliationPage } from 'features/reconciliations';
 
 export const AppRoutes = () => (
   <Routes>
     <Route path={`${routes.ACCOUNTS}/*`} element={<AccountsListPage />} />
+    <Route
+      path={`${routes.ACCOUNT}/:id/create-reconciliation`}
+      element={<CreateReconciliationPage />}
+    />
     <Route path={`${routes.ACCOUNT}/:id/*`} element={<AccountTransactionsPage />} />
     <Route path={`${routes.BUDGETS}/*`} element={<BudgetsPage />} />
     <Route path={`${routes.BUDGET}/*`} element={<BudgetRoutes />} />

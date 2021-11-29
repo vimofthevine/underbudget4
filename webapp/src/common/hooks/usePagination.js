@@ -23,7 +23,7 @@ export default ({ defaultSize = 25, label = 'Rows per page' } = {}) => {
   return {
     Pagination,
     paginationProps,
-    page,
+    page: page + 1, // Material-UI pagination is 0-based
     size,
   };
 };

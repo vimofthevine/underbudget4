@@ -132,7 +132,7 @@ test('should use cleared transactions to pre-populate ending balance', async () 
         { id: 2, amount: 7000 },
       ],
     });
-    api.onGet('/api/accounts/9/unreconciled-transactions?page=0&size=25').reply(200, {
+    api.onGet('/api/accounts/9/unreconciled-transactions?page=1&size=25').reply(200, {
       total: 5,
       transactions: [
         { id: 1, recordedDate: '2021-11-07', payee: 'Vendor A', memo: '', amount: -1000 },
@@ -235,7 +235,7 @@ test('should use user-entered parameters', async () => {
   const { history, mockApi } = render((api) => {
     api.onGet('/api/accounts/9/reconciliations/last').reply(404);
     api.onGet(clearedTransactionsUrl).reply(200, { transactions: [] });
-    api.onGet('/api/accounts/9/unreconciled-transactions?page=0&size=25').reply(200, {
+    api.onGet('/api/accounts/9/unreconciled-transactions?page=1&size=25').reply(200, {
       total: 5,
       transactions: [
         { id: 1, recordedDate: '2021-11-07', payee: 'Vendor A', memo: '', amount: -1000 },
@@ -301,11 +301,11 @@ test('should paginate unreconciled transactions', async () => {
   const { mockApi } = render((api) => {
     api.onGet('/api/accounts/9/reconciliations/last').reply(404);
     api.onGet(clearedTransactionsUrl).reply(200, { transactions: [] });
-    api.onGet('/api/accounts/9/unreconciled-transactions?page=0&size=25').reply(200, {
+    api.onGet('/api/accounts/9/unreconciled-transactions?page=1&size=25').reply(200, {
       total: 30,
       transactions: [...Array(25)].map(() => transactionGenerator()),
     });
-    api.onGet('/api/accounts/9/unreconciled-transactions?page=1&size=25').reply(200, {
+    api.onGet('/api/accounts/9/unreconciled-transactions?page=2&size=25').reply(200, {
       total: 30,
       transactions: [...Array(5)].map(() => transactionGenerator()),
     });
