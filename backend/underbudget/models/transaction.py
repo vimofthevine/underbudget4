@@ -232,7 +232,17 @@ class AccountTransactionModel(db.Model):
         transaction_type: Optional[Dict[str, Any]] = None,
     ):
         """ Searches for account transactions """
-        query = cls.query.join(TransactionModel)
+        query = cls.query.join(TransactionModel).add_columns(
+            cls.id,
+            cls.account_id,
+            cls.amount,
+            cls.cleared,
+            cls.memo,
+            cls.reconciliation_id,
+            TransactionModel.transaction_type,
+            TransactionModel.recorded_date,
+            TransactionModel.payee,
+        )
         if account_id:
             query = filter_ops.filter_in(query, cls.account_id, **account_id)
         if amount:
@@ -326,7 +336,15 @@ class EnvelopeTransactionModel(db.Model):
         transaction_type: Optional[Dict[str, Any]] = None,
     ):
         """ Searches for envelope transactions """
-        query = cls.query.join(TransactionModel)
+        query = cls.query.join(TransactionModel).add_columns(
+            cls.id,
+            cls.amount,
+            cls.envelope_id,
+            cls.memo,
+            TransactionModel.transaction_type,
+            TransactionModel.recorded_date,
+            TransactionModel.payee,
+        )
         if amount:
             query = filter_ops.filter_comp(query, cls.amount, **amount)
         if envelope_id:
