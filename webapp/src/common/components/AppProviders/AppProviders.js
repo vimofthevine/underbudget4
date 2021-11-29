@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { ConfirmationContextProvider } from '../../contexts/confirmation';
+import { DrawerContextProvider } from '../../contexts/drawer';
 import { SelectionContextProvider } from '../../contexts/selection';
 import { SnackbarContextProvider } from '../../contexts/snackbar';
 
@@ -11,7 +12,9 @@ const AppProviders = ({ children }) => (
   <MuiPickersUtilsProvider utils={MomentUtils}>
     <ConfirmationContextProvider>
       <SnackbarContextProvider>
-        <SelectionContextProvider>{children}</SelectionContextProvider>
+        <SelectionContextProvider>
+          <DrawerContextProvider>{children}</DrawerContextProvider>
+        </SelectionContextProvider>
       </SnackbarContextProvider>
     </ConfirmationContextProvider>
   </MuiPickersUtilsProvider>

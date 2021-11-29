@@ -43,6 +43,12 @@
         "ignoreTemplateLiterals": true,
         "ignoreRegExpLiterals": true
       }
+    ],
+    "react/jsx-props-no-spreading": [
+      "error",
+      {
+        "exceptions": ["Pagination"]
+      }
     ]
   },
   "overrides": [

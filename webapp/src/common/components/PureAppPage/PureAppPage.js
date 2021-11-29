@@ -30,11 +30,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PureAppPage = ({ appBar, children, hasFab }) => {
+const PureAppPage = ({ appBar, appDrawer, children, hasFab }) => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
       {appBar}
+      {appDrawer}
       <main className={classes.content} id='app-content'>
         {appBar && <div className={classes.appBarSpacer} />}
         <Container
@@ -52,12 +53,14 @@ const PureAppPage = ({ appBar, children, hasFab }) => {
 
 PureAppPage.propTypes = {
   appBar: PropTypes.node,
+  appDrawer: PropTypes.node,
   children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]).isRequired,
   hasFab: PropTypes.bool,
 };
 
 PureAppPage.defaultProps = {
   appBar: null,
+  appDrawer: null,
   hasFab: false,
 };
 

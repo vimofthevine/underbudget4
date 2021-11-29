@@ -101,7 +101,15 @@ class AccountTransactionHistoryEntrySchema(Schema):
     reconciliation_id = fields.Integer(data_key="reconciliationId")
     transaction_id = fields.Integer(data_key="transactionId")
     # Transaction fields
-    transaction_type = fields.String(data_key="type")
+    transaction_type = fields.Function(
+        lambda obj: (
+            obj.transaction_type
+            if isinstance(obj.transaction_type, str)
+            else obj.transaction_type.name
+        ),
+        deserialize=TransactionType.parse,
+        data_key="type",
+    )
     recorded_date = fields.Date(data_key="recordedDate")
     payee = fields.String()
 
@@ -140,7 +148,15 @@ class EnvelopeTransactionHistoryEntrySchema(Schema):
     envelope_id = fields.Integer(data_key="envelopeId")
     transaction_id = fields.Integer(data_key="transactionId")
     # Transaction fields
-    transaction_type = fields.String(data_key="type")
+    transaction_type = fields.Function(
+        lambda obj: (
+            obj.transaction_type
+            if isinstance(obj.transaction_type, str)
+            else obj.transaction_type.name
+        ),
+        deserialize=TransactionType.parse,
+        data_key="type",
+    )
     recorded_date = fields.Date(data_key="recordedDate")
     payee = fields.String()
 

@@ -127,9 +127,10 @@ test('should create income transaction', async () => {
       },
     ],
   });
-  expect(invalidateQueries).toHaveBeenCalledTimes(4);
+  expect(invalidateQueries).toHaveBeenCalledTimes(5);
   expect(invalidateQueries).toHaveBeenCalledWith(['account-balance', '2']);
   expect(invalidateQueries).toHaveBeenCalledWith(['account-transactions', '2']);
+  expect(invalidateQueries).toHaveBeenCalledWith(['unreconciled-transactions', '2']);
   expect(invalidateQueries).toHaveBeenCalledWith(['envelope-balance', '3']);
   expect(invalidateQueries).toHaveBeenCalledWith(['envelope-transactions', '3']);
   await waitFor(() =>
@@ -185,9 +186,10 @@ test('should create expense transaction', async () => {
       },
     ],
   });
-  expect(invalidateQueries).toHaveBeenCalledTimes(4);
+  expect(invalidateQueries).toHaveBeenCalledTimes(5);
   expect(invalidateQueries).toHaveBeenCalledWith(['account-balance', '3']);
   expect(invalidateQueries).toHaveBeenCalledWith(['account-transactions', '3']);
+  expect(invalidateQueries).toHaveBeenCalledWith(['unreconciled-transactions', '3']);
   expect(invalidateQueries).toHaveBeenCalledWith(['envelope-balance', '1']);
   expect(invalidateQueries).toHaveBeenCalledWith(['envelope-transactions', '1']);
   await waitFor(() =>
@@ -255,9 +257,10 @@ test('should create multi-split expense transaction', async () => {
       },
     ],
   });
-  expect(invalidateQueries).toHaveBeenCalledTimes(8);
+  expect(invalidateQueries).toHaveBeenCalledTimes(9);
   expect(invalidateQueries).toHaveBeenCalledWith(['account-balance', '1']);
   expect(invalidateQueries).toHaveBeenCalledWith(['account-transactions', '1']);
+  expect(invalidateQueries).toHaveBeenCalledWith(['unreconciled-transactions', '1']);
   expect(invalidateQueries).toHaveBeenCalledWith(['envelope-balance', '1']);
   expect(invalidateQueries).toHaveBeenCalledWith(['envelope-transactions', '1']);
   expect(invalidateQueries).toHaveBeenCalledWith(['envelope-balance', '2']);
@@ -323,11 +326,13 @@ test('should create transfer transaction', async () => {
     ],
     envelopeTransactions: [],
   });
-  expect(invalidateQueries).toHaveBeenCalledTimes(4);
+  expect(invalidateQueries).toHaveBeenCalledTimes(6);
   expect(invalidateQueries).toHaveBeenCalledWith(['account-balance', '2']);
   expect(invalidateQueries).toHaveBeenCalledWith(['account-transactions', '2']);
+  expect(invalidateQueries).toHaveBeenCalledWith(['unreconciled-transactions', '2']);
   expect(invalidateQueries).toHaveBeenCalledWith(['account-balance', '3']);
   expect(invalidateQueries).toHaveBeenCalledWith(['account-transactions', '3']);
+  expect(invalidateQueries).toHaveBeenCalledWith(['unreconciled-transactions', '3']);
   await waitFor(() =>
     expect(screen.queryByRole('heading', { name: /create transaction/i })).not.toBeInTheDocument(),
   );
