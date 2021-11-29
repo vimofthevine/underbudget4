@@ -104,7 +104,7 @@ class AccountTransactionHistoryEntrySchema(Schema):
     transaction_type = fields.Function(
         lambda obj: (
             obj.transaction_type
-            if type(obj.transaction_type) is str
+            if isinstance(obj.transaction_type, str)
             else obj.transaction_type.name
         ),
         deserialize=TransactionType.parse,
@@ -151,7 +151,7 @@ class EnvelopeTransactionHistoryEntrySchema(Schema):
     transaction_type = fields.Function(
         lambda obj: (
             obj.transaction_type
-            if type(obj.transaction_type) is str
+            if isinstance(obj.transaction_type, str)
             else obj.transaction_type.name
         ),
         deserialize=TransactionType.parse,
