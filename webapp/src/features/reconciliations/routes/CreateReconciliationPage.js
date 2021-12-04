@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { AppPage } from 'common/components/AppPage';
+import AppPage from 'common/components/AppPage';
 import * as routes from 'common/utils/routes';
 import { CreateTransactionDialog } from 'features/transactions';
 import CreateReconciliationAppBar from '../components/CreateReconciliationAppBar';
