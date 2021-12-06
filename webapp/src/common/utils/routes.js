@@ -10,5 +10,7 @@ export const REPORTS = '/reports';
 export const LOGOUT = '/authelia/logout';
 
 export const accountRoute = (id) => `${ACCOUNT}/${id}`;
+export const accountReconciliationsRoute = (id) => `${ACCOUNT}/${id}/reconciliations`;
+export const createReconciliationRoute = (id) => `${ACCOUNT}/${id}/create-reconciliation`;
 export const envelopeRoute = (id) => `${ENVELOPE}/${id}`;
 export const budgetRoute = (id) => `${BUDGET}/${id}`;
