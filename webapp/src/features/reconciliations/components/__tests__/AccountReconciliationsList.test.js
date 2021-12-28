@@ -37,6 +37,22 @@ const render = (configureApi = () => 0) => {
   };
 };
 
+test('should display alert when no reconciliations exist', async () => {
+  const { history, mockApi } = render((api) => {
+    api.onGet('/api/accounts/9/reconciliations?page=1&size=25').reply(200, {
+      reconciliations: [],
+      total: 0,
+    });
+  });
+
+  await waitFor(() => expect(mockApi.history.get).toHaveLength(2));
+
+  expect(screen.getByRole('alert')).toBeInTheDocument();
+
+  userEvent.click(screen.getByRole('button', { name: /create/i }));
+  await waitFor(() => expect(history.location.pathname).toBe('/account/9/create-reconciliation'));
+});
+
 test('should display reconciliations for account', async () => {
   const { history, mockApi } = render((api) => {
     api.onGet('/api/accounts/9/reconciliations?page=1&size=25').reply(200, {

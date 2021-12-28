@@ -1,20 +1,15 @@
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { useLocation } from 'react-router';
 
 import { ChildPageAppBar, RightIconButtons } from 'common/components/AppBar';
-import useNavigateKeepingSearch from 'common/hooks/useNavigateKeepingSearch';
-import { accountRoute, createReconciliationRoute } from 'common/utils/routes';
+import { accountRoute } from 'common/utils/routes';
 import { useFetchAccount } from 'features/accounts';
+import useNavigateToCreateReconciliation from '../hooks/useNavigateToCreateReconciliation';
 
 const AccountReconciliationsAppBar = ({ accountId, prominent }) => {
-  const location = useLocation();
-  const navigate = useNavigateKeepingSearch();
-
   const parentRoute = accountRoute(accountId);
-  const createRoute = createReconciliationRoute(accountId);
-  const handleCreateReconciliation = () => navigate(createRoute, { state: { from: location } });
+  const handleCreateReconciliation = useNavigateToCreateReconciliation(accountId);
 
   const { data } = useFetchAccount({ id: accountId });
   const title = React.useMemo(() => {

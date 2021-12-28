@@ -8,6 +8,7 @@ import useErrorMessage from 'common/hooks/useErrorMessage';
 import useNavigateKeepingSearch from 'common/hooks/useNavigateKeepingSearch';
 import { reconciliationRoute } from 'common/utils/routes';
 import useFetchReconciliations from '../hooks/useFetchReconciliations';
+import NoReconciliationsAlert from './NoReconciliationsAlert';
 import ReconciliationsList from './ReconciliationsList';
 
 const AccountReconciliationsList = ({ accountId }) => {
@@ -16,7 +17,7 @@ const AccountReconciliationsList = ({ accountId }) => {
 
   const createErrorMessage = useErrorMessage({ request: 'Unable to retrieve reconciliations' });
 
-  const { data, error, isError, isFetching, isLoading } = useFetchReconciliations({
+  const { data, error, isError, isFetching, isLoading, isSuccess } = useFetchReconciliations({
     accountId,
     defaultSize: 25,
   });
@@ -30,6 +31,9 @@ const AccountReconciliationsList = ({ accountId }) => {
         onSelect={handleSelectReconciliation}
         reconciliations={reconciliations}
       />
+      {isSuccess && reconciliations.length === 0 && (
+        <NoReconciliationsAlert accountId={accountId} />
+      )}
       {(isLoading || isFetching) && <LinearProgress />}
       {isError && <Alert severity='error'>{errorMessage}</Alert>}
       <TablePagination count={count} defaultSize={25} labelRowsPerPage='Reconciliations per page' />
