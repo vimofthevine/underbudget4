@@ -23,7 +23,7 @@ export const reconciliationsGenerator = (num) => {
 
   for (let i = 0; i < num; i += 1) {
     const beginningBalance = endingBalance - faker.datatype.number({ min: -100000, max: 100000 });
-    const beginningDate = endingDate.subtract(1, 'month');
+    const beginningDate = endingDate.clone().subtract(1, 'month').add(1, 'day');
     reconciliations.push({
       id: faker.datatype.number({ min: 1 }),
       beginningBalance,
@@ -32,7 +32,7 @@ export const reconciliationsGenerator = (num) => {
       endingDate,
     });
     endingBalance = beginningBalance;
-    endingDate = beginningDate.subtract(1, 'day');
+    endingDate = beginningDate.clone().subtract(1, 'day');
   }
 
   return reconciliations;
