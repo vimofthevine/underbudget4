@@ -38,30 +38,19 @@ export default {
   },
 };
 
-const setupApi = (total) => {
-  const reconciliations = reconciliationsGenerator(total);
-  return {
-    get: [
-      ['/api/ledgers/2', { currency: 840 }],
-      ['/api/accounts/8', { name: 'Account Name' }],
-      [
-        /\/api\/accounts\/8\/reconciliations.*/,
-        (conf) => {
-          const pageMatch = conf.url.match(/page=\d+/);
-          const page = parseInt(pageMatch[1], 10);
-          const sizeMatch = conf.url.match(/size=\d+/);
-          const size = parseInt(sizeMatch[1], 10);
-          return {
-            reconciliations: reconciliations.slice((page - 1) * size, page * size),
-            page,
-            size,
-            total,
-          };
-        },
-      ],
+const setupApi = (total) => ({
+  get: [
+    ['/api/ledgers/2', { currency: 840 }],
+    ['/api/accounts/8', { name: 'Account Name' }],
+    [
+      /\/api\/accounts\/8\/reconciliations.*/,
+      {
+        reconciliations: reconciliationsGenerator(total),
+        total,
+      },
     ],
-  };
-};
+  ],
+});
 
 const Template = () => <AccountReconciliationsPage />;
 
@@ -77,5 +66,5 @@ SeveralReconciliations.parameters = {
 
 export const ManyReconciliations = Template.bind({});
 ManyReconciliations.parameters = {
-  api: setupApi(60),
+  api: setupApi(25),
 };

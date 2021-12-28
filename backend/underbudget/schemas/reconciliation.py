@@ -6,6 +6,7 @@ class BaseReconciliationSchema(Schema):
     """ Reconciliation schema """
 
     id = fields.Integer(dump_only=True)
+    account_id = fields.Integer(data_key="accountId", dump_only=True)
     beginning_balance = fields.Integer(data_key="beginningBalance", required=True)
     beginning_date = fields.Date(data_key="beginningDate", required=True)
     ending_balance = fields.Integer(data_key="endingBalance", required=True)
