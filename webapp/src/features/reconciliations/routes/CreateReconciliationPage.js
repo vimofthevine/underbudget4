@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 import AppPage from 'common/components/AppPage';
 import * as routes from 'common/utils/routes';
@@ -16,11 +16,10 @@ const useStyles = makeStyles((theme) => ({
 
 const CreateReconciliationPage = () => {
   const classes = useStyles();
+  const location = useLocation();
 
   const { id } = useParams();
-  const parentRoute = React.useMemo(() => ({ pathname: `${routes.ACCOUNT}/${id}`, search: '' }), [
-    id,
-  ]);
+  const { from: parentRoute } = location.state || { from: { pathname: routes.accountRoute(id) } };
   const accountId = parseInt(id, 10);
 
   const [createTrnIsOpen, setCreateTrnIsOpen] = React.useState(false);
