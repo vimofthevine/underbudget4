@@ -5,7 +5,7 @@ import React from 'react';
 
 const useStyles = makeStyles((theme) => ({
   iconButton: {
-    marginRight: theme.spacing(1),
+    marginRight: theme.spacing(2),
   },
 }));
 

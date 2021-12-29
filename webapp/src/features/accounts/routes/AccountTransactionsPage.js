@@ -2,9 +2,10 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import ArchiveIcon from '@material-ui/icons/Archive';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 import React from 'react';
-import { Routes, Route, useParams } from 'react-router-dom';
+import { Routes, Route, useLocation, useParams } from 'react-router-dom';
 
 import FullAppPage from 'common/components/FullAppPage';
 import useConfirmation from 'common/hooks/useConfirmation';
@@ -24,11 +25,12 @@ import useDeleteAccount from '../hooks/useDeleteAccount';
 import useFetchAccount from '../hooks/useFetchAccount';
 import useFetchAccountBalance from '../hooks/useFetchAccountBalance';
 
-const parentRoute = { pathname: routes.ACCOUNTS, search: '' };
+const parentRoute = { pathname: routes.accountsRoute(), search: '' };
 
 const AccountTransactionsPage = () => {
   const confirm = useConfirmation();
   const formatMoney = useFormatMoney();
+  const location = useLocation();
   const mobile = useMobile();
   const navigate = useNavigateKeepingSearch();
 
@@ -71,9 +73,15 @@ const AccountTransactionsPage = () => {
   const secondaryActions = [
     {
       'aria-label': 'Reconcile account',
-      icon: <PlaylistAddCheckIcon />,
-      onClick: () => navigate('create-reconciliation'),
+      icon: <PlaylistAddIcon />,
+      onClick: () => navigate(routes.createReconciliationRoute(id), { state: { from: location } }),
       text: 'Reconcile account',
+    },
+    {
+      'aria-label': 'Reconciliations',
+      icon: <PlaylistAddCheckIcon />,
+      onClick: () => navigate(routes.accountReconciliationsRoute(id)),
+      text: 'Reconciliations',
     },
     {
       'aria-label': 'Delete account',

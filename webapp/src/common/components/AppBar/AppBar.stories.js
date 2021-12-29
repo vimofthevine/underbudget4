@@ -119,3 +119,11 @@ WithOnePrimaryRightIconButton.args = {
 export const WithOnePrimaryRightIconButtonOnMobile = Template.bind({});
 WithOnePrimaryRightIconButtonOnMobile.args = WithOnePrimaryRightIconButton.args;
 WithOnePrimaryRightIconButtonOnMobile.parameters = WithOneRightIconButtonOnMobile.parameters;
+
+export const Prominent = Template.bind({});
+Prominent.args = {
+  ...WithOneRightIconButton.args,
+  prominent: true,
+  title: 'A rather long title for mobile',
+};
+Prominent.parameters = WithOneRightIconButtonOnMobile.parameters;
