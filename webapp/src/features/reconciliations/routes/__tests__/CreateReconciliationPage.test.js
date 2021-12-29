@@ -9,7 +9,7 @@ import renderWithRouter from 'test/renderWithRouter';
 import setupMockApi from 'test/setupMockApi';
 import CreateReconciliationPage from '../CreateReconciliationPage';
 
-const render = () => {
+const render = (route = '/account/9/create-reconciliation') => {
   configure({ defaultHidden: true });
 
   setSelectedLedger('2');
@@ -31,7 +31,7 @@ const render = () => {
           <Route path='/account/:id/create-reconciliation' element={<CreateReconciliationPage />} />
         </Routes>
       </QueryClientProvider>,
-      { route: '/account/9/create-reconciliation' },
+      { route },
     ),
     mockApi,
     queryClient,
@@ -45,6 +45,18 @@ test('should prompt to navigate away from page', async () => {
   userEvent.click(screen.getByRole('button', { name: /cancel this operation/i }));
   await waitFor(() => expect(window.confirm).toHaveBeenCalled());
   await waitFor(() => expect(history.location.pathname).toBe('/account/9'));
+});
+
+test('should navigate to previous page', async () => {
+  window.confirm = jest.fn(() => true);
+  const { history } = render({
+    pathname: '/account/9/create-reconciliation',
+    state: { from: '/prev-page' },
+  });
+
+  userEvent.click(screen.getByRole('button', { name: /cancel this operation/i }));
+  await waitFor(() => expect(window.confirm).toHaveBeenCalled());
+  await waitFor(() => expect(history.location.pathname).toBe('/prev-page'));
 });
 
 test('should open create-transaction dialog', async () => {

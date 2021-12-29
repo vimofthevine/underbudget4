@@ -41,7 +41,7 @@ const render = ({ route = '/account/7', width = '800px' } = {}) => {
   mockAxios.onGet('/api/transactions/42').reply(200, {
     payee: '',
     recordedDate: '',
-    type: '',
+    type: 'expense',
     accountTransactions: [],
     envelopeTransactions: [],
   });
@@ -141,6 +141,22 @@ test('should open dialogs when using nav bar actions', async () => {
   expect(history.location.pathname).toBe('/account/7/modify');
 
   // TODO open create-transaction dialog
+});
+
+test('should navigate to create-reconciliation page using nav bar action', async () => {
+  const { history } = render();
+
+  userEvent.click(screen.getByRole('button', { name: /open actions menu/i }));
+  userEvent.click(screen.getByRole('menuitem', { name: /reconcile account/i }));
+  await waitFor(() => expect(history.location.pathname).toBe('/account/7/create-reconciliation'));
+});
+
+test('should navigate to reconciliations page using nav bar action', async () => {
+  const { history } = render();
+
+  userEvent.click(screen.getByRole('button', { name: /open actions menu/i }));
+  userEvent.click(screen.getByRole('menuitem', { name: /reconciliations/i }));
+  await waitFor(() => expect(history.location.pathname).toBe('/account/7/reconciliations'));
 });
 
 test('should display account name and balance in app bar', async () => {
