@@ -1,4 +1,3 @@
-/* eslint-disable */
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Alert from '@material-ui/lab/Alert';
 import PropTypes from 'prop-types';
@@ -64,9 +63,11 @@ const UnreconciledTransactions = ({ accountId, onSelect, selected }) => {
 UnreconciledTransactions.propTypes = {
   accountId: PropTypes.number.isRequired,
   onSelect: PropTypes.func.isRequired,
-  selected: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number,
-  })).isRequired,
+  selected: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+    }),
+  ).isRequired,
 };
 
 export default UnreconciledTransactions;
