@@ -6,7 +6,11 @@ import { AccountsListPage, AccountTransactionsPage } from 'features/accounts';
 import { BudgetsPage, BudgetRoutes } from 'features/budgets';
 import { EnvelopesListPage, EnvelopeTransactionsPage } from 'features/envelopes';
 import { LedgersPage } from 'features/ledgers';
-import { AccountReconciliationsPage, CreateReconciliationPage } from 'features/reconciliations';
+import {
+  AccountReconciliationsPage,
+  CreateReconciliationPage,
+  ReconciliationPage,
+} from 'features/reconciliations';
 
 export const AppRoutes = () => (
   <Routes>
@@ -17,6 +21,7 @@ export const AppRoutes = () => (
     />
     <Route path={routes.createReconciliationRoute(':id')} element={<CreateReconciliationPage />} />
     <Route path={routes.accountRoute(':id/*')} element={<AccountTransactionsPage />} />
+    <Route path={routes.reconciliationRoute(':id/*')} element={<ReconciliationPage />} />
     <Route path={`${routes.BUDGETS}/*`} element={<BudgetsPage />} />
     <Route path={`${routes.BUDGET}/*`} element={<BudgetRoutes />} />
     <Route path={`${routes.ENVELOPES}/*`} element={<EnvelopesListPage />} />
