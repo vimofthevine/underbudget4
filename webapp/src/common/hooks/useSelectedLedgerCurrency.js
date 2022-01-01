@@ -12,7 +12,7 @@ export default () => {
 
   return React.useMemo(
     () => ({
-      currency: isLoading ? currencyCodes.code('USD') : currencyCodes.number(data.currency),
+      currency: data ? currencyCodes.number(data.currency) : currencyCodes.code('USD'),
       isLoading,
       isValid: !!data,
     }),

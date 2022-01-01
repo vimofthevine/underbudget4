@@ -1,13 +1,22 @@
 import * as faker from 'faker';
 import moment from 'moment';
 
+export const accountGenerator = (overrides = {}) => ({
+  id: faker.datatype.number({ min: 1 }),
+  categoryId: faker.datatype.number({ min: 1 }),
+  name: faker.finance.accountName(),
+  archived: false,
+  ...overrides,
+});
+
 export const reconciliationGenerator = (overrides = {}) => {
   const endingDate = moment(faker.date.past(1));
   const endingBalance = faker.datatype.number({ min: 100000, max: 400000 });
-  const beginningDate = endingDate.subtract(1, 'month');
+  const beginningDate = endingDate.clone().subtract(1, 'month').add(1, 'day');
   const beginningBalance = endingBalance - faker.datatype.number({ min: -100000, max: 100000 });
   return {
     id: faker.datatype.number({ min: 1 }),
+    accountId: faker.datatype.number({ min: 1 }),
     beginningBalance,
     beginningDate,
     endingBalance,
@@ -55,4 +64,12 @@ export const transactionGenerator = (overrides = {}) => {
     balance: faker.datatype.number({ min: 100000, max: 400000 }),
     ...overrides,
   };
+};
+
+export const transactionsGenerator = (num, overrides = {}) => {
+  const transactions = [];
+  for (let i = 0; i < num; i += 1) {
+    transactions.push(transactionGenerator(overrides));
+  }
+  return transactions;
 };

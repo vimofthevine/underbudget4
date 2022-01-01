@@ -53,7 +53,7 @@ const TransactionsTable = ({ loading, onClick, transactions }) => {
               hover={onClick !== null}
               key={transaction.id}
               onClick={onClick && (() => onClick(transaction))}
-              role='checkbox'
+              role={onClick ? 'checkbox' : 'row'}
               style={onClick && { cursor: 'pointer' }}
             >
               <TableCell>
