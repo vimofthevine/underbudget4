@@ -66,10 +66,10 @@ export const transactionGenerator = (overrides = {}) => {
   };
 };
 
-export const transactionsGenerator = (num) => {
+export const transactionsGenerator = (num, overrides = {}) => {
   const transactions = [];
   for (let i = 0; i < num; i += 1) {
-    transactions.push(transactionGenerator());
+    transactions.push(transactionGenerator(overrides));
   }
   return transactions;
 };
