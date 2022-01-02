@@ -67,7 +67,7 @@ const FullTableRow = ({ formatMoney, hasCleared, transaction }) => {
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell colSpan={hasCleared ? 7 : 6} style={{ paddingBottom: 0, paddingTop: 0 }}>
+        <TableCell colSpan={hasCleared ? 8 : 7} style={{ paddingBottom: 0, paddingTop: 0 }}>
           <Collapse in={open} timeout='auto' unmountOnExit>
             <Box margin={1}>
               <Typography component='div' gutterBottom variant='h6'>
