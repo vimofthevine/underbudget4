@@ -162,7 +162,8 @@ class AccountTransactionModel(db.Model):
     ):
         """ Updates the specified transactions to reference the given reconciliation """
         count = cls.query.filter(cls.id.in_(transaction_ids)).update(
-            {cls.reconciliation_id: reconciliation_id}, synchronize_session=False
+            {cls.reconciliation_id: reconciliation_id, cls.cleared: True},
+            synchronize_session=False,
         )
         if count != len(transaction_ids):
             raise NotFound("Account transaction not found")
