@@ -72,7 +72,7 @@ const NavIconList = () => {
       <Divider />
 
       <List>
-        <ListItem button onClick={() => navigate(routes.LOGOUT)}>
+        <ListItem button component='a' href={routes.LOGOUT}>
           <ListItemIcon>
             <LogoutIcon />
           </ListItemIcon>
